@@ -1,0 +1,154 @@
+<script>
+var arr_colist = new Array();
+<?php 
+$arr_col = explode(",",$this->data["FIELDLIST"]);
+if(count($arr_col)){ 
+	foreach($arr_col as $col){
+
+	?>
+		arr_colist[arr_colist.length] = "<?=$col?>";
+<?php } }?>
+
+function getColumn(tblname){
+	var submitAjax = new AjaxEngine(); 
+	var oXmlHttp = submitAjax.createXMLHttp();
+	oXmlHttp.open("post", "/dvc/danhmuc/onshowcol/tblname/"+encodeURIComponent(tblname) , true); 
+	oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	oXmlHttp.onreadystatechange = function () { 
+				if (oXmlHttp.readyState == 4) { 
+				
+				if (oXmlHttp.status == 200) { 
+			
+				if(oXmlHttp.responseText){
+					
+					//alert(oXmlHttp.responseText);
+					var data_js = JSON.parse(oXmlHttp.responseText);
+					//var myjsObject = JSON.parse(oXmlHttp.responseText);
+					//alert(oXmlHttp.responseText);
+					createTblColumns(data_js);
+			
+				}	
+				else{
+					
+				}
+				
+            } else { 
+                //as_checkdata_all = 1;
+            } 
+        } 
+       }; 
+   	   oXmlHttp.send(null);		   
+}
+
+function createTblColumns(data_js){
+		 var odivtk = document.getElementById('listcolsdiv');
+		 if(data_js.length == 0){
+			odivtk.innerHTML = 'Không tìm thấy dự án nào';
+		 }else{
+			 var oTable = document.createElement("TABLE");
+			 oTable.innerText = "";
+			 oTable.setAttribute("className","adminlist"); //ie only
+			 oTable.setAttribute("class","adminlist");
+			 oTable.setAttribute("id","listcols");
+			 var oTRH = oTable.insertRow(-1);
+			 var oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'STT';
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Tên cột';
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Kiểu dữ liệu';
+			
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = '';
+			 var stt = 1;
+			 
+			 var is_old = 0;
+			 if(document.frm.TABLENAME.value == "<?=$this->data["TABLENAME"]?>") 
+				 is_old = 1;
+			 
+			 for(var i = 0 ; i < data_js.length ; i++){
+				
+				oTRH = oTable.insertRow(-1);
+				oTRH.setAttribute("id","tr"+data_js[i].Field);
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = stt;
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = data_js[i].Field;
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = data_js[i].Type;
+				
+				oTDH = oTRH.insertCell(-1);
+				var oCheck = document.createElement('input');
+				oCheck.setAttribute('type','checkbox');
+				oCheck.setAttribute('name','colslist[]');
+				oCheck.value = data_js[i].Field;
+				for(var j=0; j < arr_colist.length ; j++){
+					if(arr_colist[j] == data_js[i].Field ){
+						oCheck.checked = "checked";
+						break;
+					}
+				}
+				oTDH.appendChild(oCheck);
+
+			 }
+			 stt++;
+			 odivtk.innerHTML = "";
+			 odivtk.appendChild(oTable);
+		}
+	}
+
+	function SaveButtonClick(){
+		//document.frm.action="/dvc/services/save";
+		document.frm.submit();
+	}
+	
+	function BackButtonClick(){
+		window.location = "/dvc/danhmuc/index";
+	}
+
+	
+
+
+</script>
+
+<form name=frm method="post" action="/dvc/danhmuc/save"  >
+	<div>
+	<label>Tên danh mục</label>
+	<input type=text name="NAME" value="<?=$this->data["NAME"]?>" >
+	</div>
+	<div class=clr></div>
+	<div>
+	<label>Mã số:</label>
+	<input type=text name=CODE value="<?=$this->data["CODE"]?>";>
+	</div>
+	
+	<div class=clr></div>
+	<div>
+	<label>Tên bảng </label>
+	<select name="TABLENAME" onchange="getColumn(this.value)"  >
+		<?php foreach( $this->tbllist as $tbl){  ?>
+		<option > 
+			<?=$tbl["Tables_in_".$this->dbname]?>
+		</option>
+		<?php }?>
+	</select>
+	<script>
+		<?php if($this->data["ID_DANHMUC"]){?>
+			document.frm.TABLENAME.value = "<?=$this->data["TABLENAME"]?>";
+			getColumn(document.frm.TABLENAME.value);
+		<?php } ?>
+	</script>
+	</div>
+	<div class=clr></div>
+	
+	<div id="listcolsdiv" >
+		
+
+	</div>
+
+	<div class=clr></div>
+	
+	<input type=hidden name="id" value="<?=$this->id?>"  />
+	
+
+</form>

@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<FONT  style="font-size: 11pt;line-height: 25px;">
+<table>
+<tr>
+<td width=50%>
+	<table width=100% >
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>SỞ THÔNG TIN VÀ TRUYỀN THÔNG </b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>BỘ PHẬN TIẾP NHẬN VÀ TRẢ KẾT QUẢ</b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b><u>Độc lập – Tự do – Hạnh phúc</u></b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Số: <?=$this->data->SO?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"><i><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></i></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Mã số: <b><?=$this->data->MAHOSO?></b><br /><img src='/barcode.php?barcode=<?=$this->data->BARCODE?>'/></br>SĐT: <?=$this->config->sys_info->phone?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+		</tr>
+	</table>
+	<p align="center"><font style="font-size: 12pt;"><b>PHIẾU NHẬN HỒ SƠ</b></font><br><i><?=$this->tenloai?></i></p>
+	<table width="100%">
+	<tr>
+		<td nowrap="nowrap" colspan=4 width=60%>
+	Bộ phận tiếp nhận và trả kết quả đã nhận đủ hồ sơ của ông (bà):<b> <?=$this->data->TENTOCHUCCANHAN?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=5>
+			Ngày nhận hồ sơ: lúc <?=date("h")?>:<?=date("i")?> ngày <b><?=QLVBDHCommon::MysqlDateToVnDate($this->data->NGAYNHAN)?></b> có nhận của ông (bà)<b> <?=$this->data->TENTOCHUCCANHAN?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3>
+			Địa Chỉ: <b><?=$this->data->DIACHI?> <?=$this->tenphuong?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2>
+			Điện thoại: <b><?=$this->data->DIENTHOAI?></b>		
+		</td>
+
+	</tr>
+
+	<?php
+		$arr_custom_fields = motcua_hosoModel::CustomfieldsInBN($this->id_loaihoso);
+		$dem = count($arr_custom_fields);
+		if($dem > 0){
+			for($i=0;$i<$dem;$i++){
+	?>
+			<tr>
+				<td valign="top" nowrap><?=$arr_custom_fields[$i]["NAME_DISPLAY"]?><b>:</b></td>
+				<td valign="top" width=50%>
+	<?php
+				$col_value = "";
+				eval('$col_value=$this->data->'.$arr_custom_fields[$i]["NAME_COLUMN"].";");
+				if($arr_custom_fields[$i]["TYPE"] == "DATE"){
+					echo "<b>".implode("/",array_reverse(explode("-",$col_value)))."</b>";
+				}else{
+					echo "<b>".$col_value."</b>";
+				}
+	?>
+				</td>
+	<?php
+				$i++;
+	?>
+				<td valign="top" nowrap><?=$arr_custom_fields[$i]["NAME_DISPLAY"]?><b><?=($i==$dem)?"":":"?></b></td>
+				<td valign="top" width=50%>
+	<?php
+				$col_value = "";
+				eval('$col_value=$this->data->'.$arr_custom_fields[$i]["NAME_COLUMN"].";");
+				if($arr_custom_fields[$i]["TYPE"] == "DATE"){
+					echo "<b>".implode("/",array_reverse(explode("-",$col_value)))."</b>";
+				}else{
+					echo "<b>".$col_value."</b>";
+				}
+	?>
+				</td>
+			</tr>
+	<?php
+			}
+		}
+	?>
+	</table>
+	
+	<table width="100%" style="line-height: 25px;">
+	<tr><td nowrap="nowrap" align="" style="line-height: 25px;margin-left:50px;" colspan="1"><i>HỒ SƠ GỒM</i></td></tr>
+
+	<?php
+	if($this->id_yeucau>0){
+		$sa=0;
+		foreach($this->thutucbosungs as $itemyeucau){
+		//if($sa%2==0)
+			echo "<tr>";
+
+	?>
+		<td colspan="1"><b><?=$sa+1?></b>/ <?=$itemyeucau["TEN_THUTUC"]?></td>
+
+	<?php
+		//if($sa%2 == 1 || $sa == (($this->id_yeucau)-1))
+		echo "</tr>";
+		$sa++;
+	}}
+	else if(count($this->nhangom)>0){
+		$st=0;
+		foreach($this->nhangom as $itemnhangom){
+		//if($st%2==0)
+			echo "<tr>";
+	?>
+		<td colspan="1"><b><?=$st+1?></b>/ <?=$itemnhangom->TEN_THUTUC?></td>
+
+	<?php
+		//if($st%2 == 1 || $st == (count($this->nhangom)-1))
+		echo "</tr>";
+		$st++;
+	}}
+
+	?>
+	<tr>
+		<td colspan="2"><i>Ngày thực hiện nghĩa vụ tài chính (nếu có ): </i>.............................	</td>
+	</tr>
+	<tr>
+	<td colspan="2"><i>Ngày hẹn trả kết quả: </i><b><?
+	$tempNhanNgay= QLVBDHCommon::addDateAll(strtotime($this->data->NHAN_NGAY),$this->hanxuly);
+	echo date('d/m/Y',$tempNhanNgay);
+	?></b>
+
+	</td>
+	</tr>
+	</table>
+	<b>
+	<table width="100%">
+		<tr>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center">NGƯỜI NHẬN HỒ SƠ</td>
+
+		</tr>
+		<tr>
+			<td colspan="3"><br><br><br></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" width="33%"></td>
+			<td nowrap="nowrap" width="33%"></td>
+			<td nowrap="nowrap" width="33%" align="center"><?=$this->user->FULLNAME?></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+		</tr>
+	</table>
+	</b>
+	<table width="100%" cellpadding=0 cellspacing=0 style="line-height: 15px;">
+		<tr nowrap="nowrap" width="100%" align="left" cellpadding=0 cellspacing=0 style="line-height: 15px;"><font style="font-size: 10pt;"><i>Hướng dẫn tra cứu trạng thái hồ sơ:</i></font></tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- Trực tuyến:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>vào website <b>http://www.nghean.gov.vn</b> và vào mục <b>Tra cứu hồ sơ</b></i></font></td>
+		</tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- Điện thoại:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>gọi đến số <b>038.3599522</b> và làm theo hướng dẫn </i></font></td>
+		</tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- SMS:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>soạn tin <b>MC YYYYY</b>, ví dụ: <b>MC 04345100001</b> và gửi đến số <b>0166-3905957</b></i></font></td>
+		</tr>		
+	</table>
+</td>
+</tr>
+</table>
+<p style="page-break-before: always">
+<table>
+<tr>
+<td width=50%>
+	<table width=100%>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>SỞ THÔNG TIN VÀ TRUYỀN THÔNG <?=mb_strtoupper($this->config->sys_info->city,"UTF-8")?></b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>CỘNG HÒA XÃ HỘI CHỦ  NGHĨA VIỆT NAM</b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>BỘ PHẬN TIẾP NHẬN VÀ TRẢ KẾT QUẢ</b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b><u>Độc lập – Tự do – Hạnh phúc</u></b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Số: <?=$this->data->SO?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"><i><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></i></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Mã số: <b><?=$this->data->MAHOSO?></b><br /><img src='/barcode.php?barcode=<?=$this->data->BARCODE?>'/></br>SĐT: <?=$this->config->sys_info->phone?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+		</tr>
+	</table>
+	<p align="center"><font style="font-size: 12pt;"><b>PHIẾU LƯU CHUYỂN HỒ SƠ</b></font></p>
+	<table width="100%">
+	<tr>
+		<td nowrap="nowrap" width=100%>
+			Hồ sơ số:<b> <?=$this->data->TENTOCHUCCANHAN?></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Loại thủ tục: ..............................................................................
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Người nộp hồ sơ: ...........................................................................
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Thời gian tiếp nhận hồ sơ:.....giờ.....phút....., ngày.....tháng.....năm....................
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Thời gian trả kết quả theo quy định.....giờ.....phút....., ngày.....tháng.....năm...........
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table width=100%>
+				<tr>
+					<th nowrap="nowrap" style="border: 1px solid #000;"><b>Tên đơn vị/bộ phận</b></th>
+					<th nowrap="nowrap" style="border-top: 1px solid #000;border-bottom: 1px solid #000;"><b>Ngày giao/nhận hồ sơ</b></th>
+					<th nowrap="nowrap" style="border: 1px solid #000;"><b>Ghi chú</b></th>
+				</tr>
+				<tr>
+					<td style="border: 1px solid #000; border-top: none;">
+						<table>
+							<tr>
+								<td>-Giao...............</td>
+							</tr>
+							<tr>
+								<td>-Nhận...............</td>
+							</tr>
+						</table>
+					</td>
+					<td style="border-bottom: 1px solid #000;">
+						<table>
+							<tr>
+								<td colspan="2">
+									.....giờ.....phút....., ngày.....tháng.....năm....................			
+								</td>
+							</tr>
+							<tr>
+								<td align="center"><b>Người giao</b></td>
+								<td align="center"><b>Người nhận</b></td>
+							</tr>
+							<tr>
+								<td align="center"><i>(ký, ghi rõ họ tên)</i></td>
+								<td align="center"><i>(ký, ghi rõ họ tên)</i></td>
+							</tr>
+						</table>
+					</td>
+					<td style="border: 1px solid #000; border-top: none;"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
+</td>
+</tr>
+</table>
+<p style="page-break-before: always">
+<table>
+<tr>
+<td width=50%>
+		<table width=100% >
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>SỞ THÔNG TIN VÀ TRUYỀN THÔNG </b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>CỘNG HÒA XÃ HỘI CHỦ  NGHĨA VIỆT NAM</b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b>BỘ PHẬN TIẾP NHẬN VÀ TRẢ KẾT QUẢ</b></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"><b><u>Độc lập – Tự do – Hạnh phúc</u></b></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Số: <?=$this->data->SO?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"><i><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></i></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px">Mã số: <b><?=$this->data->MAHOSO?></b></br>SĐT: <?=$this->config->sys_info->phone?></td>
+			<td width="100%" style="line-height: 16px"></td>
+			<td nowrap="nowrap" align="right" style="line-height: 16px"></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+		</tr>
+	</table>
+	<p align="center"><font style="font-size: 12pt;"><b>PHIẾU NHẬN HỒ SƠ</b></font><br><i><?=$this->tenloai?></i></p>
+	<table width="100%">
+	<tr>
+		<td nowrap="nowrap" colspan=4 width=60%>
+	Bộ phận tiếp nhận và trả kết quả đã nhận đủ hồ sơ của ông (bà):<b> <?=$this->data->TENTOCHUCCANHAN?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=5>
+			Ngày nhận hồ sơ: lúc <?=date("h")?>:<?=date("i")?> ngày <b><?=QLVBDHCommon::MysqlDateToVnDate($this->data->NGAYNHAN)?></b> có nhận của ông (bà)<b> <?=$this->data->TENTOCHUCCANHAN?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3>
+			Địa Chỉ: <b><?=$this->data->DIACHI?> <?=$this->tenphuong?></b>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2>
+			Điện thoại: <b><?=$this->data->DIENTHOAI?></b>		
+		</td>
+
+	</tr>
+
+	<?php
+		$arr_custom_fields = motcua_hosoModel::CustomfieldsInBN($this->id_loaihoso);
+		$dem = count($arr_custom_fields);
+		if($dem > 0){
+			for($i=0;$i<$dem;$i++){
+	?>
+			<tr>
+				<td valign="top" nowrap><?=$arr_custom_fields[$i]["NAME_DISPLAY"]?><b>:</b></td>
+				<td valign="top" width=50%>
+	<?php
+				$col_value = "";
+				eval('$col_value=$this->data->'.$arr_custom_fields[$i]["NAME_COLUMN"].";");
+				if($arr_custom_fields[$i]["TYPE"] == "DATE"){
+					echo "<b>".implode("/",array_reverse(explode("-",$col_value)))."</b>";
+				}else{
+					echo "<b>".$col_value."</b>";
+				}
+	?>
+				</td>
+	<?php
+				$i++;
+	?>
+				<td valign="top" nowrap><?=$arr_custom_fields[$i]["NAME_DISPLAY"]?><b><?=($i==$dem)?"":":"?></b></td>
+				<td valign="top" width=50%>
+	<?php
+				$col_value = "";
+				eval('$col_value=$this->data->'.$arr_custom_fields[$i]["NAME_COLUMN"].";");
+				if($arr_custom_fields[$i]["TYPE"] == "DATE"){
+					echo "<b>".implode("/",array_reverse(explode("-",$col_value)))."</b>";
+				}else{
+					echo "<b>".$col_value."</b>";
+				}
+	?>
+				</td>
+			</tr>
+	<?php
+			}
+		}
+	?>
+	</table>
+	
+	<table width="100%" style="line-height: 25px;">
+	<tr><td nowrap="nowrap" align="" style="line-height: 25px;margin-left:50px;" colspan="1"><i>HỒ SƠ GỒM</i></td></tr>
+
+	<?php
+	if($this->id_yeucau>0){
+		$sa=0;
+		foreach($this->thutucbosungs as $itemyeucau){
+		//if($sa%2==0)
+			echo "<tr>";
+
+	?>
+		<td colspan="1"><b><?=$sa+1?></b>/ <?=$itemyeucau["TEN_THUTUC"]?></td>
+
+	<?php
+		//if($sa%2 == 1 || $sa == (($this->id_yeucau)-1))
+		echo "</tr>";
+		$sa++;
+	}}
+	else if(count($this->nhangom)>0){
+		$st=0;
+		foreach($this->nhangom as $itemnhangom){
+		//if($st%2==0)
+			echo "<tr>";
+	?>
+		<td colspan="1"><b><?=$st+1?></b>/ <?=$itemnhangom->TEN_THUTUC?></td>
+
+	<?php
+		//if($st%2 == 1 || $st == (count($this->nhangom)-1))
+		echo "</tr>";
+		$st++;
+	}}
+
+	?>
+	<tr>
+		<td colspan="2"><i>Ngày thực hiện nghĩa vụ tài chính (nếu có ): </i>.............................	</td>
+	</tr>
+	<tr>
+	<td colspan="2"><i>Ngày hẹn trả kết quả: </i><b><?
+	$tempNhanNgay= QLVBDHCommon::addDateAll(strtotime($this->data->NHAN_NGAY),$this->hanxuly);
+	echo date('d/m/Y',$tempNhanNgay);
+	?></b>
+
+	</td>
+	</tr>
+	</table>
+	<b>
+	<table width="100%">
+		<tr>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center">NGƯỜI NHẬN HỒ SƠ</td>
+
+		</tr>
+		<tr>
+			<td colspan="3"><br><br><br></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" width="33%"></td>
+			<td nowrap="nowrap" width="33%"></td>
+			<td nowrap="nowrap" width="33%" align="center"><?=$this->user->FULLNAME?></td>
+		</tr>
+		<tr>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+			<td nowrap="nowrap" width="33%" align="center"></td>
+		</tr>
+	</table>
+	</b>
+	<table width="100%" cellpadding=0 cellspacing=0 style="line-height: 15px;">
+		<tr nowrap="nowrap" width="100%" align="left" cellpadding=0 cellspacing=0 style="line-height: 15px;"><font style="font-size: 10pt;"><i>Hướng dẫn tra cứu trạng thái hồ sơ:</i></font></tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- Trực tuyến:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>vào website <b>http://www.nghean.gov.vn</b> và vào mục <b>Tra cứu hồ sơ</b></i></font></td>
+		</tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- Điện thoại:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>gọi đến số <b>038.3599522</b> và làm theo hướng dẫn </i></font></td>
+		</tr>
+		<tr>			
+			<td nowrap="nowrap" width="10%" align="left"><font style="font-size: 10pt;"><i><b>- SMS:</b></i></font></td>
+			<td align="left"><font style="font-size: 10pt;"><i>soạn tin <b>MC YYYYY</b>, ví dụ: <b>MC 04345100001</b> và gửi đến số <b>0166-3905957</b></i></font></td>
+		</tr>		
+	</table>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+</font>
+</body>
+</html>
+<script>
+window.print();
+
+</script>

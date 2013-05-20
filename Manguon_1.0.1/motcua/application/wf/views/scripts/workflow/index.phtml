@@ -1,0 +1,329 @@
+<?php
+$this->dojo()->enable();
+?>
+<form name=frm method=post>
+<fieldset>
+<legend>Quy trình</legend>
+<table class="adminlist">
+	<thead>
+	<tr>
+    	<th nowrap>#</th>
+        <th nowrap>
+        	<?php echo QLVBDHButton::EnableCheckAll("DELPR") ?>
+        </th>
+        <th width="100%" colspan="3">Quy trình</th>
+		<th nowrap>Mã số quy trình</th>
+        <th nowrap>Sử dụng</th>
+    </tr>
+    </thead>
+    <tfoot>
+		<tr>
+			<td colspan="7">
+				<del class="container">
+					<span class=error>Chú ý: quy trình hiện tại có màu xám</span>
+				</del>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+$stt=0;
+$i=0;
+foreach($this->process as $rowpr){
+	$stt++;
+	$i = 1 - $i;
+	$classname = "row$i";
+	if($this->idp==$rowpr->ID_P)$classname="row2";
+?>
+    <tr class="<?=$classname?>">
+    	<td nowrap><?php echo $stt; ?></td>
+        <td nowrap>
+        	<input type=checkbox name="DELPR[]" value='<?php echo $rowpr->ID_P ?>'>
+        </td>
+		<td nowrap><a href="#" onclick="Selectpr('<?php echo $rowpr->ID_P ?>');">Chọn</a></td>
+        <td width="100%">
+        	<a href="/wf/Process/Input/id/<?php echo $rowpr->ID_P ?>">
+				<?php echo htmlspecialchars($rowpr->NAME) ?>
+			</a>
+		</td>
+		<td nowrap>
+			<a href="/wf/process/Input/id/<?=$rowpr->ID_P?>/code/copy">Sao chép</a>
+		</td>
+		<td nowrap>
+			<?php echo $rowpr->ALIAS ?>
+		</td>
+        <td nowrap><?php echo $rowpr->ACTIVE==1?"Có":"Không"; ?></td>
+    </tr>
+<?php
+}
+?>
+	</tbody>
+</table>
+</fieldset>
+<fieldset>
+<legend>Trạng thái</legend>
+<table class=adminlist>
+	<thead>
+		<tr>
+	    	<th nowrap>#</th>
+	        <th nowrap>
+	        	<?php echo QLVBDHButton::EnableCheckAll("DELA") ?>
+	        </th>
+	        <th width="100%">Trạng thái</th>
+	        <th nowrap>
+	        	Quyền truy cập
+	        </th>
+	        <th nowrap>Sử dụng</th>
+	    </tr>
+    </thead>
+    <tfoot>
+		<tr>
+			<td colspan="5">
+				<del class="container">
+					<span class=error>Chú ý: Trạng thái chưa phân quyền có màu xám</span>
+				</del>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+$stt=0;
+$i=0;
+foreach($this->activity as $rowa){
+	$stt++;
+	$i = 1 - $i;
+	$classname = "row$i";
+	if($rowa["ACCOUNT"]==0)$classname="row2";
+?>
+    <tr class="<?=$classname?>">
+    	<td nowrap><?php echo $stt; ?></td>
+        <td nowrap>
+        	<input type=checkbox name="DELA[]" value='<?php echo $rowa["ID_A"] ?>'>
+        </td>
+        <td width="100%">
+        	<a href="/wf/Activity/Input/id/<?php echo $rowa["ID_A"] ?>/idp/<?php echo $this->idp; ?>">
+				<?php echo htmlspecialchars($rowa["NAME"]) ?>
+			</a>
+		</td>
+		<td nowrap>
+			<a href="#" onclick="ActivityAccessClick('<?php echo $rowa["ID_A"] ?>');">Quyền truy cập</a>
+		</td>
+        <td nowrap><?php echo $rowa["ACTIVE"]==1?"Có":"Không"; ?></td>
+    </tr>
+<?php
+}
+?>
+	</tbody>
+</table>
+</fieldset>
+<fieldset>
+<legend>Sơ đồ quy trình</legend>
+<table class=adminlist>
+	<thead>
+		<tr>
+	    	<th nowrap>#</th>
+	    	<th nowrap><?php echo QLVBDHButton::EnableCheckAll("DELT") ?></th>
+	        <th width="30%">Trạng thái bắt đầu</th>
+	        <th width="25%">Hành động</th>
+	        <th width="25%">Tên hiển thị</th>
+	        <th nowrap>Hạn xử lý</th>
+	        <th nowrap="nowrap">Kết thúc tại</th>
+	        <th width="25%">Trạng thái kết thúc</th>
+	        <th nowrap>Cho phép chuyển nhiều</th>
+	    </tr>
+    </thead>
+    <tfoot>
+		<tr>
+			<td colspan="9">
+				<del class="container">
+					
+				</del>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+$stt=0;
+$i=0;
+foreach($this->transition as $rowtr){
+	$stt++;
+	$i = 1 - $i;
+	$classname = "row$i";
+?>
+    <tr class="<?=$classname?>">
+    	<td nowrap><?php echo $stt; ?></td>
+        <td nowrap>
+        	<input type=checkbox name="DELT[]" value='<?php echo $rowtr["ID_T"] ?>'>
+        </td>
+        <td width="30%">
+        	<input type="hidden" name="ID_T[]" value="<?php echo $rowtr["ID_T"] ?>">
+        	<select name=ID_A_BEGIN[]>
+        	<?php echo ActivityModel::ToCombo($this->activity,$rowtr["ID_A_BEGIN"]) ?>
+        	</select><br>
+        	<input type="radio" name="ISFIRST" value="<?php echo $rowtr["ID_T"] ?>" <?php echo $rowtr["ISFIRST"]==1?"checked":"" ?>>Bắt đầu
+        	<input type="checkbox" name="ISLAST[]" value="<?php echo $rowtr["ID_T"] ?>" <?php echo $rowtr["ISLAST"]==1?"checked":"" ?>>Kết thúc
+        </td>
+        <td width="25%">
+        	<select name=ID_TP[]>
+        	<?php echo TransitionPoolModel::ToCombo($this->transitionpool,$rowtr["ID_TP"]) ?>
+        	</select>
+        </td>
+        <td width="25%">
+        	<input type=text size=30 name=NAME[] value="<?=$rowtr["NAME"]?>">
+        </td>
+        <td nowrap>
+        	<input type=text size=2 name=HANXULY[] value="<?=$rowtr["HANXULY"]?>">
+        </td>
+        <td nowrap>
+			<?php foreach($this->transition as $trans){?>
+			<input type=checkbox 
+			<?php $arr_end_at =  explode(",",$rowtr["END_AT_MULTI"]);
+				foreach($arr_end_at as $end_at){
+					if($trans["ID_T"] == $end_at){
+						echo "checked"; break;
+					}
+			?>
+				
+			<?php } ?>
+			name=END_AT<?=$rowtr["ID_T"]?>[]  value="<?=$trans["ID_T"]?>" ><?=$trans["NAME"]?><br>
+			<?php }?>
+			
+			<script>
+			
+        	
+			
+			
+			</script>
+        </td>
+        <td width="25%">
+        	<select name=ID_A_END[]>
+        	<?php echo ActivityModel::ToCombo($this->activity,$rowtr["ID_A_END"]) ?>
+        	</select>
+        </td>
+        <td align="center">
+<?php
+if(WFEngine::IsCheckMulti($rowtr["ID_TP"])){
+?>
+        	<input type=checkbox name="MULTI[]" value="<?=$rowtr["ID_T"]?>" <?=$rowtr['MULTI']==1?"checked":""?>>
+<?php
+}
+?>
+        </td>
+    </tr>
+<?php
+}
+$stt="*";
+$classname = "row$i";
+?>
+	    <tr class="<?=$classname?>">
+	    	<td nowrap><?php echo ++$stt; ?></td>
+	        <td nowrap>
+	        	&nbsp;
+	        </td>
+	        <td width="30%">
+	        	<input type="hidden" name="ID_T[]" value="0">
+	        	<select name=ID_A_BEGIN[]>
+	        	<option value="-1"></option>
+	        	<?php echo ActivityModel::ToCombo($this->activity,-1) ?>
+	        	</select><br>
+	        	<input type="radio" name="ISFIRST" value="-1">Bắt đầu
+	        	<input type="checkbox" name="ISLAST[]" value="-1">Kết thúc
+	        </td>
+	        <td width="25%">
+	        	<select name=ID_TP[]>
+	        	<option value="-1"></option>
+	        	<?php echo TransitionPoolModel::ToCombo($this->transitionpool,-1) ?>
+	        	</select>
+	        </td>
+	        <td width="25%">
+	        	<input type=text size=30 name=NAME[]>
+	        </td>
+	        <td nowrap>
+        		<input type=text size=2 name=HANXULY]>
+       	 	</td>
+       	 	 <td nowrap>
+				<?php foreach($this->transition as $trans){?>
+				<input type=checkbox 
+				<?php $arr_end_at =  explode(",",$rowtr["END_AT_MULTI"]);
+					foreach($arr_end_at as $end_at){
+						if($trans["ID_T"] == $end_at){
+							echo "checked"; break;
+						}
+				?>
+				
+			<?php } ?>
+			name=END_AT<?=$rowtr["ID_T"]?>[]  value="<?=$trans["ID_T"]?>" ><?=$trans["NAME"]?><br>
+			<?php }?>
+		
+        </td>
+	        <td width="25%">
+	        	<select name=ID_A_END[]>
+	        	<option value="-1"></option>
+	        	<?php echo ActivityModel::ToCombo($this->activity,-1) ?>
+	        	</select>
+	        </td>
+	        <td align="center">
+        		<input type=checkbox name="MULTI[]" value="0">
+        	</td>
+	    </tr>
+    </tbody>
+</table>
+</fieldset>
+<input type=hidden name=idp value="<?php echo $this->idp; ?>">
+<input type=hidden name=idc value="<?php echo $this->idc; ?>">
+</form>
+<script>
+function DeleteprButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DELPR[]","Phải chọn ít nhất một quy trình để xóa.");
+	if(mess){
+		if(confirm("Bạn có muốn xóa các quy trình được chọn không?")){
+			document.frm.action = "/wf/Process/Delete";
+			document.frm.submit();
+		}
+	}else{
+		alert("Phải chọn ít nhất một quy trình để xóa.");
+	}
+}
+function DeletetrButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DELT[]","Phải chọn ít nhất một dòng luân chuyển để xóa.");
+	if(mess){
+		if(confirm("Bạn có muốn xóa các dòng luân chuyển được chọn không?")){
+			document.frm.action = "/wf/Transition/Delete";
+			document.frm.submit();
+		}
+	}else{
+		alert("Phải chọn ít nhất một dòng luân chuyển để xóa.");
+	}
+}
+function DeleteaButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DELA[]","<?=ERR11005003?>");
+	if(mess){
+		if(confirm("<?=MSG11005006?>")){
+			document.frm.action = "/wf/Activity/Delete";
+			document.frm.submit();
+		}
+	}else{
+		alert("<?=ERR11005003?>");
+	}
+}
+function Selectpr(id){
+	document.frm.action = "/wf/Workflow/index";
+	document.frm.idp.value=id;
+	document.frm.submit();
+}
+function AddaButtonClick(){
+	document.frm.action = "/wf/Activity/Input";
+	document.frm.submit();
+}
+function UpdatetrButtonClick(){
+	document.frm.action = "/wf/Transition/save";
+	document.frm.submit();
+}
+function ActivityAccessClick(ida){
+	document.frm.action = "/wf/ActivityAccess/index/ida/"+ida;
+	document.frm.submit();
+}
+</script>

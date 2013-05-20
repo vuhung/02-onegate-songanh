@@ -1,0 +1,29 @@
+<form name="frm" action="/danhmuc/linhvuc/save" method="POST">
+<div>
+<label><b>Tên Lĩnh vực</b></label>
+<textarea rows="2" cols="80" name=TEN><?=$this->data["TEN"]?></textarea>
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Được sử dụng</b></label>
+<input type=checkbox name="ACTIVE" value=1  <?=$this->data["ACTIVE"]==1?"checked":""?> >
+</div>
+
+<div class="clr"></div>
+<div class="clr"></div>
+<input type="hidden" name="ID_LINHVUC" value="<?=$this->data["ID_LINHVUC"]?>" >
+
+</form>
+
+<script>
+
+function SaveButtonClick(){
+	document.frm.submit();
+}
+
+function BackButtonClick(){
+	window.location= "/danhmuc/linhvuc/index";
+}
+
+
+</script>

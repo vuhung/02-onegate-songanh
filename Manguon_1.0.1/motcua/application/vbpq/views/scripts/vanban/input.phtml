@@ -1,0 +1,299 @@
+<?php
+require_once 'vbden/models/vbdenModel.php';
+?>
+<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/js/autocomplete.js"></script>
+<form name="frmAddCap"  method="<?php echo $this->form->getAttrib('method');?>" action="/vbpq/vanban/input">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="left"><div id="loading_message" style="width:300px;margin-left:138px;margin-bottom:3px"></div><span class="box_erro_area"><?php echo $this->error; ?></span></div>
+	<!--
+	<div class="required">
+		<label id="lblTextIput">Mã văn bản<font color="red">*</font></label>
+		<?php //echo $this->form->getElement('MAVANBAN');?>
+    	<span class="box_erro_area">
+        	<?php 
+                //echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('MAVANBAN'));			
+            ?>
+        </span>
+	</div>
+	-->
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Số ký hiệu<font color="red">*</font></label>
+		<?php echo $this->form->getElement('SOKYHIEU');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('SOKYHIEU'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Cơ quan ban hành <font color="red">*</font></label>		
+		<?php
+			echo QLVBDHCommon::AutoComplete(
+			vbdenModel::GetDataCQ(null),
+			"ID_CQ",
+			"NAME",
+			"ID_CQ",
+			"COQUANBANHANH_TEXT",
+			false,
+			"width:200px",
+			"",
+			null,
+			$this->form->getElement('COQUANBANHANH_TEXT')->getValue());
+		?>
+		<span class="box_erro_area" id="ERRCOQUANBANHANH_TEXT">
+			<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('COQUANBANHANH_TEXT'));			
+            ?>
+		</span>
+	</div>
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Cấp<font color="red">*</font></label>
+		<?php echo $this->form->getElement('ID_CAP');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('ID_CAP'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Lĩnh vực văn bản<font color="red">*</font></label>
+		<?php echo $this->form->getElement('ID_LINHVUC');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('ID_LINHVUC'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Trích yếu<font color="red">*</font></label>
+		<?php echo $this->form->getElement('TRICHYEU');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('TRICHYEU'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="required">
+		<label id="lblTextIput">Ngày ban hành <font color="red">*</font></label>		
+		<?=QLVBDHCommon::calendarFull($this->NGAYBANHANH,"NGAYBANHANH","NGAYBANHANH") ?>		
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NGAYBANHANH'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Ngày có hiệu lực</label>
+		<?=QLVBDHCommon::calendarFull($this->NGAYCOHIEULUC,"NGAYCOHIEULUC","NGAYCOHIEULUC") ?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NGAYCOHIEULUC'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Ngày hết hiệu lực</label>
+		<?=QLVBDHCommon::calendarFull($this->NGAYHETHIEULUC,"NGAYHETHIEULUC","NGAYHETHIEULUC") ?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NGAYHETHIEULUC'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Văn bản hướng dẫn</label>
+		<?php echo $this->form->getElement('VANBANHUONGDAN');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('VANBANHUONGDAN'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Người ký</label>
+		<?php echo $this->form->getElement('NGUOIKY');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NGUOIKY'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Nguồn văn bản</label>
+		<?php echo $this->form->getElement('NGUONVANBAN');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NGUONVANBAN'));			
+            ?>
+        </span>
+	</div>	
+	<div class="clr"></div>	
+	<div class="optional">
+		<label id="lblTextIput">Nội dung</label>
+		<?php
+			$sBasePath = $this->dirFCK .'/fckeditor/';
+			$oFCKeditor = new FCKeditor('NOIDUNG') ;										
+			$oFCKeditor->BasePath = $sBasePath;
+			$oFCKeditor->Config['SkinPath'] = $sBasePath . 'editor/skins/' . htmlspecialchars('office2003') . '/' ;
+			$oFCKeditor->Value = $this->NOIDUNG;
+			$oFCKeditor->Width = 550;
+			$oFCKeditor->Height = 200;
+			$oFCKeditor->ToolbarSet = 'Basic';
+			$oFCKeditor->Create();
+		?>		
+    	<span class="box_erro_area">        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label id="lblTextIput">Văn bản liên quan</label>	
+		<select id="coquan" name="coquan" style="width:130px" onChange="getVanban()">
+	    	<option value="" >-----Chọn cơ quan ------</option>
+	    	<?php
+	    		if(count($this->datacoquan)>0)
+	    		{
+					foreach($this->datacoquan as $rows)
+					{
+			?>
+			<option value="<?php echo $rows["ID_COQUAN"] ?>" '<?php echo $this->coquan==$rows["ID_COQUAN"]?"selected":""; ?>'><?php echo htmlspecialchars($rows["NAME"])?></option>
+			<?php
+					}
+				}
+	    	?>			  		
+	    </select>
+		<select id="linhvuc" name="linhvuc" style="width:130px" onChange="getVanban()">
+	    	<option value="" >-----Chọn lĩnh vực ------</option>
+	    	<?php
+	    		if(count($this->datalinhvuc)>0)
+	    		{
+					foreach($this->datalinhvuc as $rows)
+					{
+			?>
+			<option value="<?php echo $rows["ID_LVVB"] ?>" '<?php echo $this->coquan==$rows["ID_LVVB"]?"selected":""; ?>'><?php echo htmlspecialchars($rows["NAME"])?></option>
+			<?php
+					}
+				}
+	    	?>			  		
+	    </select>
+		<select id="vanban" name="vanban" style="width:150px">
+		</select>
+		<a href="#" onClick="addVanBan();return false;"><img src="/images/icon_add.gif" border="0"/></a>
+    	<span class="box_erro_area">        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label id="lblTextIput"></label>
+		<table width="550" style="width:550px" class="adminlist">
+			<thead>
+				<tr><td>Văn bản</td></tr>
+			</thead>
+			<tbody  id="list_vanban">
+				<?php
+					$data=$this->vanbanlienquan;
+					if(count($data)>0)
+					{
+						foreach($data as $row)
+						{
+				?>
+						<tr id='vanban_<?php echo $row["ID_VBPQ"]?>'>
+						<td>
+						<a href="vbpq/vanban/input/id/<?php echo $row["ID_VBPQ"] ?>"><?php echo htmlspecialchars($row["TRICHYEU"])?></a>
+						<input type='hidden' name='vanban_id[]' value='<?php echo $row["ID_VBPQ"]?>'/>			
+						<img onclick="removeVanBan(<?php echo $row["ID_VBPQ"]?>)" src="/images/icon_del.jpg"/>
+						</td></tr>
+				
+				<?php
+						}
+					}
+				?>
+			</tbody>
+		</table>
+		<span class="box_erro_area">        	
+        </span>
+	</div>
+</fieldset>
+<input type=hidden name="id" value=<?php echo $this->id?> >
+</form>
+
+<script>
+	jQuery.noConflict();
+	function SaveButtonClick()
+	{
+		document.frmAddCap.submit();
+	}
+	function BackButtonClick()
+	{
+		document.frmAddCap.action = "/vbpq/vanban/";
+		document.frmAddCap.submit();
+	}
+	function getVanban(value)
+	{
+		(function($) {
+			postObject = new Object;
+			postObject.coquan = $("#coquan").val();
+			postObject.linhvuc = $("#linhvuc").val();
+			$("#vanban").html('<option value="">-------Chọn văn bản------</option>');
+			$("#loading_message").html("<div class=fbloading>Cập nhật...</div>");
+			$.post("/vbpq/vanban/getvanban", postObject, function(data)
+			{
+				if (data.isValid)
+				{
+					$("#loading_message").html("<div class='fbloading_success'>"+data.message+"...</div>");
+					var data=data.data;
+					for(i=0;i<data.length;i++)
+					{
+						str="<option value='"+data[i]['ID_VBPQ']+"'>"+data[i]['TRICHYEU']+"</option>";
+						$("#vanban").append(str);
+					}								
+				}
+				else
+				{
+					$("#loading_message").html("<div class='fbloading_error'>"+data.message+"...</div>");		
+				}
+			}, "json");	
+		})(jQuery);
+	}
+	function addVanBan()
+	{
+		(function($) {
+			id=$("#vanban").val();	
+			if(id>0 && $("#vanban_"+id).length == 0)
+			{
+				$html="<tr id='vanban_"+id+"'><td>";
+				$html+=$('#vanban :selected').text();
+				$html+="<input type='hidden' name='vanban_id[]' value='"+id+"'/>";			
+				$html+='<img onclick="removeVanBan('+id+')" src="/images/icon_del.jpg"/>';
+				$html+="</td></tr>";
+				$("#list_vanban").append($html);
+			}
+		})(jQuery);
+		
+	}
+	function removeVanBan(id)
+	{
+		(function($) {
+			if($("#vanban_"+id).length > 0)
+			{
+				$("#vanban_"+id).remove();
+			}
+		})(jQuery);
+		
+		
+	}
+</script>

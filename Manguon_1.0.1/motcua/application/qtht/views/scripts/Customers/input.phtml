@@ -1,0 +1,76 @@
+<form name="frm" method="post" action="/qtht/customers">
+	<table>
+		<tr>
+			<td><label for="txtName"><b>Tên (*)</b></label></td>
+			<td><input type="text" name="txtName" id="txtName" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['NAME'];}?>" />
+				<span class="box_erro_area" id="ERRtxtName"></span></td>
+		</tr>
+		<tr>
+			<td><label for="txtAddress"><b>Địa chỉ (*)</b></label></td>
+			<td><input type="text" name="txtAddress" id="txtAddress" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['ADDRESS'];}?>" />
+				<span class="box_erro_area" id="ERRtxtAddress"></span>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="txtEmail"><b>Email:</b></label></td>
+			<td><input type="text" name="txtEmail" id="txtEmail" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['EMAIL'];}?>" />
+				<span class="box_erro_area" id="ERRtxtEmail"></span>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="txtPhone"><b>Số điện thoại:</b></label></td>
+			<td><input type="textbox" name="txtPhone" id="txtPhone" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['PHONE'];}?>" />
+				<span class="box_erro_area" id="ERRtxtPhone"></span>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" name="id" value="<?=$this->id;?>" />
+</form>
+<script>
+	function checkFormData(){
+	var strerr = validateInput("req",document.frm.txtName,"Tên không được rỗng.");
+	if(!strerr){
+		document.frm.txtName.focus();
+		return false;
+	}
+
+	var strerr = validateInput("maxlen=64",document.frm.txtName,"Tên không được vượt quá 64 kí tự.");
+	if(!strerr){
+		document.frm.txtName.focus();
+		return false;
+	}
+
+	var strerr = validateInput("req",document.frm.txtAddress,"Địa chỉ không được rỗng.");
+	if(!strerr){
+		document.frm.txtAddress.focus();
+		return false;
+	}
+
+	strerr = validateInput("maxlen=128",document.frm.txtAddress,"Địa chỉ không được vượt quá 128 kí tự.");
+	if(!strerr){		
+		document.frm.txtAddress.focus();
+		return false;
+	}
+
+	strerr = validateInput("email",document.frm.txtEmail,"Nhập email đúng định dạng, ví dụ : email@tenmien.com ");
+	if(!strerr){		
+		document.frm.txtEmail.focus();
+		return false;
+	}
+
+	return true;
+	}
+
+	function SaveButtonClick()
+	{					
+	if (checkFormData()) {
+		document.frm.action = "/qtht/customers/save";
+		document.frm.submit();
+		}
+	}
+	function BackButtonClick()
+	{
+		document.frm.action = "/qtht/customers/";
+		document.frm.submit();
+	}
+</script>

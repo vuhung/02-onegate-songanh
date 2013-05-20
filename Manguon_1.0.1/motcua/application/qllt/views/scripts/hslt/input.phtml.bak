@@ -1,0 +1,207 @@
+<script>
+function showHide(id) {
+
+	document.getElementById(id).style.display = 'block';
+
+}
+function Hide(id) {
+
+	document.getElementById(id).style.display = 'none';
+
+}
+</script>
+<form name="frmAddhslt"  method="post" action="/qllt/hslt/save" enctype="multipart/form-data">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="center"><span class="box_erro_area"></span></div>	
+	<div class="required" style="margin-bottom:5px;">
+		<label id="lblTextIput">Tên hồ sơ<font color="red">*</font></label>
+		<textarea name="tenhoso" style="height:50px;width:400px;"><?php echo htmlspecialchars($this->tenhoso); ?></textarea>
+    	<span class="box_erro_area" id=ERRtenhoso>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Mã số<font color="red">*</font></label>
+		<input type="text" name="maso" width=10 value="<?php echo $this->maso; ?>">
+		<span class="box_erro_area" id=ERRmaso>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Nơi lưu trữ<font color="red">*</font></label>
+		<span class="box_erro_area">
+        <input type="text" id="id_tmc" readonly="true" name="thumuccha_name" style="width:200px;" Onclick="showHide('treeview')" value="<?=$this->noiluutru?>"></input>
+        
+		<input type=hidden name=noiluutru value="<?=$this->id_noiluutru?>">
+		</span>
+		<div id="treeview" style="display: none;margin-left:3.7cm;border: 1px solid #CCCCCC;width:400px;height:250px;overflow-y:scroll;overflow-x:scroll"><br/>
+		<!-- Hiển thị Cây thư mục-->
+		<ul class=treeview id=treemenu2>
+		<li id="1~Sở GTVT" class=submenu>
+				Sở GTVT
+		<?php 
+		require_once('qllt/models/qllt_noiluutruModel.php');
+		$html = "";
+		$action = "setValue(this.id);Hide('treeview')";
+
+		echo qllt_noiluutruModel::GetTree_storage(1,"treemenu2",$html,$this->id_noiluutru,$action);
+		?>
+		</li>
+		</ul>
+		<script type="text/javascript" src="/js/simpletreemenu.js">
+		</script>
+
+		<script type="text/javascript" language="javascript">
+
+		function showHide(id) {
+
+		document.getElementById(id).style.display = 'block';
+
+		}
+		function setValue(name)
+		{
+			var classField = document.getElementById("id_tmc");			
+			str = name.split("~");			
+			classField.value = str['1'];
+			document.frmAddhslt.noiluutru.value = str[0];	
+			
+		}
+		</script>
+
+		<link rel="stylesheet" type="text/css" href="/styles/simpletree.css" />
+		<script type="text/javascript">
+
+		ddtreemenu.createTree("treemenu2", true, 5)
+		ddtreemenu.flatten('treemenu2', 'expand');
+
+		</script>
+		<!-- Hết cây thư mục -->
+		<br/></div>
+		<span class="box_erro_area" id=ERRthumuccha_name>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Hộp số<font color="red">*</font></label>
+		<input type="text" name="hopso" size=5 value="<?=$this->tenthumuc?>">
+		<span class="box_erro_area" id=ERRhopso>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Loại hồ sơ<font color="red">*</font></label>		
+		<select name="loaihoso" style="width:250px;">
+			<option value="">-- Chọn loại Hồ sơ --</option>
+			<?php
+				foreach($this->loaihslt as $loaihoso)
+				{   
+					if($loaihoso['ID_LOAIHOSO']!= $this->id_loai_hoso){
+						echo "<option value=".$loaihoso['ID_LOAIHOSO']."  > ".$loaihoso['TENLOAI']." </option>";
+					}
+				}
+				if ((int)$this->id_loai_hoso != 0)
+				{
+					echo "<option value=".$this->id_loai_hoso." selected > ".$this->loai_hoso." </option>";
+				}
+			?>
+		</select>
+		<span class="box_erro_area" id=ERRloaihoso>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Ngày bắt đầu</label>
+		<input type="text" name="ngaybatdau" style="width:250px; display: none" value="<?php echo $this->ngaybatdau; ?>"/>
+		<span class="box_erro_area" id=ERRngaybatdau>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Ngày kết thúc</label>
+		<input type="text" name="ngayketthuc" style="width:250px;" value="<?php echo $this->ngayketthuc; ?>"/>		
+		<span class="box_erro_area" id=ERRngayketthuc>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Năm lưu trữ<font color="red">*</font></label>
+		<input onkeypress="return isNumberKeyNoPoint(event)" type="text" name="namluutru" size=5 value="<?php if ($this->namluutru == 0) echo date("Y"); else echo $this->namluutru ; ?>">
+		<span class="box_erro_area" id=ERRnamluutru>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Thời hạn lưu trữ<font color="red">*</font></label>	
+		<select name=thoihanluutru style="width:250px;" >
+			<option value="" >-- Chọn thời hạn lưu trữ --</option>
+			<option value=1 <?= $this->thoihanluutru==1?"selected":""?>>Vĩnh viễn</option>
+			<option value=2 <?= $this->thoihanluutru==2?"selected":""?>>Lâu dài</option>
+			<option value=3 <?= $this->thoihanluutru==3?"selected":""?>>Tạm thời</option>
+		</select>
+		<span class="box_erro_area" id=ERRthoihanluutru>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+
+</fieldset>
+<input type=hidden name="id_hslt" value="<?php echo $this->id ;?>"> 
+<input type=hidden name=page value="<?php //echo $this->page; ?>">
+<input type=hidden name=limit value="<?php //echo $this->limit; ?>">
+<input type=hidden name=search value="<?php //echo $this->search; ?>">
+<input type=hidden name=filter_object value="<?php //echo $this->filter_object; ?>">
+
+
+</form>
+<script>
+	function SaveButtonClick()
+	{
+		var err = true;
+		var thlt = document.frmAddhslt.thoihanluutru.value;
+		var loaihs = document.frmAddhslt.loaihoso.value;
+		err = err & validateInput("req",document.frmAddhslt.tenhoso,"Tên hồ sơ không được rỗng.");
+		err = err & validateInput("req",document.frmAddhslt.maso,"Mã số hồ sơ không được rỗng.");
+		err = err & validateInput("req",document.frmAddhslt.thumuccha_name,"Hãy chọn thư mục lưu trữ.");
+		err = err & validateInput("req",document.frmAddhslt.hopso,"Hãy chọn hộp số.");
+		err = err & validateInput("req",document.frmAddhslt.namluutru,"Năm lưu trữ không được rỗng.");
+		err = err & err==true?validateInput("numeric",document.frmAddhslt.namluutru,"Năm lưu trữ phải là số."):false;
+		if(err==true && checkFormData()){
+			document.frmAddhslt.submit();
+		}
+	}
+
+	function BackButtonClick()
+	{
+		document.frmAddhslt.action = "/qllt/hslt/";
+		document.frmAddhslt.submit();
+	}
+
+	function checkFormData(){
+	var strerr = validateInput("req",document.frmAddhslt.loaihoso,"Chọn loại hồ sơ lưu trữ");
+	if(!strerr){
+		return false;
+	}
+	var strerr = validateInput("req",document.frmAddhslt.thoihanluutru,"Chọn thời hạn lưu trữ");
+	if(!strerr){
+		return false;
+	} 
+	var err = validateInput("lessthan=9999",document.frmAddhslt.namluutru,"Năm lưu trữ không được lớn hơn 9999.");
+	if (!err)
+	{
+		return false;
+	}
+	return true;
+	}
+</script>
+

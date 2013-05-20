@@ -1,0 +1,127 @@
+<form name=frm method="post" action="/dvc/services/input"  >
+	<div>
+	<label>Tên dịch vụ</label>
+	<input type=text name="TENDICHVU" value="<?=$this->data["TENDICHVU"]?>" >
+	</div>
+	<div class=clr></div>
+	
+	<div>
+	<label>Lĩnh vực:</label>
+	<select onchange="FillComboByComboWithSel(this,document.getElementById('ID_LOAIHOSO'),ARR_LOAIHS,null);" id="ID_LV_MC" name="ID_LV_MC" >
+		<option value=0>--Chọn lĩnh vực--</option>
+		<?php foreach($this->datalvmc as $it){?>
+		<option value="<?=$it["ID_LV_MC"]?>"  ><?=$it["NAME"]?></option>
+		<?php } ?>
+	</select>
+	</div>
+	
+	<div class=clr></div>
+
+
+	<div>
+	<label>Loại hồ sơ:</label>
+	<select name="ID_LOAIHOSO" id="ID_LOAIHOSO">
+	
+	</select>
+	</div>
+	<div class=clr></div>
+	<div>
+	<label>Mã số dịch vụ</label>
+	<input type=text name="CODE" value="<?=$this->data["CODE"]?>">
+	</div>
+	<div class=clr></div>
+	
+	<fieldset>
+	<legend>Quản lý dữ liệu</legend>
+
+	<div class=clr></div>
+	<div>
+		
+	</div>
+	<table class=adminlist>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Tên dữ liệu</th>
+				<th>Loại</th>
+				<th>Bảng</th>
+				<th>Cột</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php 
+			$stt = 1;
+			foreach($this->datadb as $itdb){
+		?>
+		<tr>
+			<td><?=$stt?></td>
+			<td>
+			<?php if($itdb["TYPENODE"]){?>
+				<a href="/dvc/xmltodb/input/id/<?=$itdb["ID_DBDVCI"]?>" style="font-size:13pt;" ><?=xmltodb::printTabLevel($itdb["LEVEL"]).$itdb["NAME"]?></a>
+				<a href="#" onclick="deleteNode(<?=$itdb["ID_DBDVCI"]?>);return false;" ><img src="/images/icon_del.gif" border="0"></a>
+			<?php }else{?>
+			<?=$itdb["IS_IDENTITY"]==1?"<font color=green>":""?>  <?=xmltodb::printTabLevel($itdb["LEVEL"]).$itdb["NAME"]?> <?=$itdb["IS_IDENTITY"]==1?"</font>":""?>
+			<?php }?>
+			</td>
+
+			<td><?=$itdb["TYPENODE"]?"Danh sách":"Giá trị"?></td>
+			<td><?=$itdb["TABLENAME"]?></td>
+			<td><?=$itdb["COLUMNNAME"]?></td>
+		</tr>
+		<?php $stt++;}?>
+		</tbody>
+
+	</table>
+	</fieldset>
+	<input type=hidden name="id" value="<?=$this->id?>"  />
+</form>
+<script>
+	var ARR_LOAIHS = new Array();
+	<?php $stt = 0 ;foreach($this->dataloaihs as $it){ ?>
+		ARR_LOAIHS[ARR_LOAIHS.length] = new Array(<?=$it["ID_LV_MC"]?>,<?=$it["ID_LOAIHOSO"]?>,"<?=$it["TENLOAI"]?>"); 
+	<?php $stt++;} ?>
+	FillComboByComboWithSel(document.getElementById("ID_LV_MC"),document.getElementById("ID_LOAIHOSO"),ARR_LOAIHS,null);
+	document.frm.ID_LOAIHOSO.value = '<?=$this->data["ID_LOAIHOSO"]?>';
+	function SaveButtonClick(){
+		document.frm.action="/dvc/services/save";
+		document.frm.submit();
+	}
+	
+	function BackButtonClick(){
+		window.location = "/dvc/services/index";
+	}
+	
+	function addnewClick(){
+		window.location='/dvc/xmltodb/input/SERVICECODE/<?=$this->data["CODE"]?>';
+	}
+
+	function mappingClick(){
+			document.frm.action = '/dvc/services/save/redirect/mapping';
+			document.frm.submit();
+			//window.location='/dvc/mapping/input/id_service/<?=$this->data["ID_SERVICE"]?>';
+	}
+
+	function deleteNode(id){
+		if(confirm("Bạn có chắc chắn muốn xóa?")) {  
+			var submitAjax = new AjaxEngine(); 
+			var oXmlHttp = submitAjax.createXMLHttp();
+			oXmlHttp.open("post", "/dvc/xmltodb/delete/id/"+id , true); 
+			oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+			//var post = submitAjax.getDataFromFrm(document.frm);
+			oXmlHttp.onreadystatechange = function () { 	
+				if (oXmlHttp.readyState == 4) { 	
+					//alert(oXmlHttp.responseText);
+					if(oXmlHttp.responseText == 1){
+						window.location.reload();
+					}else{
+						alert("Bạn không thể xóa được node này. Hãy xóa các node danh sách con trước");
+					}
+			   } else { 
+                //as_checkdata_all = 1;
+				} 
+       }; 
+   		
+		oXmlHttp.send(null);
+	}
+}
+</script>

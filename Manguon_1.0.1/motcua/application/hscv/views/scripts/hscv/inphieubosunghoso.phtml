@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<FONT  style="font-size: 12pt;">
+<?php
+   global $config ;
+?>
+<table>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b><?=$config->sys_info->company?></b></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b>CỘNG HÒA XÃ HỘI CHỦ  NGHĨA VIỆT NAM</b></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b><u>Độc lập – Tự do – Hạnh phúc</u></b></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px">----------</td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px">----------------------</td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b>TỔ TIẾP NHẬN VÀ TRẢ HỒ SƠ<b></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="right" style="line-height: 16px"><i><?=$config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></i></td>
+	</tr>
+	<tr>
+        <td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+	</tr>
+</table>
+<p align="center"><font style="font-size: 12pt;"><b>PHIẾU TRẢ HỒ SƠ</b></font></p>
+<FONT  style="font-size: 14pt;">
+<table width="100%">
+<tr>
+	<td style="padding-left:150PX" nowrap="nowrap">
+	<?php foreach($this->data as $item){?>
+		Văn phòng nhận được hồ sơ: <?=$item["TENLOAI"]?> <br>
+		của đơn vị trình : <?=$item["TENTOCHUCCANHAN"]?>
+		<?php } ?>
+	</td>
+</tr>
+<tr>
+	<td style="padding-left:150PX" nowrap="nowrap">
+	Qua kiểm tra, Tổ Tiếp nhận và trả hồ sơ xin trả lại hồ sơ để:
+	<br>
+		<?php foreach($this->bs as $ghichu)
+			  if(!$ghichu["NGAY_BOSUNG"]){?>
+		<?=nl2br($ghichu["CACGHICHU"])?><br>
+		<?php }?>
+	</td>
+</tr>
+
+</table>
+</font>
+<br>
+<br>
+<b>
+<table width="100%">
+	<tr>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"><b>TỔ TIẾP NHẬN VÀ TRẢ HỒ SƠ<b></td>
+
+	</tr>
+	<tr>
+		<td colspan="3"><br><br><br></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" width="33%"></td>
+		<td nowrap="nowrap" width="33%"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+	</tr>
+</table>
+</b>
+<table>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b><?=$config->sys_info->company?></b></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b>CỘNG HÒA XÃ HỘI CHỦ  NGHĨA VIỆT NAM</b></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b><u>Độc lập – Tự do – Hạnh phúc</u></b></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px">----------</td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="center" style="line-height: 16px">----------------------</td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" align="center" style="line-height: 16px"><b>TỔ TIẾP NHẬN VÀ TRẢ HỒ SƠ<b></td>
+		<td width="100%" style="line-height: 16px"></td>
+		<td nowrap="nowrap" align="right" style="line-height: 16px"><i><?=$config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></i></td>
+	</tr>
+	<tr>
+        <td nowrap="nowrap" align="center" style="line-height: 16px"></td>
+	</tr>
+</table>
+<p align="center"><font style="font-size: 12pt;"><b>PHIẾU TRẢ HỒ SƠ</b></font></p>
+<FONT  style="font-size: 14pt;">
+<table width="100%">
+<tr>
+	<td style="padding-left:150PX" nowrap="nowrap">
+	<?php foreach($this->data as $item){?>
+		Văn phòng nhận được hồ sơ: <?=$item["TENLOAI"]?> <br>
+		của đơn vị trình : <?=$item["TENTOCHUCCANHAN"]?>
+	<?php } ?>
+	</td>
+</tr>
+<tr>
+	<td style="padding-left:150PX" nowrap="nowrap">
+	Qua kiểm tra, Tổ Tiếp nhận và trả hồ sơ xin trả lại hồ sơ để:
+	<br>
+
+		<?php foreach($this->bs as $ghichu)
+			if(!$ghichu["NGAY_BOSUNG"]){?>
+		<?=nl2br($ghichu["CACGHICHU"])?><br>
+		<?php }?>
+	</td>
+</tr>
+</table>
+</FONT>
+<br>
+<br>
+<b>
+<table width="100%">
+	<tr>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"><b>TỔ TIẾP NHẬN VÀ TRẢ HỒ SƠ</b></td>
+
+	</tr>
+	<tr>
+		<td colspan="3"><br><br><br></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" width="33%"></td>
+		<td nowrap="nowrap" width="33%"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+		<td nowrap="nowrap" width="33%" align="center"></td>
+	</tr>
+</table>
+</b>
+</font>
+</body>
+</html>
+<script>
+window.print();
+
+</script>

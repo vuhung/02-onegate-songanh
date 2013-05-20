@@ -1,0 +1,166 @@
+<?php
+	/**
+   * @author trunglv
+   * @version 1.0
+   * Lop View hiện thị trang danh sách các văn bản dự thảo
+   */ ?>
+<?php require_once 'qtht/models/usersModel.php';?>
+
+<table>
+<?php
+	//var_dump($this->datamotcua);
+	//echo $this->data['ID_LOAIHOSO']."dddddddd";
+	$arr_custom_fields = motcua_hosoModel::Customfields($this->id_loaihoso);
+	$dem = count($arr_custom_fields);
+	if($dem > 0){
+		$stt=0;
+		foreach ($arr_custom_fields as $cus){
+		$col_value = "";
+		eval ('$col_value = $this->dataHS['.$cus["NAME_COLUMN"]."'];");
+		if($stt%2 == 0)
+			echo "<tr>";
+	?>
+		<td valign="top" nowrap="nowrap" style="color:blue"><?=$cus["NAME_DISPLAY"]?><?=$cus["IS_REQUIRED"]==1?"<font color=red>*</font>":""?></td>
+		<td valign="top" nowrap="nowrap">
+		<?php
+			if($cus["TYPE"] == "DATE"){
+
+				echo QLVBDHCommon::calendarFull(implode("/",array_reverse(explode("-",$col_value))),$cus["NAME_COLUMN"].$this->idHSCV,$cus["NAME_COLUMN"].$this->idHSCV);
+			}else{
+		?>
+
+		<input type=text value="<?=$col_value?>" name='<?=$cus["NAME_COLUMN"]?><?php echo $this->idHSCV ?>' id='<?=$cus["NAME_COLUMN"]?><?php echo $this->idHSCV ?>'>
+
+	<?} ?>
+			<div class="clr"></div>
+			<span class="box_erro_area" id='ERR<?=$cus["NAME_COLUMN"]?><?php echo $this->idHSCV ?>'>
+		 </span>
+	</td><td valign="top" nowrap="nowrap" width=20></td>
+	<?php
+
+
+	if($stt%2 == 1 || $stt == ($dem-1))
+		echo "</tr>";
+	$stt++;
+	}}?>
+</table>
+<input type=button onclick="
+	var err = true;
+	<?php
+			if(count($arr_custom_fields) > 0){
+
+			foreach ($arr_custom_fields as $cus){
+				if($cus["IS_REQUIRED"] == 1){
+
+		?>
+			err = err & validateInput('req',document.getElementById('<?=$cus["NAME_COLUMN"].$this->idHSCV?>'),'<?="Bạn phải nhập ".$cus["NAME_DISPLAY"]?>');
+		<?php
+				}
+			switch($cus["TYPE"]){
+			case "DATE" : ?>
+				err = err & validateInput('date',document.getElementById('<?=$cus["NAME_COLUMN"].$this->idHSCV?>'),'Ngày tháng sai định dạng');
+			<?php break; ?>
+
+			<?php case "INTEGER" : ?>
+			err = err & validateInput('numeric',document.getElementById('<?=$cus["NAME_COLUMN"].$this->idHSCV?>'),'Diện tích thử đất sai định dạng');
+			<?php break; ?>
+			<?php case "DOUBLE" : ?>
+			err = err & validateInput('decimal',document.getElementById('<?=$cus["NAME_COLUMN"].$this->idHSCV?>'),'Ngày tháng sai định dạng');
+			<?php break; ?>
+		<?php }
+			}
+		}?>
+	if(err){
+		str = '';
+		<?php
+			$strdata = "";
+			foreach ($arr_custom_fields as $cus){
+				$strdata .= "str += '&".$cus["NAME_COLUMN"]."='+"."document.getElementById('".$cus["NAME_COLUMN"].$this->idHSCV."').value;";
+			}
+			echo $strdata;
+		?>
+		//alert(str);
+		sendDataToServer(null,'/hscv/ketquaxuly/update?idHSCV=<?php echo $this->idHSCV ?>&iddivParent=<?php echo $this->iddivParent ?>&year=<?php echo $this->year ?>&idKetqua=<?php echo $this->idKetqua ?>&ID_LOAIHOSO=<?php echo $this->id_loaihoso ?>'+encodeURI(str));
+	}
+" value="Cập nhật"  class="input_button" style="cursor:pointer; border:1px solid; width:80px;">
+<br>
+<div class=clrs></div>
+<table class="adminlist">
+<thead>
+<tr>
+<th nowrap colspan=6>
+<a href="javascript:;" onclick="
+		document.getElementById('addKetquaxulyFrm<?php echo $this->idHSCV ?>').src='/hscv/ketquaxuly/input?idHSCV=<?php echo $this->idHSCV?>&iddivParent=<?php echo $this->iddivParent ?>&idKetqua=0&year=<?php echo $this->year ?>';
+		//alert(document.getElementById('addKetquaxulyFrm<?php echo $this->idHSCV ?>').src);
+		document.getElementById('addKetquaxulyFrm<?php echo $this->idHSCV ?>').style.display='';
+"><img src="/images/icon_add.gif" border="0">Thêm mới</a>
+<a href="javascript:;" onclick="
+	//sendDataToServer(oData,'/hscv/ketquaxuly/delete?idHSCV=<?php echo $this->idHSCV ?>&idKetqua=<?php echo   $row["ID_KQ_MC"] ?>&year=<?php echo $this->year ?>&iddivParent=<?php echo $this->iddivParent ?>');
+	var ln = 0;
+	var arr = document.getElementsByName('DELidnhapketqua<?php echo $this->idHSCV ?>[]');
+	for(var i = 0 ; i < arr.length ;i++ ){
+		if(arr[i].checked == true){
+			ln = 1;
+		}
+	}
+	if(ln == 1){
+		if(confirm('<?php echo "Bạn có muốn xóa không"; ?>')){
+
+			sendDataObjectNameToServer('DELidnhapketqua<?php echo $this->idHSCV ?>[]','/hscv/ketquaxuly/delete?idHSCV=<?php echo $this->idHSCV ?>&idKetqua=<?php echo  $row["ID_KQ_MC"] ?>&year=<?php echo $this->year ?>&iddivParent=<?php echo $this->iddivParent ?>');
+
+		}
+	}else{
+		document.getElementById('kq_ERRNochoiceDelete<?php echo $this->idHSCV ?>').innerHTML = 'Bạn phải chọn ít nhất một dòng để xóa';
+	}
+	"><img src="/images/icon_del.gif" border="0">Xóa</a>
+<span class="box_erro_area" id="kq_ERRNochoiceDelete<?php echo $this->idHSCV ?>"></span>
+</th>
+</tr>
+<tr>
+<th nowrap>#</th>
+
+<th nowrap><input type=checkbox name='DELALLidnhapketqua<?php echo $this->idHSCV ?>' onclick="SelectAll(this,'DELidnhapketqua<?php echo $this->idHSCV ?>')"></th>
+<th nowrap="nowrap">Ngày Ký</th>
+<th nowrap="nowrap">Người Ký</th>
+<th nowrap="nowrap" colspan=2>Số Ký Hiệu</th>
+</tr>
+</thead>
+
+	<tbody>
+<?php
+$stt = 0;
+if( count($this->data) == 0){
+	 ?>
+<tr><td colspan=6> Không có kết quả liên quan. </td> </tr>
+<?php }else{
+	   $i=0;
+	   foreach($this->data as $row){
+		$stt++;
+?>
+		<tr class="row<?php echo $i; ?>">
+			<td nowrap="nowrap">
+				<?php echo $stt; ?>
+			</td>
+			<td nowrap="nowrap">
+				<input type=checkbox name='DELidnhapketqua<?php echo $this->idHSCV ?>[]' value='<?= $row["ID_KQ_MC"]?>'>
+			</td>
+			<td width="100%">
+				<b><?=$row["NGAYKY"]?></b>
+
+			</td>
+			<td nowrap="nowrap">
+				<b><?=$row["NGUOIKY"]?></b>
+			</td>
+			<td width="100%">
+				<b><?=$row["SOKYHIEU"]?></b>
+			</td>
+		</tr>
+<?php
+	   }
+			}
+?>
+</tbody>
+<tfoot>
+	<tr><th align="left" colspan=6><iframe style="overflow-x:visible;display:none" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no name="addKetquaxulyFrm<?php echo $this->idHSCV ?>" id="addKetquaxulyFrm<?php echo $this->idHSCV ?>" src="" width="100%"> </iframe></tr>
+</tfoot>
+</table>

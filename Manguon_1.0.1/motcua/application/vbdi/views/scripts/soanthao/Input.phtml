@@ -1,0 +1,202 @@
+<?php  require_once 'Common/FileDinhKem.php';
+	   require_once 'qtht/models/UsersModel.php';  	
+?>
+<?php 
+$url = "";
+$is_new = 0;
+$type = 0;
+if((int)$this->data["ID_HSCV"]==0){
+	$is_new = 1;
+	$type = -1;
+}else{
+	$is_new = 0;
+	$type = 1;
+}
+$url ="'/hscv/file?iddiv=idFileDinhKem&idObject=".$this->data["ID_HSCV"]."&is_new=".$is_new."&year=" . $this->year . "&type=".$type."'" ;
+	
+?>
+
+<script type="text/javascript" src="/js/Ajax/AjaxEngine.js"></script>
+<form name=frm method="post" action="/vbdi/soanthao/Save">
+<table>
+    <tbody>
+      <tr>
+        <td style="color:blue"><?php echo MSG11001004 ?><font color="Red" size="3">*</font></td>
+        <td>
+            <input type=text class=inputbox name=NAME value="<?=$this->data["NAME"]?>" size=50>
+        	<div class="clr"></div>
+            <span class=error id="ERRNAME"></span>
+        </td>
+      </tr>
+      <?php if($this->id_hscv == 0){?>
+      <tr>
+        <td style="color:blue"><?php echo MSG11001005 ?><font color="Red" size="3">*</font></td>
+        <td>
+            
+            <select  name="DEP_NGUOIYEUCAU" id="DEP_NGUOIYEUCAU" onchange='FillComboByCombo(this,document.getElementById("NGUOIYEUCAU"),ARR_NGUOIYEUCAU);'>
+            	<option value="-1">--Mặc định--</option>
+            	<?php foreach ($this->arr_deps_se as $dep_yc){?>
+            		
+            		<option value="<?=$dep_yc['ID_DEP']?>"> <?=$dep_yc['NAME']?></option>
+            	<?php } ?>
+            </select>
+            <select  name="NGUOIYEUCAU" id="NGUOIYEUCAU" >
+           	</select>
+            <?php //var_dump($this->arr_users_se);?>
+           	<script>
+            var ARR_NGUOIYEUCAU = new Array();
+           	<?php 
+           	
+           	$i=0 ;foreach ($this->arr_users_se as $user_yc){?>
+            	ARR_NGUOIYEUCAU[<?=$i?>]= new Array('<?=$user_yc['ID_DEP']?>','<?=$user_yc['ID_U']?>','<?=$user_yc['NAME']?>');	
+            <?php $i++;} ?>
+            FillComboByCombo(this,document.getElementById("NGUOIYEUCAU"),ARR_NGUOIYEUCAU);
+            <?php if($this->id_dep_cur_user_se > -2) {?> 
+            document.frm.DEP_NGUOIYEUCAU.value = <?=$this->id_dep_cur_user_se?>;
+            document.frm.DEP_NGUOIYEUCAU.onchange();
+            document.frm.NGUOIYEUCAU.value = <?=$this->nguoitao?>;
+            <?php }else {?>
+            document.frm.DEP_NGUOIYEUCAU.onchange();
+            <?php }?>
+            </script>
+        </td> 
+        <td class=error id="ERRNGUOIYEUCAU">
+        </td>  
+      </tr>
+      <tr>
+        <td style="color:blue"><?php echo MSG11001006 ?><font color="Red" size="3">*</font></td>
+        <td>
+            <select  name="DEP_NGUOIXULY" id="DEP_NGUOIXULY" onchange='FillComboByCombo(this,document.getElementById("NGUOIXULY"),ARR_NGUOIXULY);'>
+            	<option value="-1">--Mặc định--</option>
+            	<?php foreach ($this->arr_deps_re as $dep_xl){?>
+            		
+            		<option value="<?=$dep_xl['ID_DEP']?>"> <?=$dep_xl['NAME']?></option>
+            	<?php } ?>
+            </select>
+             <select  name="NGUOIXULY" id="NGUOIXULY" >
+            	
+            </select>
+            <script>
+            var ARR_NGUOIXULY = new Array();
+           	<?php $i=0 ;foreach ($this->arr_users_re as $user_xl){?>
+            	ARR_NGUOIXULY[<?=$i?>]= new Array('<?=$user_xl['ID_DEP']?>','<?=$user_xl['ID_U']?>','<?=$user_xl['NAME']?>');	
+            <?php $i++;} ?>
+			
+     		<?php if($this->id_dep_cur_user_re > -2) {?> 
+            document.frm.DEP_NGUOIXULY.value = <?=$this->id_dep_cur_user_re?>;
+            document.frm.DEP_NGUOIXULY.onchange();	
+            document.frm.NGUOIXULY.value = <?=$this->nguoitao?>;
+            <?php }else {?>
+            
+            document.frm.DEP_NGUOIXULY.onchange();	
+			<?php } ?>
+            </script>
+        </td>
+        <td class=error id="ERRNGUOIXULY">
+        </td>
+      </tr>
+      
+      <!--
+      <tr>
+        <td style="color:blue"><?php echo MSG11001010 ?><font color="Red" size="3">*</font></td>
+        <td>            
+            <?=QLVBDHCommon::calendarFull(QLVBDHCommon::MysqlDateToVnDate($this->data['NGAY_BD']),"NGAY_BD","NGAY_BD") ?>
+        	<div class="clr"></div>
+            <span class=error id="ERRNGAY_BD"></span>
+        </td> 
+      </tr>
+      <tr>  
+        <td style="color:blue"><?php echo MSG11001011 ?><font color="Red" size="3">*</font></td>
+        <td>            
+            <?=QLVBDHCommon::calendarFull(QLVBDHCommon::MysqlDateToVnDate($this->data['NGAY_KT']),"NGAY_KT","NGAY_KT") ?>
+        	<div class="clr"></div>
+            <span class=error id="ERRNGAY_KT"></span>
+        </td> 
+        
+      </tr>
+      -->
+      <tr>
+        <td style="color:blue"><?php echo MSG11001007 ?></td>
+        <td>
+            <TEXTAREA NAME="NOIDUNG" ROWS="3" COLS="70"><?=$this->data["NOIDUNG"]?></TEXTAREA>    
+        </td>        
+      </tr>
+      <tr>
+      	<td style="color:blue">Hạn xử lý</td>
+      	<td>
+		<?=QLVBDHCommon::createInputHanxuly("id_HANXULY","HANXULY",WFEngine::GetHanXuLy($this->wf_id_t))?>
+		<div class="clr"></div>
+      	<span class=error id="ERRHANXULY"></span>
+      	</td>
+      	
+      </tr>
+      <?php }?>
+      <!-- 
+      <tr>
+        <td style="color:blue"><?php echo MSG11001008 ?></td>
+        <td>
+            <TEXTAREA NAME="GHICHU" ROWS="2" COLS="50"><?=$this->data["GHICHU"]?></TEXTAREA>    
+        </td>
+      </tr>
+      
+      <tr>
+	 	<td style="color:blue" colspan="3"><?php echo MSG11001012 ?></td>
+	 </tr>
+	
+	 <?php if($this->id_hscv == 0) {?>
+	 <tr>
+	 	<td style="color:blue" colspan="3">
+	 	<?php
+		echo WFEngine::FormSend($this->wf_id_t);		
+		?>
+		</td>
+	 </tr>
+	<?php }?>
+	-->
+		
+	<tr>
+        <td style="color:blue" colspan="3">File đính kèm liên quan công việc</td>
+    </tr>
+	<tr>
+        <td id="idFileDinhKem" colspan="3"></td>
+      	<script>
+			loadDivFromUrl('idFileDinhKem',<?echo $url ?>,0);
+		</script> 
+	 </tr>
+  </tbody>
+</table>
+<input type=hidden name=year value="<?php echo $this->year; ?>">
+<input type=hidden name=ID_VBDI_CVST value="<?php echo $this->data["ID_VBDI_CVST"]; ?>">
+<input type=hidden name=id_hscv value="<?php echo $this->data["ID_HSCV"]; ?>">
+<input type="hidden" name="wf_nexttransition" value="<?=$this->wf_id_t?>">
+</form>
+<script>
+            	
+</script> 
+        
+<script>
+
+    function SaveButtonClick(){
+        var err = true;
+        err = err & validateInput("req",document.frm.NAME,"<?php echo ERR11001003 ?>");
+       	<?php if($this->id_hscv == 0){ ?>
+        err = err & err==true?validateInput("maxlen=128",document.frm.NAME,"<?php echo ERR11001004 ?>"):false;                
+      	err = err & validateInput("req",document.frm.HANXULY,"Phải nhập hạn xu lý");                
+        <?php }?>
+        
+        //err = err & validateInput("req",document.frm.NGAY_BD,"<?php echo ERR11001007 ?>");
+        //err = err & err==true?validateInput("date",document.frm.NGAY_BD,"<?php echo ERR11001008 ?>"):false;
+        
+        //err = err & validateInput("req",document.frm.NGAY_KT,"<?php echo ERR11001009 ?>");
+        //err = err & err==true?validateInput("date",document.frm.NGAY_KT,"<?php echo ERR11001010 ?>"):false;
+        //err = err & err==true?validateInput("gtdate="+document.frm.NGAY_BD.value,document.frm.NGAY_KT,"<?php echo ERR11001011 ?>"):false;
+        
+        if(err==true){
+            document.frm.submit();
+        }
+    }
+    function BackButtonClick(){
+        document.frm.action = "/vbdi/soanthao";
+        document.frm.submit();
+    }
+</script>

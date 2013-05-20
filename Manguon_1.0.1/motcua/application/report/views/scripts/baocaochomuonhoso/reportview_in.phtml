@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+td{
+	border-color: black;
+}
+th{
+	border-color: black;
+}
+</style>
+
+</head>
+<body style="background-color:transparent">
+<table  width=100% >
+<tr >
+  <td align=center ><b><?= mb_strtoupper($this->config->sys_info->unit,"utf-8") ?></b></td>
+
+  <td align=center><b>CỘNG HÒA XÃ HỘI CHỦ
+  NGHĨA VIỆT NAM</b></td>
+ </tr>
+ <tr >
+  <td align=center ><b><?=mb_strtoupper($this->config->sys_info->company,"utf-8") ?></b></td>
+  <td align=center ><b>Ðộc lập - Tự do - Hạnh phúc</b></td>
+ </tr>
+ <tr >
+
+ 
+  <td ></td>
+  <td align=right><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></td>
+ </tr>
+
+ 
+</table>
+<p align=center><b>BÁO CÁO CHO MƯỢN HỒ SƠ</b></p>
+<p align=center><?php echo $this->thu;?> </p>
+
+<table border="1" style="border: 1px solid black; border-collapse: collapse;" width=100%>
+ <thead>
+ 	<tr>
+	    <th nowrap >Stt</th>
+		<th >Ký hiệu</th>	
+ 		<th nowrap>Tên hồ sơ</th>	 		
+ 		<th nowrap>Người mượn</th>
+ 		<th nowrap>Ngày mượn</th>
+		<th nowrap>Ngày ĐK trả</th>
+		<th nowrap>Ngày trả thực tế</th>
+ 	</tr> 
+ </thead>
+ <tbody>
+<?php require_once 'qtht/models/LoaiVanBanModel.php';
+require_once 'qtht/models/CoquanModel.php'; 
+require_once 'qtht/models/DepartmentsModel.php';
+require_once 'qtht/models/UsersModel.php';
+require_once 'report/models/baocaochomuonhosoreportModel.php';
+?>
+<?php $stt=1; 
+$num = count($this->data);
+foreach($this->data as $row){ 
+ 
+ ?>
+	
+	<tr>
+    <td valign=top ><?=$stt?></td>
+	<td  valign=top ><?=$row["MASO"]?></td>	
+ 	<td  valign=top ><?=$row["TENHOSO"]?></td>	
+	<td valign=top ><?php echo baocaochomuonhosoreportModel::getName($row["ID_U_MUON"])?></td>
+ 	<td  valign=top ><?=QLVBDHCommon::MysqlDateToVnDate($row['NGAY_MUON']);?></td>
+ 	<td  valign=top ><?=QLVBDHCommon::MysqlDateToVnDate($row["NGAY_TRA"]);?></td>
+	<td  valign=top ><?=QLVBDHCommon::MysqlDateToVnDate($row["NGAYTRA_THUCTE"]);?></td>
+	</tr>
+
+<?php  
+  $stt++ ; } ?>
+ </tbody>
+
+</table>
+</body>
+<script>print();</script>
+</html>

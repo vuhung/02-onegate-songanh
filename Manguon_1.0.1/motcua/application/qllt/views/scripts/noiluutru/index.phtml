@@ -1,0 +1,133 @@
+<form name="frmListFolder" method="post" action="/qllt/noiluutru">
+	<table class="adminlist">
+	<thead>
+		<tr>
+			<th nowrap width="10">#</th>
+			<th nowrap width="10"><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th nowrap>Tên nơi lưu trữ</th>
+			<th width=70%>Ghi chú</th>	
+			<th nowrap>Kích hoạt</th>			
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan="5">
+					
+			</td>
+		</tr>
+	</tfoot>
+
+	<tbody>
+<?php
+$ArrLoai = array(0=>'Chưa phân loại',1=>'Kho',2=>'Kệ',3=>'Tầng',4=>'Ngăn',5=>'Hộp');
+$stt=0;
+$i=0;
+$ii=1;
+
+foreach ($this->data as $row ){
+	$stt++;
+?>
+		<tr class="row<?php echo $i; ?>">
+							<!-- Số thứ tự -->
+			<td nowrap align="right"><?php echo $stt ?></td>
+			<td nowrap align="center">
+				<input type=checkbox name=DEL[] id="ck<?php echo $row['ID_NOILUUTRU']; ?>" value='<?php echo $row['ID_NOILUUTRU'] ?>' onclick="checkid('sid<?php echo 
+$row['ID_NOILUUTRU']?>',this.id)" />				
+			</td>
+							<!-- Tên nơi lưu trữ -->
+			<td width=70%>
+				<a href="#" id="fid<?php echo $row['ID_NOILUUTRU'] ?>" name="<?php echo $row['TENTHUMUC'] ?>" 
+				onclick = "ItemClick(<?php echo $row['ID_NOILUUTRU'].',\''.$row['TENTHUMUC'].'\','.$row['ID_THUMUCCHA'].','.$row['LOAI'].',\''.$row['ACTIVE'].'\',\''.$row['GHICHU'] ?>');">
+				<?php echo str_repeat("---",$row['LEVEL']-1).htmlspecialchars($ArrLoai[$row['LOAI']].' '.$row['TENTHUMUC']) ?>
+				</a>
+				<input id="sid<?php echo $row['ID_THUMUCCHA']?>" name="FORBIDDEN" type="hidden">
+			</td>		
+			<td>				
+				<?php echo htmlspecialchars($row['GHICHU']) ?>
+				
+			</td>			
+			<td>
+				<?php if($row['ACTIVE']=='1') echo 'Rồi';
+					  else echo 'Chưa';
+				?>
+			</td>
+			
+		</tr>
+<?php
+	$i = (-1+$i)*-1;
+}
+?>
+	</tbody>
+</table>
+<input type="hidden" name="page" value="<?php echo $this->page; ?>">
+<input type="hidden" name="comeFrom" value="listForm">
+
+<input type="hidden" name="id_noiluutru" value="listForm">
+<input type="hidden" name="ten_thumuc" value="listForm">
+<input type="hidden" name="loai" value="listForm">
+<input type="hidden" name="kich_hoat" value="listForm">
+<input type="hidden" name="ghichu" value="listForm">
+<input type="hidden" name="id_tmchadachon" value="listForm">
+<input type="hidden" name="ten_tmcha" value="listForm">
+
+</form>
+<script>
+function DeleteButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DEL[]","Chọn ít nhất một mục để xoá.");
+	if(mess){
+		if(confirm("<?php echo 'Bạn muốn xóa mục này!'; ?>")){
+			document.frmListFolder.action = "/qllt/noiluutru/delete";
+			document.frmListFolder.submit();
+		}
+	}else{
+		alert("Chọn ít nhất một mục để xoá.");
+	}
+}
+
+function checkid(id,ckid)
+{
+	var uu = document.getElementById(id);
+	if(uu != null)
+	{
+		alert('Thư mục này có chứa thư mục con \n   Vui lòng chọn thư mục khác ');
+		var objCheckBoxes = document.frmListFolder.elements[name];
+		document.getElementById(ckid).checked	= false;
+		document.getElementById(ckid).disabled  = true;
+	}
+}
+
+function AddNewButtonClick()
+{
+	document.frmListFolder.action = "/qllt/noiluutru/input";
+	document.frmListFolder.submit();
+}
+function ItemClick(id,tenthumuc,idthumuccha,loai,kichhoat,ghichu)
+{	
+	//alert(kichhoat);
+	var classField = document.getElementById("fid"+idthumuccha);
+	var ekb = "";
+	if(classField == null)
+	{
+		ekb = "Sở GTVT";
+	}
+	else
+	{
+		ekb = classField.name;
+	}
+
+	document.frmListFolder.id_noiluutru.value = id;
+	document.frmListFolder.ten_thumuc.value = tenthumuc;
+	document.frmListFolder.loai.value = loai;
+	document.frmListFolder.kich_hoat.value = kichhoat;
+	document.frmListFolder.ghichu.value = ghichu;
+	document.frmListFolder.id_tmchadachon.value = idthumuccha;
+	document.frmListFolder.ten_tmcha.value = ekb;
+
+	document.frmListFolder.action = "/qllt/noiluutru/input/";
+	document.frmListFolder.submit();
+}
+</script>
+
+
+

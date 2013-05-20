@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<script type="text/javascript" src="/js/calendar.js"></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<form name=frmInputVanban action="/qllt/vanban/save" method="post" enctype="multipart/form-data">
+<table>
+	<tr>
+		<td><font color="Blue">Tên văn bản</font><font color="Red" size="3">*</font></td>
+		<td><input type=text name=tenvanban size="50" value="<?=$this->tenvanban?>"></td>
+		<td class="box_erro_area" id=ERRtenvanban></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Ký hiệu văn bản<font color="Red" size="3">*</font></font></td>
+		<td><input type=text name=kyhieuvanban size="18" value="<?=$this->kyhieuvanban?>"></td>
+		<td class="box_erro_area" id=ERRkyhieuvanban></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Ngày tháng văn bản<font color="Red" size="3">*</font></font></td>
+		<td><? echo QLVBDHCommon::calendarfull(QLVBDHCommon::MysqlDateToVnDate($this->ngaythangvanban),"ngaythangvanban","ngaythangvanban")?></td>
+		<td class="box_erro_area" id=ERRngaythangvanban></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Tác giả văn bản<font color="Red" size="3">*</font></font></td>
+		<td><input type=text name=tacgiavanban size="30" value="<?=$this->tacgiavanban?>"></td>
+		<td class="box_erro_area" id=ERRtacgiavanban></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Trích yếu<font color="Red" size="3">*</font></font></td>
+		<td><textarea name=trichyeu rows=1 cols=47 ><?=$this->trichyeu?></textarea></td>
+		<td class="box_erro_area" id=ERRtrichyeu></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Số tờ</font></td>
+		<td><input type=text name=soto onkeypress="return isNumberKeyNoPoint(event)" size="3" value="<?php 
+														if($this->soto != 0) 
+														echo $this->soto;
+														else echo '1';
+														?>" >
+		</td>
+		<td class="box_erro_area" id=ERRsoto></td>
+	</tr>
+	<tr>
+		<td><font color="Blue">Ghi chú</font></td>
+		<td><textarea name=ghichu rows=1 cols=47><?=$this->ghichu?></textarea></td>
+		<td class="box_erro_area" id=ERRghichu></td>
+	</tr>
+	<?php if($this->filecode != "") {?>
+		<tr>
+			<td><font color="Blue">File văn bản</font></td>
+			<td><a href="/qllt/vanban/download/id/<?=$this->idvanban?>"><?=$this->tenvanban ?></a></td>
+			<td></td>
+		</tr>
+	<?php } ?>
+	<tr>
+		<td><font color="Blue">File đính kèm</font></td>
+		<td><input type=file name="uploadedfile" size="37"></td>
+	</tr>
+	<tr>
+		<td><input type=button value="Lưu" onClick="SaveButtonClick();"></td>
+		<td></td>
+		<td class="box_erro_area" id=ERRGHICHU></td>
+	</tr>
+</table>
+<input type="hidden" name=idvanban value="<?=$this->idvanban?>">
+<input type="hidden" name="idhoso" value="<?=$this->idhoso ?>" />
+</form><p id=lasttext></p>
+<script>
+	function SaveButtonClick(){
+		var err = true;
+		var a = parseInt(document.frmInputVanban.soto.value);
+		err = err & validateInput("req",document.frmInputVanban.tenvanban,"Tên văn bản không được rỗng.");
+		err = err & validateInput("req",document.frmInputVanban.kyhieuvanban,"Ký hiệu văn bản không được rỗng.");
+		err = err & validateInput("req",document.frmInputVanban.ngaythangvanban,"Hãy nhập ngày tháng văn bản.");
+		err = err & validateInput("req",document.frmInputVanban.tacgiavanban,"Tên tác giả văn bản không được rỗng.");
+		err = err & validateInput("req",document.frmInputVanban.trichyeu,"Trích yếu không được rỗng.");
+		err = err & validateInput("req",document.frmInputVanban.soto,"Số tờ không được rỗng.");
+		err = err & err==true?validateInput("greaterthan=0",document.frmInputVanban.soto,"Số tờ phải lớn hơn 0."):false;
+		err = err & err==true?validateInput("maxlen=128",document.frmInputVanban.tenvanban,"Trích yếu không được quá 128 ký tự"):false;
+		err = err & err==true?validateInput("maxlen=128",document.frmInputVanban.trichyeu,"Trích yếu không được quá 128 ký tự"):false;
+		err = err & err==true?validateInput("maxlen=128",document.frmInputVanban.kyhieuvanban,"Ký hiệu văn bản không được quá 128 ký tự"):false;
+		err = err & err==true?validateInput("date",document.frmInputVanban.ngaythangvanban,"Phải nhập đúng định dạng ngày tháng kiểu DD/MM/YY, ví dụ: 23/12/2010"):false;
+		if(err==true){
+			document.frmInputVanban.submit();
+		}
+//document.frmInputVanban.submit();
+	}
+	function BackButtonClick(){
+		document.frmInputVanban.action = "/qllt/vanban/list";
+		document.frmInputVanban.submit();
+	}
+
+	function resize(){
+		var iframeElement = parent.document.getElementById('<?=$this->IdFrame ?>');
+		iframeElement.style.height = "" + document.getElementById("lasttext").offsetTop + "px";
+		iframeElement.width = "100%";
+	}
+	resize();
+</script>
+</body>
+</html>

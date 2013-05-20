@@ -1,0 +1,127 @@
+<?php
+/**
+ * @author  trunglv
+ * @version 1.0
+ * Lop view chuyen xu ly(chuyen ban hanh) ho so cong viec
+ */
+require_once 'Common/Common.php';
+require_once 'Common/FileDinhKem.php';
+require_once 'Common/VanBanDuThao.php';
+require_once 'qtht/models/usersModel.php'; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<script>
+<?php if($this->isBanhanh==1 && $this->canBanhanh==0){
+	echo "
+	alert('Công việc chưa có dự thảo nào nên không thể ban hành được.');
+	window.parent.document.getElementById('groupcontent".$this->ID_HSCV."').style.display='none';
+	window.parent.SwapDiv(".$this->ID_HSCV.",'/hscv/VanBanDuThao/index/year/".QLVBDHCommon::getYear()."/iddivParent/groupcontent".$this->ID_HSCV."/idHSCV/".$this->ID_HSCV."',5);
+	";
+}
+?>
+</script>
+<!-- Form nhap lieu to trinh de chuyen xy ly ho so cong viec -->
+<form name="frm" method=post action="/hscv/chuyenxuly/save">
+<fieldset>
+<legend style="color:#0066CC;"><?php
+/*if($this->code == "banhanh"){
+	echo "Chuyển ban hành văn bản";
+}else if($this->code == "noprocess"){
+	echo "Chuyển lưu trữ";
+}else if($this->code == "khongxl"){
+    echo "Không xử lý";
+ }else{
+	echo "Chuyển xử lý hồ sơ";
+} */
+echo  $this->actioninfo["NAME"];
+?></legend>
+<!-- table hien thong tin ve ho so  -->
+<table class=admintable>
+	<tr>
+		<td valign=top class=key nowrap>Các ý kiến trước</td>
+		<td nowrap>
+			<?php for ($i=0;$i<count($this->data)-1;$i++){ ?>
+				<div><b> <?php echo UsersModel::getEmloyeeNameByIdUser($this->data[$i]['NGUOITRINH'])  ?> </b>
+				(<?php echo QLVBDHCommon::doDateStandard2Viet($this->data[$i]['NGAYTRINH']) ?>)<?php if($this->data[$i]["HANXULY"]>0){?> - Hạn xử lý : <?=QLVBDHCommon::createTextHanXuLy($this->data[$i]["HANXULY"])?><?php } ?></div>
+				<?=nl2br($this->data[$i]['NOIDUNG']) ?>
+			<?php } ?>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3 width=100% nowrap><!-- de cho dep -->
+		</td>
+	</tr>
+</table>
+<!-- end table the hien thong tin ve ho so  -->
+</fieldset>
+<fieldset>
+<legend style="color:#0066CC;">Người nhận</legend>
+<?php
+	//form chuyen cho nguoi tiep theo
+	echo WFEngine::FormSend($this->wf_id_t);
+?>
+</fieldset>
+
+<fieldset>
+<legend style="color:#0066CC;">Dự thảo</legend>
+
+<div  id=groupcontent<?=$this->ID_HSCV?>></div>
+
+</fieldset>
+
+<input type=button name=SEND value="<?php
+if($this->code == "banhanh"){
+	echo "Chuyển Ban Hành";
+}else if($this->code == "noprocess"){
+	echo "Chuyển lưu trữ";
+}else if($this->code == "khongxl"){
+    echo "Không xử lý";
+}else{
+	echo "Chuyển xử lý";
+}
+?>" onclick="Submit();" class="chuyenxuly">
+<input type=hidden name=id value="<?=$this->ID_HSCV?>">
+<input type=hidden name=wf_id_t value="<?=$this->wf_id_t?>">
+<input type=hidden name=year value="<?=$this->year?>">
+<input type=hidden name="isBanhanh" value="<?=$this->isBanhanh?>">
+<input type=hidden name="iskhongxuly" value="<?=$this->iskhongxl?>">
+<input type=hidden name="type" value="<?=$this->id_loaihscv?>">
+</form>
+<!-- end form nhap lieu cho to trinh -->
+<p id=lasttext></p>
+<script>
+SwapDiv(<?=$this->ID_HSCV?>,"/hscv/VanBanDuThao/index/iddivParent/groupcontent<?=$this->ID_HSCV?>/idHSCV/<?=$this->ID_HSCV?>");
+function resize(){
+	var iframeElement = parent.document.getElementById('iframebutphe<?=$this->ID_HSCV?>');
+	iframeElement.style.height = ""+ (document.getElementById("lasttext").offsetTop+30) +"px";
+	iframeElement.width = "100%";
+    setTimeout("resize()",1000);
+}
+resize();
+function checkInputData(){
+	return true;
+}
+function Submit(){
+	if(checkInputData() == true)
+		document.frm.submit();
+}
+function SwapDiv(id,url){
+			document.getElementById("groupcontent"+id).style.display="";
+			document.getElementById("groupcontent"+id).innerHTML="<img src='/images/loading.gif' width='16' height='16' border='0'></img<img src='/images/loading.gif' width='16' height='16' border='0'></img><img src='/images/loading.gif' width='16' height='16' border='0'></img><img src='/images/loading.gif' width='16' height='16' border='0'></img>";
+			loadDivFromUrl("groupcontent"+id,url,1);
+}
+</script>
+</body>
+</html>
+

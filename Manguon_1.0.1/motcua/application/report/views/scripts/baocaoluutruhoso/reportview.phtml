@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+<link rel=Stylesheet href=stylesheet.css>
+
+
+
+</head>
+<body style="background-color:transparent">
+
+<table class=adminlist width="100%">
+ <thead>
+ 	<tr>
+	    <th nowrap >Stt</th>
+		<th >Hộp số</th>
+		<th nowrap>Mã số</th>
+ 		<th nowrap>Tên hồ sơ</th>	 		
+ 		<th nowrap>Ngày BĐ và KT</th>
+ 		<th nowrap>Thời hạn lưu trữ</th>
+		<th nowrap>Ghi chú</th>
+	
+ 	</tr> 	
+ </thead>
+ <tbody>
+<?php require_once 'qtht/models/LoaiVanBanModel.php';
+require_once 'qtht/models/CoquanModel.php'; 
+require_once 'qtht/models/DepartmentsModel.php';
+require_once 'qtht/models/UsersModel.php';
+?>
+<?php $stt=1; 
+$num = count($this->data);
+foreach($this->data as $row){  
+ ?>
+	
+	<tr>
+    <td valign=top ><?=$stt?></td>
+	<td  valign=top ><?=$row["TENTHUMUC"]?></td>
+	<td valign=top ><?=$row["MASO"]?></td>
+ 	<td  valign=top ><?=$row["TENHOSO"]?></td>	
+ 	<td  valign=top ><?php echo $row['NGAYBATDAU']."<br>".$row['NGAYKETTHUC']; ?></td>
+ 	<td  valign=top ><? if($row["THOIHANLUUTRU"]==1)  echo "Vĩnh viễn";
+						if($row["THOIHANLUUTRU"]==2) echo "Lâu dài";
+						if($row["THOIHANLUUTRU"]==3) echo "Tạm thời";
+	 ?></td>
+	<td  valign=top ></td>
+	</tr>
+<?php  
+  $stt++ ; } ?>
+ </tbody>
+ <tfoot>
+ </tfoot>
+</table>
+
+
+<p id=lasttext></p>
+</body>
+</html>
+<script>
+var iframeElement = window.parent.document.getElementById('reportview');
+iframeElement.style.height = ""+(document.getElementById("lasttext").offsetTop)+"px";
+iframeElement.width = "100%"; 
+
+</script>

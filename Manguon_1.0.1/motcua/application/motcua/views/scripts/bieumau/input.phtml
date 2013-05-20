@@ -1,0 +1,148 @@
+<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+<form enctype="multipart/form-data" name="frmAddBieuMau"  method="<?php echo $this->form->getAttrib('method');?>" action="/motcua/bieumau/input">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="left"><div id="loading_message" style="width:300px;margin-left:138px;margin-bottom:3px"></div><span class="box_erro_area"><?php echo $this->error; ?></span></div>
+	<div class="required">
+		<label id="lblTextIput">Tên biểu mẫu<font color="red">*</font></label>
+		<?php echo $this->form->getElement('TEN_BIEUMAU');?>
+    	<span class="box_erro_area">
+        	<?php
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('TEN_BIEUMAU'));
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="optional">
+		<label id="lblTextIput">Loại hồ sơ</label>
+		<select style="width: 500px;" id="ID_LOAIHOSO" name="ID_LOAIHOSO" onchange="getHoSoCanCo(this.value)">
+			<option value="">--------Chọn loại hồ sơ--------</option>
+			<?php
+				if(count($this->dataloai))
+				{
+					foreach($this->dataloai as $row)
+					{
+			?>
+			<option label="<?php echo $row["TENLOAI"]; ?>" value="<?php echo $row["ID_LOAIHOSO"]; ?>" <?php if($this->idloai['ID_LOAIHOSO'] == $row["ID_LOAIHOSO"]){echo "selected";}?>><?php echo $row["TENLOAI"]; ?></option>
+			<?php
+					}
+				}
+			?>
+		</select>
+		<span class="box_erro_area"></span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Hồ sơ cần có/đầu vào<font color="red">*</font></label>
+		<?php echo $this->form->getElement('ID_THUTUC');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('ID_THUTUC'));			
+            ?>
+        </span>
+	</div>
+		<div class="clr"></div>
+    <div class="optional">
+		<label id="lblTextIput">Số lượng bộ hồ sơ </label>
+		<?php echo $this->form->getElement('SOLUONG');?>
+    	<span class="box_erro_area">
+			<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('SOLUONG'));			
+            ?>       	
+        </span>
+	</div>	
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">File<font color="red">*</font></label>
+		<?php echo $this->form->getElement('FILE_BIEUMAU');?>
+		<span>
+			<a href="/motcua/bieumau/download/id/<?php echo $this->id?>"><?php echo $this->file_bieumau;?></a>
+		</span>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('FILE_BIEUMAU'));			
+            ?>
+        </span>
+	</div>
+	
+	<div class="clr"></div>
+    <div class="optional">
+		<label id="lblTextIput">Căn cứ </label>
+		<?php echo $this->form->getElement('CANCU');?>
+    	<span class="box_erro_area">        	
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="optional">
+		<label id="lblTextIput">Nội dung </label>
+		<?php
+			$sBasePath = $this->dirFCK .'/fckeditor/';
+			$oFCKeditor = new FCKeditor('NOIDUNG') ;
+
+			$oFCKeditor->BasePath = $sBasePath;
+			$oFCKeditor->Config['SkinPath'] = $sBasePath . 'editor/skins/' . htmlspecialchars('office2003') . '/' ;
+			$oFCKeditor->Value = $this->noidung;
+			$oFCKeditor->Width = 600;
+			$oFCKeditor->Height = 200;
+			$oFCKeditor->ToolbarSet = 'Basic';
+			$oFCKeditor->Create();
+		?>
+    	<span class="box_erro_area">
+        </span>
+	</div>
+</fieldset>
+<input type=hidden name="id" value=<?php echo $this->id?> >
+<input type=hidden name=page value="<?php echo $this->page; ?>">
+<input type=hidden name=limit value="<?php echo $this->limit; ?>">
+<input type=hidden name=search value="<?php echo $this->search; ?>">
+<input type=hidden name=filter_object value="<?php echo $this->filter_object; ?>">
+</form>
+
+<script>
+	jQuery.noConflict();
+	function SaveButtonClick()
+	{
+		document.frmAddBieuMau.submit();
+	}
+	function BackButtonClick()
+	{
+		document.frmAddBieuMau.action = "/motcua/bieumau/";
+		document.frmAddBieuMau.submit();
+	}
+	function getHoSoCanCo(idhoso)
+	{
+		(function($) {
+			postObject = new Object;
+			postObject.id = idhoso;
+			$("#ID_THUTUC").html('<option value="">--------Chọn thủ tục--------</option>');
+			$("#loading_message").html("<div class=fbloading>Cập nhật...</div>");
+			$.post("/motcua/bieumau/gethoso", postObject, function(data)
+			{
+				if (data.isValid)
+				{
+					$("#loading_message").html("<div class='fbloading_success'>"+data.message+"...</div>");
+					var data=data.data;
+					if(data.length>0)
+					{
+						for(i=0;i<data.length;i++)
+						{
+							str="<option value='"+data[i]['ID_THUTUC']+"'>"+data[i]['TENTHUTUC']+"</option>";
+							$("#ID_THUTUC").append(str);
+						}
+					}					
+					else
+					{
+							str="";
+							$("#ID_THUTUC").append(str);
+					}							
+				}
+				else
+				{
+					$("#loading_message").html("<div class='fbloading_error'>"+data.message+"...</div>");		
+				}
+			}, "json");	
+		})(jQuery);
+	}
+</script>

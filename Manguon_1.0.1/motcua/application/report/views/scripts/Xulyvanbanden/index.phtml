@@ -1,0 +1,152 @@
+<?php require_once('qtht/models/DepartmentsModel.php');
+
+$data_departs = DepartmentsModel::getAll();
+?>
+
+<!-- Khung lọc dữ liệu -->
+<div>
+<form name=frm action="/report/xulyvanbanden/reportview" method="POST" target="reportview"  >
+<div>
+<label><b>Theo:</b></label>
+<input type="radio" name="type_date"  value=0> Ngày đến
+<input type="radio" name="type_date" value=1 checked> Ngày ban hành
+</div>
+<div class=clr></div>
+<div>
+<label><b>Từ:</b></label>
+<?=QLVBDHCommon::calendar($this->fromdate,"fromdate","fromdate") ?>
+>>
+<?=QLVBDHCommon::calendar($this->todate,"todate","todate") ?>
+
+</div>
+<div class=clr></div>
+<div>
+<div>
+<label><b>Tháng:</b></label>
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/1','31/1')">1
+<?php 
+$year = QLVBDHCommon::getYear();
+$d = strtotime($year."-3-1") ;
+$d = $d - 86400;
+$str_cuoi2 =date('d/m',$d); 
+ ?>
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/2','<?php echo $str_cuoi2 ?>')" >2
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/3','31/3')">3
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/4','30/4')" >4
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/5','31/5')">5
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/6','30/6')">6
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/7','31/7')" >7
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/8','31/8')" >8
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/9','30/9')">9
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/10','31/10')">10
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/11','30/11')">11
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/12','31/12')">12
+</div>
+<div class=clr></div>
+<div>
+<label><b>Quí:</b></label>
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/1','31/3')">I
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/4','30/6')">II
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/7','30/9')">III
+<input type="radio" name='sel_timedis'onclick="setvalueDateD('1/10','31/12')">IV
+</div>
+<div class=clr></div>
+
+<div>
+<label><b>Năm:</b></label>
+<input type="radio" name='sel_timedis' onclick="setvalueDateD('1/1','31/12')">
+</div>
+</div>
+<div class=clr></div>
+<br/>
+<div>
+<div style="float:left;padding-left:10px">
+<br/>
+<select style="width:60px" name="op_lvb">
+	<option value=0 >Và</option>
+	<option value=1>Hoặc</option>
+</select>
+</div>
+<div style="float:left">
+<b>Loại văn bản:</b><br/>
+<select name="sel_lvb[]" id="sel_lvb" multiple="multiple" size=5>
+	<option value=0>[Tất cả loại văn bản]</option>
+	<?php LoaiVanBanModel::toComboName(); ?>
+</select>
+</div>
+
+<div style="float:left;padding-left:10px">
+<br/>
+<select style="width:60px" name="op_cqbh">
+	<option value=0>Và</option>
+	<option value=1>Hoặc</option>
+</select>
+</div>
+<div style="float:left;padding-left:10px">
+<b>Cơ quan ban hành:</b><br/>
+<select name="sel_cqbh[]" id="sel_cqbh" multiple="multiple" size=5>
+	<option value=0>[Tất cả loại văn bản]</option>
+	<?php CoquanModel::toComboName(1); ?>
+</select>
+</div>
+
+<div style="float:left;padding-left:10px">
+<br/>
+<select style="width:60px" name="op_trangthai">
+	<option value=0>Và</option>
+	<option value=1>Hoặc</option>
+</select>
+</div>
+
+<div style="float:left;padding-left:10px">
+<b>Trạng thái xử lý:</b><br/>
+<select name="sel_trangthai" id="sel_trangthai">
+	<option value=0>[Tất cả ]</option>
+	<option value=1>Đã xử lý</option>
+	<option value=2>--- Không có văn bản đi</option>
+	<option value=3>--- Có văn bản đi</option>
+	<option value=4>Đang xử lý</option>
+	
+	
+	
+</select>
+</div>
+</div>
+<br/>
+<div class="clr"></div>
+
+<input type=hidden id=h_isexel name=h_isexel value=0>
+</form>
+<div title="Hiện thị báo cáo" style="float:left;background-color:#C0C0C0;border:1px solid #888888;cursor:pointer;margin:2px;
+padding:2px 2px;position:relative;white-space:nowrap;width:100px;height:25px" 
+onclick="
+document.frm.action = '/report/Xulyvanbanden/reportview';
+document.frm.submit();
+return false;">
+<img src="/images/report_show.jpg" width="20" height="20"></img>
+<b>Hiển thị</b>
+</div>
+<div title="Xuất excel" style="float:left;background-color:#C0C0C0;border:1px solid #888888;cursor:pointer;margin:2px;
+padding:2px 2px;position:relative;white-space:nowrap;width:100px;height:25px" 
+onclick="
+document.frm.h_isexel.value = 1;
+document.frm.action = '/report/Xulyvanbanden/reportviewexcel';
+document.frm.submit();
+return false;">
+<img src="/images/report_show.jpg" width="20" height="20"></img>
+<b>Xuất ra Excel</b>
+</div>
+</div>
+<div class="clr"></div>
+
+<iframe style="overflow-x:visible" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no id="reportview" name="reportview" >
+</iframe>
+
+
+
+<script>
+function setvalueDateD(value_from,value_to){
+	document.frm.fromdate.value = value_from;
+	document.frm.todate.value = value_to;
+}
+</script>

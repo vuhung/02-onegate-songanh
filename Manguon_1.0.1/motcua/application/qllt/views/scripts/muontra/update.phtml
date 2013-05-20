@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/calendar.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+
+<form name="frm" method=post action="/qllt/muontra/save/execute/update" onsubmit="return ValidateForm();">
+<table class=admintable width=100% >
+	<tr>
+		<td>
+			<span>
+				<b>Ngày trả <font color="red">*</font></b>
+			</span>
+		</td>
+		<td>
+			<?=QLVBDHCommon::calendarFull($this->fromdate,"ngaytrathucte","ngaytrathucte") ?>		<script>
+				document.frm.ngaytrathucte.value = '<?php echo date("j/n/Y") ?>';
+			</script>	
+			<span class="box_erro_area" id="ERRngaytrathucte"></span>
+		</td>
+	</tr>
+	
+	<tr>
+		<td nowrap>
+			<span>
+				<br/><b>Chọn người trả <font color="red">*</font></b>
+				
+			</span></td>
+		<td>
+			<?php echo QLVBDHCommon::writeSelectDepartmentUserWithSelAndAction('DEP_NGUOIGUI','NGUOIGUI',105,1,"")?>
+			<span class="box_erro_area" id="ERRNGUOIGUI"></span>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap">
+			
+			<input type="button" value="Lưu" onclick="Insertvalue(NGUOIGUI.value);ValidateForm();" />
+			
+		</td>
+		<td valign="top" width=100%><div id="listuser"></div></td>
+	</tr>
+</table>
+<br/><br/><br/><br/><br/><br/><br/><br/>
+<input type=hidden name="id_muontra" value="<?=$this->id_muontra ?> "/>
+<input type=hidden name=id value="<?=$this->id?>"/>
+<input type=hidden name=year value="<?=$this->year?>"/>
+<input type=hidden name=id_nguoitra value=""/>
+<input type=hidden name=idhoso value="<?=$this->id_hoso?>"/>
+
+</form>
+<p id=lasttext></p>
+</body>
+</html>
+<script>
+	var arr_user = new Array();
+	var arr1 = new Array();
+	var arr_user_temp = new Array();	
+	
+	function SaveButtonClick(){
+		var err = true;
+		if(err==true){
+			document.frm.submit();
+		}
+	}
+	function Insertvalue(value){	
+		document.frm.id_nguoitra.value = value;
+	}
+
+	function InsertIntoArr(value){	
+		document.frm.id_nguoitra.value = value;
+	}
+
+	function resize(){
+		var iframeElement = parent.document.getElementById('<?=$this->IdFrame ?>');
+		iframeElement.style.height = "" + document.getElementById("lasttext").offsetTop + "px";
+		iframeElement.width = "100%";
+	}
+	resize();
+
+
+function stripCharsInBag(s, bag){
+	var i;
+    var returnString = "";
+    // Search through string's characters one by one.
+    // If character is not in bag, append to returnString.
+    for (i = 0; i < s.length; i++){   
+        var c = s.charAt(i);
+        if (bag.indexOf(c) == -1) returnString += c;
+    }
+    return returnString;
+}
+
+function daysInFebruary (year){
+	// February has 29 days in any year evenly divisible by four,
+    // EXCEPT for centurial years which are not also divisible by 400.
+    return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
+function DaysArray(n) {
+	for (var i = 1; i <= n; i++) {
+		this[i] = 31
+		if (i==4 || i==6 || i==9 || i==11) {this[i] = 30}
+		if (i==2) {this[i] = 29}
+   } 
+   return this
+}
+
+function isDate(dtStr,datename){
+	var ngaymuon = "<?=$this->last_ngaymuon?>";
+	var strerr1 = validateInput("required",document.frm.ngaytrathucte,"Nhập ngày trả");
+	strerr1 = strerr1==true?validateInput("date",document.frm.ngaytrathucte,"Bạn phải nhập đúng định dạng ngày trả, ví dụ : 30/04/2011"):strerr1;
+	strerr1 = strerr1==true?CompareDateBAOTQ(ngaymuon,document.frm.ngaytrathucte.value,"ERRngaytrathucte","Ngày mượn phải lớn hơn hoặc bằng ngày hồ sơ được trả trước đó (<a href='#' title='click vào đây' onclick='insertMissDate()'>"+ngaymuon+"</a>)"):strerr1;
+	strerr1 = strerr1==true?validateInput("required",document.frm.NGUOIGUI,"Chọn người trả"):strerr1;
+	if(strerr1!=true){
+		return false;
+	}	
+
+return true
+}
+
+function CompareDateBAOTQ(dt1,dt2,onelement,displayErr)
+{	
+	str1		= dt1.split("/");			
+	var year1	= str1['2'];
+	var month1	= str1['1'] -1;
+	var day1	= str1['0'];
+
+	str2		= dt2.split("/");			
+	var year2	= str2['2'];
+	var month2	= str2['1'] -1;
+	var day2	= str2['0'];
+
+	var Date1	=new Date();
+	Date1.setFullYear(year1,month1,day1);
+		
+	var Date2	=new Date();
+	Date2.setFullYear(year2,month2,day2);
+
+	if(Date1 > Date2)
+	{
+		document.getElementById(onelement).innerHTML = displayErr;
+		return false;
+	}
+	else
+	{
+		document.getElementById(onelement).innerHTML = "";
+		return true;
+	}
+	return true;
+}
+
+function insertMissDate()
+{
+	var ngaytrathucte = "<?=$this->last_ngaymuon ?>";
+	document.frm.ngaytrathucte.value = ngaytrathucte;
+	document.getElementById('ERRngaytrathucte').innerHTML = "";
+}
+
+function ValidateForm(){
+	var dt=document.frm.ngaytrathucte
+	var isvalid = 1
+	if (isDate(dt.value,'trả')==false){
+		dt.focus()
+		isvalid = 0;
+	}	
+	if(isvalid == 1)
+	{		
+		SaveButtonClick();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+ }
+
+</script>

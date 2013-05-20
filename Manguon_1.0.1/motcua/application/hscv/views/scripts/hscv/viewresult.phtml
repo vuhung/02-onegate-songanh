@@ -1,0 +1,44 @@
+<?php
+
+?>
+<b>Kết quả xử lý hồ sơ</b>
+<table class=adminlist>
+	<thead>
+		<tr>
+			<th nowrap="nowrap">#</th>
+			<th width="100%">Văn bản</th>
+			<th nowrap="nowrap">Người ký</th>
+			<th nowrap="nowrap">Ngày ban hành</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th colspan="4"></th>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+	$stt=0;
+	$i=0;
+	foreach($this->data as $row){
+		$stt++;
+?>
+		<tr class="row<?php echo $i; ?>">
+			<td nowrap="nowrap">
+				<?php echo $stt ?>
+			</td>
+			<td width="100%">
+				<b><?=$row["SOKYHIEU"]?></b>: <?=$row["TRICHYEU"] ?>
+			</td>
+			<td nowrap="nowrap">
+				<?=$row["EMPNAME"] ?>
+			</td>
+			<td nowrap="nowrap">
+				<?=QLVBDHCommon::MysqlDateToVnDate($row["NGAYBANHANH"])?>
+			</td>
+		</tr>
+<?php
+	}
+?>
+	</tbody>
+</table>

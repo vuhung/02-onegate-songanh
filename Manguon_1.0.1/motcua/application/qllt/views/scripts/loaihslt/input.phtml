@@ -1,0 +1,140 @@
+<form name="frmAddLoaihslt"  method="post" action="/qllt/loaihslt/save">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="center"><span class="box_erro_area"></span></div>	
+	<div class="required">
+		<label id="lblTextIput">Ký hiệu<font color="red">*</font></label>
+		<input type="text" name="kyhieu" size=10 value="<?php echo $this->kyhieu; ?>"/>
+    	<span class="box_erro_area" id=ERRkyhieu>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Tên loại<font color="red">*</font></label>
+		<input type="text" name="tenloai" style="width:250px;" value="<?php echo $this->tenloai; ?>">
+		<span class="box_erro_area" id=ERRtenloai>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Thuộc kho<font color="red">*</font> </label>
+		<?php //var_dump($this->depart); ?>
+		<select name="thuockho">
+			<option value="">-- Chọn kho --</option>
+			<?php 
+				foreach($this->thuockho as $thuockho)
+				{   if($thuockho['ID_NOILUUTRU']!= $this->idnoiluutru)
+					echo "<option value=".$thuockho['ID_NOILUUTRU'].">
+							".$thuockho['TENTHUMUC']." 
+						</option>";
+				}
+				if ((int)$this->idnoiluutru != 0)
+				{
+					echo "<option value=".$this->idnoiluutru." selected > ".$this->tenthumuc." </option>";
+				}
+			?>
+		</select>
+    	<span class="box_erro_area" id=ERRthuockho>  
+		
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required">
+		<label id="lblTextIput">Phòng ban<font color="red">*</font> </label>
+		<?php //var_dump($this->depart); ?>
+		<select name="phongban" style="width:250px;">
+			<option value="">-- Chọn phòng ban --</option>
+			<?php 
+				foreach($this->depart as $departs)
+				{   if($departs['NAME']!="root" && (int)$this->idphongban != $departs['ID_DEP'])
+					echo "<option value=".$departs['ID_DEP']." > ".$departs['NAME']." </option>";
+				}
+				if ((int)$this->idphongban != 0)
+				{
+					echo "<option value=".$this->idphongban." selected > ".$this->phongban." </option>";
+				}
+			?>
+		</select>
+    	<span class="box_erro_area" id=ERRphongban>  
+		
+        </span>
+	</div>
+	<div class="clr"></div>
+    <div class="required" style="margin-bottom:5px;">
+		<label id="lblTextIput">Mô tả<font color="red"></font></label>
+		<textarea rows=3 style="width:400px;" name="mota" ><?php echo $this->mota; ?></textarea>
+		<span class="box_erro_area" id=ERRmota>
+        	
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput"><font color="red"></font></label>
+		<input type="checkbox"  <?php if($this->kichhoat == "1") echo "checked"; ?>  value="<?=$this->kichhoat ?>" name="kichhoat" /> Kích hoạt
+		<span class="box_erro_area">
+        	
+        </span>
+	</div>
+	</div>	
+	<div class="clr"></div>
+</fieldset>
+<input type=hidden name="id" value="<?php echo $this->id ;?>"> 
+<input type=hidden name=page value="<?php //echo $this->page; ?>">
+<input type=hidden name=limit value="<?php //echo $this->limit; ?>">
+<input type=hidden name=search value="<?php //echo $this->search; ?>">
+<input type=hidden name=filter_object value="<?php //echo $this->filter_object; ?>">
+</form>
+<script>
+	function SaveButtonClick()
+	{
+		var err = true;
+		err = err & validateInput("req",document.frmAddLoaihslt.kyhieu,"Ký hiệu không được rỗng.");
+		err = err & validateInput("req",document.frmAddLoaihslt.tenloai,"Tên loại không được rỗng.");
+		err = err & err==true?validateInput("maxlen=128",document.frmAddLoaihslt.kyhieu,"Ký hiệu không được quá 128 ký tự"):false;
+		err = err & err==true?validateInput("maxlen=128",document.frmAddLoaihslt.tenloai,"Tên loại không được quá 128 ký tự"):false;
+		if(err==true && checkFormData() == true){
+			document.frmAddLoaihslt.submit();
+		}
+		//document.frmAddLoaihslt.submit();
+	}
+
+	function checkFormData(){
+	var strerr = validateInput("req",document.frmAddLoaihslt.thuockho,"Chọn kho lưu trữ");
+	if(!strerr){
+		return false;
+	}
+	var strerr = validateInput("req",document.frmAddLoaihslt.phongban,"Chọn phòng ban");
+	if(!strerr){
+		return false;
+	}  
+	return true;
+	}
+
+	function BackButtonClick()
+	{
+		document.frmAddLoaihslt.action = "/qllt/loaihslt/";
+		document.frmAddLoaihslt.submit();
+	}
+
+	function Clickchexbox()
+	{
+		var isset = "No";
+		var ckvalue = document.getElementById("kichhoat");
+		if(ckvalue.value == 0)
+		{
+			ckvalue.value = 1;
+			isset = "Yes";			
+		}
+		if(ckvalue.value == 1)
+		{
+			if(isset == "No")
+			{
+			ckvalue.value = 0;
+			}
+		}		
+	}
+</script>

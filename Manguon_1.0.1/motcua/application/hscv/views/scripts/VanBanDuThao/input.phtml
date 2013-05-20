@@ -1,0 +1,144 @@
+<?php/**
+      * @author trunglv
+      * @version 1.0
+      * Lop view the hien khung nhap lieu cho van ban du thao
+      */ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<?php if($this->isnew == 1) {?>
+<form name=frmUpload enctype="multipart/form-data" action="/hscv/vanbanduthao/save" method="post" target="addVanBanDuThaoFrm<?php echo $this->idHSCV?>">
+	<input type="hidden" name="idHSCV" value=<?php echo $this->idHSCV?> >
+	<input type="hidden" name="isNoHSCV" value=<?php echo $this->isNoHSCV?> >
+	<input type="hidden" name="idPBDuthao" value=<?php echo $this->idPBDuthao?> >
+	<input type="hidden" name="isTemp" value=<?php echo 1//cho id tam?>>
+	<input type="hidden" name="year" value=<?php echo $this->year?>>
+	<input type="hidden" name="idOldFile" value=<?php echo $this->idOldFile?>>
+	<input type="hidden" name="type" value=2 >
+	<input type="hidden" name="idDuthao" value=<?php echo $this->idDuthao?>>
+	<input type="hidden" name="version" value="1.0">
+	<input type="hidden" name="iddivParent" value=<?php echo $this->iddivParent ?> >
+	
+<?php } ?>
+<table width="100%">
+	<tr>
+		<td nowrap class=key>Trích yếu VB dự thảo</td>
+		<td width="100%"><textarea cols=50 id=tenduthaoid name="duthao_tenvanbanduthao"><?php echo $this->tenduthao ?></textarea><span class="box_erro_area" id="ERRduthao_tenvanbanduthao"></td>
+	</tr>
+	<?php if($this->isnew == 1) {?>
+	<tr>
+		<td nowrap class=key>Tệp đính kèm</td>
+		<td width="100%"><input name="uploadedfile" type="file" /><span class="box_erro_area" id="ERRuploadedfile"></span></td>
+	</tr>
+	<?php }?>
+	<tr>
+		<td nowrap class=key>Loại văn bản</td>
+		<td width="100%">
+			<select id=ID_LVB name=ID_LVB>
+				<option value="0">--Chọn loại văn bản--</option>
+				<?php 
+				foreach($this->loaivb as $lvbitem){
+					if($lvbitem["ID_LVB"]==$this->idlvb){
+				?>
+					<option value="<?=$lvbitem["ID_LVB"]?>" selected><?=$lvbitem["NAME"]?></option>
+				<?php 
+					}else{
+				?>
+					<option value="<?=$lvbitem["ID_LVB"]?>"><?=$lvbitem["NAME"]?></option>
+				<?php
+					}
+				}
+				?>
+			</select>
+		</td>
+	</tr>
+</table>
+<?php if($this->isnew == 1) {?>
+</form>
+<?php } ?>
+
+
+<a href="#" onclick="
+<?php if($this->isnew == 0){ ?>	
+	var str='Tên văn bản dự thảo không được dài quá 512 ký tự.';
+	strerr = validateInput('maxlen=512',document.getElementById('tenduthaoid'),str);
+	if(!strerr){
+		document.getElementById('tenduthaoid').focus();
+		return false;
+	}
+	var oData = new Object();
+	oData.TENDUTHAO = getValueById('tenduthaoid');
+	oData.ID_LVB = getValueById('ID_LVB');
+	sendDataToServer(oData,'/hscv/vanbanduthao/save?isNoHSCV=<?php echo $this->isNoHSCV ?>&idHSCV=<?php echo $this->idHSCV ?>&iddivParent=<?php echo $this->iddivParent ?>&year=<?php echo $this->year ?>&idDuthao=<?php echo $this->idDuthao ?>');
+	return false;
+
+<?php }else{ ?>
+checkFormDataAndSubmit();
+return false;
+<?php } ?>
+"
+>[ Lưu ]</a>
+<?php if($this->isnew == 1) {?>
+<a href="javascript:;" onclick="window.parent.document.getElementById('addVanBanDuThaoFrm<?php echo $this->idHSCV?>').style.display='none';">[ Hủy ]</a>
+<?php }else{ ?>
+<a href="javascript:;" onclick="loadDiv('idcapnhatduthao<?php echo $this->idDuthao ?>','/hscv/vanbanduthao/input/',0);">
+[ Hủy ]</a>
+<?php } ?>
+
+<p id=lasttext></p>
+</body>
+</html>
+<script>
+
+function checkTenDuthao(){	
+	var str="Tên văn bản dự thảo không được dài quá 512 ký tự.";
+	strerr = validateInput("maxlen=512",document.frmUpload.duthao_tenvanbanduthao,str);
+	if(!strerr){
+		document.frmUpload.duthao_tenvanbanduthao.focus();
+		return false;
+	}
+	return true;
+}
+function checkFormDataAndSubmit(){
+
+	var	str="Tên văn bản dự thảo không được dài quá 512 ký tự.";
+	strerr = validateInput("maxlen=512",document.frmUpload.duthao_tenvanbanduthao,str);
+	if(!strerr){
+		document.frmUpload.duthao_tenvanbanduthao.focus();
+		return false;
+	}
+	str="Phải nhập file đính kèm cho phiên bản dự thảo đầu tiên";
+	var strerr = validateInput("required",document.frmUpload.uploadedfile,str);
+	if(!strerr){
+		document.frmUpload.uploadedfile.focus();
+		return false;
+	}
+	
+	document.frmUpload.submit();
+	return true;
+}
+
+function SaveButtonClick(){
+	
+}
+
+
+var iframeElement = window.parent.document.getElementById("addVanBanDuThaoFrm<?php echo $this->idHSCV?>");
+iframeElement.style.height = "" +(document.getElementById("lasttext").offsetTop+30)+ "px";
+iframeElement.width = "100%";
+
+
+
+ 
+</script>

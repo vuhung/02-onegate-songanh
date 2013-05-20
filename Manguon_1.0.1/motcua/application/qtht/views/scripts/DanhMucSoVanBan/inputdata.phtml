@@ -1,0 +1,238 @@
+<?php 
+require_once('qtht/models/LoaiVanBanModel.php');
+require_once('qtht/models/CoQuanModel.php');
+
+?>
+<form name="datacdform"  action="/qtht/DanhMucSoVanBan/save" method="post">
+<table  class=admintable >
+<tbody>
+<tr>
+	<td class=key>Tên sổ văn bản</td> 
+	<td >
+		<input type="text" name="name" maxlength="128" size=50 value="<?php echo htmlspecialchars($this->namebefore);?>">
+	</td>
+	<td class=error id="ERRname"></td>
+	<tr>
+	<td class=key>Năm</td> 
+	<td >
+		<input type="text" name="year" maxlength="128" size=50 value="<?php echo htmlspecialchars($this->yearbefore);?>">
+	</td>
+	<td class=error id="ERRyear"></td>
+	<tr>
+	<td class=key>Loại sổ văn bản</td>
+	<td>
+	<select name="choiceSVB" onchange="onchange_choiceLSVB();">
+	<!--<option value=1>Văn bản đến</option>-->
+	<option value=2>Văn bản đi</option>
+	<option value=3>Hồ sơ một cửa</option>
+	<?php 
+		/*if($this->type == 1)
+		{
+			echo '<option value=1>Văn bản đến</option>';
+			echo '<option value=2>Văn bản đi </option>';
+		}
+		else 
+		{
+			
+			echo '<option value=2>Văn bản đi </option>';
+			echo '<option value=1>Văn bản đến</option>';
+		}*/
+	?>   	
+	</select>
+	<script>document.datacdform.choiceSVB.value="<?=$this->type?>"</script>
+	</td>
+	</tr>
+	<tr id='tr_lvb_lienquan'>
+	<td class=key >Loại văn bản liên quan</td>
+	<td>
+	<select name="choiceLVB">
+	<option value="0" >--Chọn loại văn bản--</option>
+	<?php 
+		LoaiVanBanModel::toComboName();
+	?>   	
+	</select>
+	 <script>document.datacdform.choiceLVB.value='<?=(int)$this->id_lvb?>';</script>
+	</td>
+	<td class=error ></td>
+	</tr>
+	
+	<tr id='tr_id_lv_mc'>
+	<td class=key>Lĩnh vực hồ sơ(*)</td>
+	<td>
+	<select name="id_lv_mc" onchange="getLV(this.value);">
+	<option value="0" >--Chọn lĩnh vực hồ sơ--</option>
+	<?php 
+		$linhvucmotcuaModel = new linhvucmotcuaModel(); 
+		echo $linhvucmotcuaModel->ToCombo($linhvucmotcuaModel->SelectAll(),1);
+	?>   	
+	</select>
+	 <script>document.datacdform.id_lv_mc.value='<?=(int)$this->id_lv_mc?>';</script>
+	</td>
+	<td class=error id="ERRid_lv_mc"></td>
+	</tr>
+	<tr id='tr_id_lhs_mc'>
+	<td class=key>Loại hồ sơ(*)</td>
+	<td>
+	 <select name="id_lhs_mc">
+	  
+	  <option value="0" >--Chọn loại hồ sơ--</option>
+	    <?php
+	       $linhvucmotcuaModel = new linhvucmotcuaModel(); 
+	       echo $linhvucmotcuaModel->ToComboloaihoso((int)$this->id_lv_mc,1);
+	    ?> 	     
+	 </select>
+	 <script>document.datacdform.id_lhs_mc.value='<?=(int)$this->id_lhs_mc?>';</script>
+	 
+	</td>
+	<td class=error id="ERRid_lhs_mc"></td>
+	</tr>
+	<tr id='tr_coquan'>
+	<td class=key>Cơ quan</td>
+	<td>
+	<select name="choiceCQ">
+	<option value="0" >--Chọn cơ quan--</option>
+	<?php 
+		CoQuanModel::toComboName(2);
+	?>   	
+	</select>
+	 <script>document.datacdform.choiceCQ.value='<?=(int)$this->id_cq?>';</script>
+	</td>
+	<td class=error ></td>
+	</tr>
+	<tr>
+	<td class=key>Thuộc phòng:</td>
+	<td>
+	<select name=choiceDEP>
+	<option value=0>-- Toàn cơ quan --</option>
+	<?php
+		DepartmentsModel::toComboName();
+	?>
+	</select>
+	<script> document.datacdform.choiceDEP.value="<?=(int)$this->id_dep?>" </script>
+	</td>
+	<td class=error> </td>
+</tr>
+	<tr>
+	<td class=key>Đã được sử dụng</td>
+	<td>
+	<?php
+		if($this->activeselect == 1){
+			echo '<input type="checkbox" value=1 name="active" checked=checked>';
+		}
+		else {
+			echo '<input type="checkbox" value=1 name="active">';
+		}
+	?>
+	</td>
+	<td class=error> </td>
+</tr>
+</tbody>
+</table>
+
+<input type=hidden name="InputIDSVB" value=<?php echo $this->id?> >
+<input type=hidden name="limit" value=<?php echo $this->limit?> >
+<input type=hidden name="filter_object" value=<?php echo $this->filter_object?> >
+<input type=hidden name="search" value=<?php echo $this->search?> >
+<input type=hidden name="page" value=<?php echo $this->page?> >
+<input type=hidden name="ID_DEP" value="<?=$this->ID_DEP?>">
+</form>
+
+<script>
+
+function checkFormData(){
+
+	var str = "Bạn phải nhập tên sổ văn bản";
+	var strerr = validateInput("required",document.datacdform.name,str);
+	if(!strerr){
+		document.datacdform.name.focus();
+		return false;
+	}
+	str="Tên của sổ văn bản không được quá 128 ký tự";
+	strerr = validateInput("maxlen=128",document.datacdform.name,str);
+	if(!strerr){
+		
+		document.datacdform.name.focus();
+		return false;
+	}
+	str ="Năm sai định dạng";
+	strerr = validateInput("year",document.datacdform.year,str);
+	if(!strerr){
+		
+		document.datacdform.year.focus();
+		return false;
+	}
+	if(document.datacdform.choiceSVB.value == 3){
+		str ="Bạn phải chọn một lĩnh vực";
+		strerr = validateInput("greaterthan=0",document.datacdform.id_lv_mc,str);
+	
+		if(!strerr){
+		
+			document.datacdform.id_lv_mc.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function SaveButtonClick(){
+	
+	if(checkFormData()){
+		//document.datacdform.method ="get";
+		document.datacdform.submit();
+	}
+}
+function BackButtonClick(){
+	document.datacdform.action = '/qtht/danhmucsovanban/index';
+	document.datacdform.submit();
+}
+function getLV(id_stn){
+	//$id_lv=id_stn;
+	//document.location.reload();
+	document.datacdform.action ="/qtht/danhmucsovanban/input";
+	document.datacdform.submit();
+}
+
+function onchange_choiceLSVB(){
+	
+	var tr_lvb_lienquan = document.getElementById('tr_lvb_lienquan');
+	var tr_coquan = document.getElementById('tr_coquan');
+	var tr_id_lv_mc = document.getElementById('tr_id_lv_mc');
+	var tr_id_lhs_mc = document.getElementById('tr_id_lhs_mc');
+	if(document.datacdform.choiceSVB.value == 3){
+		
+		tr_lvb_lienquan.style.display = "none";
+		tr_coquan.style.display = "none";	
+		tr_id_lv_mc.style.display = "";
+		tr_id_lhs_mc.style.display = "";
+	}
+	else{
+		tr_lvb_lienquan.style.display = "";
+		tr_coquan.style.display = "";
+		tr_id_lv_mc.style.display = "none";
+		tr_id_lhs_mc.style.display = "none";
+		
+	}
+
+}
+onchange_choiceLSVB();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

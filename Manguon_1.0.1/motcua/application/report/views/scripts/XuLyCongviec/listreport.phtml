@@ -1,0 +1,113 @@
+<?php 
+require_once('qtht/models/DepartmentsModel.php');
+require_once('report/models/xulycongviecModel.php');
+ $year = QLVBDHCommon::getYear();
+//loc danh sach phong ban
+$data_departs = array();
+
+/*if(count($this->pbs)==0 || $this->pbs[0]==0)
+{
+	$data_departs = DepartmentsModel::getAll();
+}else{
+	
+	$data_alldeparts =DepartmentsModel::getAll();
+foreach ($data_alldeparts as $dp){
+	
+	for($j= 0 ; $j< count($this->pbs);$j++){
+		
+		if($dp["ID_DEP"] == $this->pbs[$j]){
+			array_push($data_departs,$dp);
+			break;
+		}			
+	}
+	
+	
+}
+
+}*/
+$data_departs = xulycongviecModel::getPbByLoaiHsMotcua($this->svb);
+
+?>
+<?php 
+$isdisXLVBD = false;
+$isdisST = false;
+$isdisMC = false;
+foreach ($this->lcv as $itlcv){
+	switch ($itlcv) {
+		case 0:
+			$isdisXLVBD = true;
+			$isdisST = true;
+			$isdisMC = true;
+	
+			break;
+		case 1:
+			$isdisXLVBD = true;
+			break;
+		case 2:
+			$isdisST = true;
+			break;
+		case 3:
+			$isdisMC = true;
+			break;
+		default:
+			break;
+	}
+	
+		
+	
+}
+?>
+<?php if($isdisMC){?>
+<!--ho so mot cua-->
+<div style="margin-top:20px;margin-top:20px;">
+<div id="div_depart_motcua" style="margin-left:20px;margin-top:20px;">
+<?php
+foreach($data_departs as $item){
+?>
+
+<a href="#" onclick="
+var id_div = 'id_users_hsmc_<?php echo $item["ID_DEP"]?>';
+var odiv = document.getElementById(id_div);
+var oimg = document.getElementById('hsmc_dp_<?=$item["ID_DEP"]?>');
+var oimg_load = document.getElementById('image_load_dep_3_<?=$item["ID_DEP"]?>');
+if(odiv.innerHTML != ''){
+	odiv.innerHTML = '';
+	oimg.src = '/images/iplus.gif';
+}else{
+	oimg_load.style.display ='';
+	var ajx = new AjaxEngine();
+	ajx.loadDivFromUrlAndHideImage('id_users_hsmc_<?php echo $item["ID_DEP"]?>','/report/xulycongviec/ajaxgetuserbydepart?type=3&id_dep=<?php echo $item["ID_DEP"]; ?>'
+	,'image_load_dep_3_<?=$item["ID_DEP"]?>'
+	);
+	oimg.src = '/images/iminus.gif';
+}
+
+return false;" > 
+<img align="absmiddle" id='hsmc_dp_<?=$item["ID_DEP"]?>' src='/images/iplus.gif' border="0" hspace="5">
+<?php echo $item['NAME'];
+
+$arr_re = xulycongviecModel::thongkePhongBan($year,$item["ID_DEP"],3);
+//echo "<font color=red><b> đang xử lý : ".$arr_re['DANGXULY']." --- đã kết thúc: ".$arr_re['KETTHUC']." (trễ: " .$arr_re["KETTHUC_TRE"]. " ) </b></font>";
+?></a>
+<?php 
+$arr_re = xulycongviecModel::getListHscvBydep($item["ID_DEP"],3,$year,$this->fromdate,$this->todate);
+echo '
+&nbsp;<i>(<b> Chờ xử lý </b><font color="Blue">'.count($arr_re["DANGXULY"]).'</font>'.($arr_re['DANGXULY_TRE']>0? ' (<font color="Red"> trễ : '.$arr_re['DANGXULY_TRE'].'</font>)' : '').' 
+					<b>Đã xử lý </b><font color="Blue">'.count($arr_re["DAXULY"]).'</font>'.($arr_re['DAXULY_TRE']>0? '( <font color="Red">trễ : '.$arr_re['DAXULY_TRE'].'</font> )' : '').' 
+					<b>Đã kết thúc </b><font color="Blue">'.count($arr_re["KETTHUC"]).'</font>' .($arr_re['KETTHUC_TRE']>0? '( <font color="Red">trễ : '.$arr_re['KETTHUC_TRE'].'</font> )' : '').'
+			)</i>';
+?>
+<img id="image_load_dep_3_<?=$item["ID_DEP"]?>" src="/images/loading.gif" style="display:none;">
+<div id="id_users_hsmc_<?php echo $item["ID_DEP"]?>"  style="margin-left:20px;margin-top:20px;"></div>
+<br/>
+<?php 
+}
+?>
+</div>
+</div>
+<?php } ?>
+<script>
+function BackButtonClick(){
+	window.location = "/report/xulycongviec/index?fromdate=<?=$this->fromdate?>&todate=<?=$this->todate?>";
+}
+</script>
