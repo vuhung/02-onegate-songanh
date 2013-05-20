@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<?php require_once 'report/models/tamnghivanghihanModel.php'; ?>
+<table class=adminlist>
+	<thead>
+		<tr>
+			<th>Số</th>
+			<th>Số VB</th>
+			<th>Tên tổ chức cá nhân</th>
+			<th>Địa chỉ kinh doanh</th>
+			<th>Ngành hàng kinh doanh</th>			
+			<th>Thời gian</th>
+		</tr>
+	</thead>
+	<tbody>
+        <?php  
+	  foreach ($this->dataub as $row){	  
+	  ?>
+		<tr>
+			<td>
+				<?=$row['SO']?>
+			</td>
+			<td>
+			   <?php if(count($row['ID_HSCV']) >0){
+				   $list_kh = tamnghivanghihanModel::getSKH($row['ID_HSCV']);
+				   if(count($list_kh) >0){
+				   foreach($list_kh as $skh){
+				        echo $skh['SOKYHIEU']."<br/>";
+			            }
+				       }else{ echo $row['SOKYHIEU']; }
+				 }
+			?>
+				
+			</td>
+			<td>
+				<?=$row['TENTOCHUCCANHAN']
+					
+				?>
+			</td>
+			<td>
+				<?=$row['DIACHIKINHDOANH']
+				
+				?>
+			</td>
+			<td>
+				<?=$row['NGANHHANGKD']
+					
+				?>
+			</td>
+	<?php if(count($row['NGAYNGHIHAN'])>0) {?>		
+			<td>
+				<? echo "Nghỉ hẳn"." ".QLVBDHCommon::MysqlDateToVnDate($row['NGAYNGHIHAN']);
+				?>
+			</td>
+	<?php }else{?>
+	            <td>	            
+	            <?php  echo QLVBDHCommon::MysqlDateToVnDate($row['TAMNGHI_BATDAU'])."->".QLVBDHCommon::MysqlDateToVnDate($row['TAMNGHI_KETTHUC']); ?></td>
+		<?php }?>	
+		</tr>
+		
+ 	<?php }	
+	?>
+	
+	<tr>
+	 <td colspan="6" align="center"><b> PHÒNG TÀI CHÍNH KẾ HOẠCH</b> </td> 
+	</tr>
+	 
+	 <?php  
+	  foreach ($this->datatckh as $r){	  
+	  ?>
+	  <tr>
+	  		
+	  		<td>
+				<?=$r['SO']?>
+			</td>
+			<td>
+				<?php if(count($r['ID_HSCV']) >0){
+				   $list_kh = tamnghivanghihanModel::getSKH($r['ID_HSCV']);
+				   if(count($list_kh) >0){
+				   foreach($list_kh as $skh){
+				        echo $skh['SOKYHIEU']."<br/>";
+			            }
+				       }else{ echo $r['SOKYHIEU']; }
+				 }
+			?>
+			</td>
+			<td>
+				<?=$r['TENTOCHUCCANHAN']
+					
+				?>
+			</td>
+			<td>
+				<?=$r['DIACHIKINHDOANH']
+				
+				?>
+			</td>
+			<td>
+				<?=$r['NGANHHANGKD']
+				
+				?>
+			</td>
+	<?php if(count($r['NGAYNGHIHAN'])>0) {?>		
+			<td>
+				<? echo "Nghỉ hẳn"." ".QLVBDHCommon::MysqlDateToVnDate($r['NGAYNGHIHAN']);
+				?>
+			</td>
+	<?php }else{?>
+	            <td>	            
+	            <?php  echo QLVBDHCommon::MysqlDateToVnDate($r['TAMNGHI_BATDAU'])."->".QLVBDHCommon::MysqlDateToVnDate($r['TAMNGHI_KETTHUC']); ?></td>
+		<?php }?>
+		</tr>	 
+	  <?php }?>	
+	</tbody>
+</table>
+<p id=lasttext></p>
+</body>
+</html>
+<script>
+var iframeElement = window.parent.document.getElementById('reportview');
+iframeElement.style.height = ""+(document.getElementById("lasttext").offsetTop)+"px";
+iframeElement.width = "100%"; 
+</script>

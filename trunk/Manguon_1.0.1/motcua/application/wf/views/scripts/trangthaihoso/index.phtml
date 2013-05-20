@@ -1,0 +1,40 @@
+<table class=adminlist>
+	<thead>
+		<th>
+			STTT
+		</th>
+		<th>
+			Tên
+		</th>
+		<th>
+			Nhóm
+		</th>
+		<th>
+			Hồ sơ <br>chuyển đến
+		</th>
+		<th>
+			Trạng thái <br>chờ bổ sung
+		</th>
+		<th>
+			Thuộc <br>tổ một cửa
+		</th>
+		<th>
+		</th>
+	</thead>
+	<?php $stt=1; foreach($this->data as $item){?>
+	<tr>
+		<td><?=$stt?></td>
+		<td><a href="/wf/trangthaihoso/input/id/<?=$item["ID_TTHS"]?>" ><?=htmlspecialchars($item["TEN"])?></a></td>
+		<td><?=$item["G_NAME"]?></td>
+		<td align=center><?=$item["LATRANGTHAINHAN"]==1?"X":"O"?></td>
+		<td align=center><?=$item["LA_CHOBOSUNG"]==1?"X":"O"?></td>
+		<td align=center><?=$item["THUOCTOMOTCUA"]==1?"X":"O"?></td>
+		<td align=center><a href="/wf/trangthaihoso/delete/id/<?=$item["ID_TTHS"]?>" >Xóa</a></td>
+	</tr>
+	<?php $stt++; }?>
+</table>
+<script>
+function AddNewButtonClick(){
+	window.location = "/wf/trangthaihoso/input";
+}
+</script>

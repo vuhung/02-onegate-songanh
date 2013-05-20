@@ -1,0 +1,565 @@
+<?php  require_once 'Common/FileDinhKem.php';?>
+<script type="text/javascript" src="/js/Ajax/AjaxEngine.js"></script>
+<form name="frmAddMotCua"  method="<?php echo $this->form->getAttrib('method');?>" action="/motcua/motcua/input">
+<?php
+if($this->id_dkquamang > 0){
+    echo "<input name='TENHOSO' value='".$this->formdata['TENHOSO']."'  type='hidden' />";
+}
+?>
+<table>
+	<tr>
+		<td colspan="2">
+			<span class="box_erro_area"   id="system_error">
+			</span>
+		</td>
+	</tr>
+	<?php if($this->id==0){ ?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Lĩnh vực<font color="red">*</font></td>
+		<td valign="top" width="100%" colspan="5">
+			<select NAME=ID_LV_MC onchange="document.frmAddMotCua.inputSubmit.value='';document.frmAddMotCua.submit();">
+				<?=linhvucmotcuaModel::ToCombo($this->data,$this->formdata['ID_LV_MC'])?>
+			</select>
+			<div class="clr"></div>
+		</td>
+	</tr>
+	<?php } ?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Thủ tục<font color="red">*</font></td>
+		<td valign="top" width="100%" colspan="5">
+			<?php if($this->id==0){ ?>
+				<?php echo $this->form->getElement('ID_LOAIHOSO');
+			      $stnmoi= SoVanBanModel::getSoTiepNhanTheoLoaiHS(QLVBDHCommon::getYear(),$this->formdata['ID_LV_MC']);
+
+			    ?>
+
+			<?php }else{ ?>
+				<?=LoaiModel::getNameById($this->loaihoso)?>
+				<input type=hidden name=ID_LOAIHOSO value="<?=$this->loaihoso?>">
+			<?php } ?>
+
+			<div class="clr"></div>
+			<span class="box_erro_area" id="ERRID_LOAIHOSO">
+        	<?php
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('ID_LOAIHOSO'));
+            ?>
+        	</span>
+		</td>
+	</tr>
+	<?php
+				$arr_stn = array();
+				if($this->id > 0){
+					$arr_stn = SoVanBanModel::getSoMotCuaTheoLoaiHS(QLVBDHCommon::getYear(),$this->loaihoso);
+				}else{
+					$arr_stn = SoVanBanModel::getSoMotCuaTheoLoaiHS(QLVBDHCommon::getYear(),$this->formdata['ID_LOAIHOSO']);
+
+
+				}
+	?>
+
+	<?php if(count($arr_stn) >= 1){ ?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Sổ tiếp nhận<font color="red">*</font></td>
+		<td valign="top" width="100%" colspan="5">
+
+			<select name="ID_STN" onchange="getSoHS(this.value);">
+				<?php
+					foreach($arr_stn as $stn){
+				?>
+					<option value="<?=$stn["ID_SVB"]?>"> <?=$stn["NAME"]?></option>
+				<?php
+				}
+				?>
+			</select>
+
+			<script>
+				document.frmAddMotCua.ID_STN.value="<?=$this->id_stn?>";
+			</script>
+			<div class="clr"></div>
+			<span class="box_erro_area" id="ERRID_STN">
+        	</span>
+		</td>
+	</tr>
+
+	<?php } else { ?>
+		<input type=hidden name=ID_STN value="<?=$arr_stn[0]["ID_SVB"]?>">
+	<?php }?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Tên tổ chức, cá nhân <font color="red">*</font></td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('TENTOCHUCCANHAN');?>
+			<div class="clr"></div>
+			<span class="box_erro_area"   id="ERRTENTOCHUCCANHAN">
+        	<?php
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('TENTOCHUCCANHAN'));
+            ?>
+        	</span>
+		</td>
+		<td width=100%  colspan="4"></td>
+
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Địa chỉ <font color="red">*</font></td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('DIACHI');?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area"   id="ERRDIACHI">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('DIACHI'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" nowrap style="color:blue">Phường/Xã</td>
+		<td valign="top">
+		<select name="phuong" id="phuong"
+			class="inputbox" size="1" onchange="">
+		        <option value=0 <?=$this->phuong==0?"selected":""?>>[Chọn phường]</option>
+				<?=motcua_hosoModel::toCombophuong($this->phuong)?>
+
+		</select>
+		<span class="box_erro_area"  id="ERRphuong"></span>
+		</td>
+		<td width=100%  colspan="2"></td>
+	</tr>
+	<?php
+	if($this->id > 0){
+	$arr_custom_fields = motcua_hosoModel::Customfields($this->datamotcua->ID_LOAIHOSO);
+	}else{
+		$arr_custom_fields = motcua_hosoModel::Customfields($this->formdata['ID_LOAIHOSO']);
+	}
+	$dem_cusf = count($arr_custom_fields);
+	if($dem_cusf > 0){
+		$arr = explode("+",$this->BUILDNAME);
+		$stt = 0;
+		foreach ($arr_custom_fields as $cus){
+		if( ($stt)%2 == 0)
+			echo "<tr>";
+		$col_value = "";
+		eval ('$col_value = $this->datamotcua->'.$cus["NAME_COLUMN"].";");
+
+	?>
+		<td valign="top" nowrap="nowrap" style="color:blue"><?=$cus["NAME_DISPLAY"]?><?=$cus["IS_REQUIRED"]==1?"<font color=red>*</font>":""?></td>
+		<td valign="top" nowrap="nowrap">
+		<?php
+			if($cus["TYPE"] == "DATE"){
+				echo QLVBDHCommon::calendarFull(implode("/",array_reverse(explode("-",$col_value))),$cus["NAME_COLUMN"],$cus["NAME_COLUMN"]);
+			}else{
+				$action = "";
+				foreach($arr as $bitem){
+					if("$".$cus["NAME_COLUMN"]==$bitem){
+						$action = "OnChange='UpdateTrichYeu();'";
+					}
+				}
+
+		?>
+
+		<input type=text name='<?=$cus["NAME_COLUMN"]?>' value="<?=$col_value?>" <?=$action?>>
+
+	<?} ?>
+			<div class="clr"></div>
+			<span class="box_erro_area" id='ERR<?=$cus["NAME_COLUMN"]?>'>
+		 </span>
+	</td><td valign="top" nowrap="nowrap" width=20></td>
+	<?php if(($stt)%2 == 1 ||  ($dem_cusf -1 == $stt ))
+			echo "</tr>";
+			$stt++; };
+	}?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Email</td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('EMAIL');?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area"   id="ERREMAIL">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('EMAIL'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" nowrap="nowrap" width=20></td>
+		<td valign="top" nowrap="nowrap" style="color:blue">Điện thoại</td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('DIENTHOAI');?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('DIENTHOAI'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" width="100%"></td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Nhận vào ngày</td>
+		<td valign="top" nowrap="nowrap">
+			<? echo QLVBDHCommon::calendarFull($this->nhan_ngay,"NHAN_NGAY","NHAN_NGAY") ?>
+			<font nowrap="nowrap" style="color: blue">Số ngày xử lý</font>
+		    <input type=text  size="4" name=HANXULY onchange="ChangeHan();" value="<?=$this->hanxuly?>">Ngày
+			<div class="clr"></div>
+	    	<span class="box_erro_area" id="ERRNHAN_NGAY">
+	        </span>
+		</td>
+
+		<td valign="top" nowrap="nowrap" width=20></td>
+		<td valign="top" nowrap="nowrap" style="color:blue">Nhận vào lúc</td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('NHAN_LUC'); ?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NHAN_LUC'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" width="100%"></td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Nhận lại vào ngày</td>
+		<td valign="top" nowrap="nowrap">
+			<? echo QLVBDHCommon::calendarFullWithNoEvent($this->nhanlai_ngay,"NHANLAI_NGAY","NHANLAI_NGAY") ?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area" id="ERRNHANLAI_NGAY">
+	        </span>
+		</td>
+		<td valign="top" nowrap="nowrap" width=20></td>
+		<td valign="top" nowrap="nowrap" style="color:blue">Nhận lại vào lúc</td>
+		<td valign="top" nowrap="nowrap">
+			<?php echo $this->form->getElement('NHANLAI_LUC');?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NHANLAI_LUC'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" width="100%"></td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Số hồ sơ</td>
+		<td valign="top" nowrap="nowrap">
+			<div style="float:left;">
+			<?php echo $this->form->getElement('SO');?>
+			</div>
+			<div style="float:right;">
+			<?php echo $this->form->getElement('SOKYHIEU_CHAR');?>
+			</div>
+			<div class="clr"></div>
+	    	<span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('SO'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" nowrap="nowrap" width=20></td>
+		<td valign="top" nowrap="nowrap" style="color:blue">Lệ phí</td>
+		<td valign="top" nowrap="nowrap">
+			<input type="hidden" name="LEPHI_hidden" id="LEPHI_hidden" value="">
+			<?php echo $this->form->getElement('LEPHI');?>
+			<div class="clr"></div>
+	    	<span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('LEPHI'));
+	            ?>
+	        </span>
+		</td>
+		<td valign="top" width="100%"></td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Tên hồ sơ <font color="red">*</font></td>
+		<td valign="top" width="100%" colspan="5">
+			<?php echo $this->form->getElement('TRICHYEU');?>
+			<div class="clr"></div>
+			<span class="box_erro_area"  id="ERRTRICHYEU">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('TRICHYEU'));
+	            ?>
+	        </span>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Chú thích</td>
+		<td valign="top" width="100%" colspan="5">
+			<?php echo $this->form->getElement('CHUTHICH');?>
+			<div class="clr"></div>
+	        <span class="box_erro_area">
+	        	<?php
+	                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('CHUTHICH'));
+	            ?>
+	        </span>
+		</td>
+	</tr>
+	<?php
+		$idhscv=$this->form->getElement('ID_HSCV')->getValue();
+		$idTemp=$this->idTemp;
+		if($idhscv>0)
+		 $idTemp=$idhscv;
+	?>
+
+	<?php
+		if($this->wf_id_t>0){
+	?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Chọn người nhận</td>
+		<td valign="top" width="100%" colspan="5">
+		<?php
+			echo WFEngine::FormSend($this->wf_id_t);
+		?>
+		</td>
+	</tr>
+	<?php
+		}else{
+	?>
+		<input type=hidden name="wf_nextuser" value=-1>
+	<?php
+		}
+	?>
+	<?php if($this->id_yeucau > 0){
+	?>
+		<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue"></td>
+		<td valign="top" width="100%" colspan="5">
+			<div >
+				<b>Nội dung yêu cầu bổ sung:</b><br>
+                <span><?php echo ($this->noidung_ycbo)?></span>
+			</div>
+		</td>
+	</tr>
+	<?php }?>
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">Danh sách hồ sơ cần có</td>
+		<td valign="top" width="100%" colspan="5">
+			<div id="DivThuTuc"></div>
+		</td>
+	</tr>
+
+	<tr>
+		<td valign="top" nowrap="nowrap" style="color:blue">File đính kèm</td>
+		<td valign="top" width="100%" colspan="5">
+			<div id="idFileDinhKem"></div>
+			<script type="text/javascript">
+				divFileDinhKemId='idFileDinhKem';
+				url='/hscv/file?iddiv=idFileDinhKem&idObject=<?php echo ($idTemp>0?$idTemp:0) ?>&is_new=<?php echo ($idTemp>0?0:1)  ?>&year=<?php echo $this->year ?>&type=<?php echo ($idTemp>0?1:-1) ?>';
+				loadDivFromUrl(divFileDinhKemId,url,0);
+			</script>
+		</td>
+	</tr>
+</table>
+<input type=hidden name="id" value=<?php echo $this->id?>>
+<input type=hidden name="type" value=<?php echo $this->type?>>
+<input type=hidden name="inputSubmit" value=inputSubmit>
+<input type=hidden name="tenloai" value="<?php echo $this->tenloai==""?LoaiModel::getNameById($this->loaihoso):$this->tenloai?>">
+<input type=hidden name="songayxuly" value=<?php echo $this->songayxuly?>>
+<input type=hidden name="idlhs" value=<?php echo $this->idlhs?>>
+
+<input type="hidden" name="id_yeucau" value=<?php echo $this->id_yeucau?>>
+<?php echo $this->form->getElement('ID_HSCV');?>
+</form>
+<script>
+	<?php
+		if($this->id>0)
+		{
+	?>
+		loadDivFromUrl("DivThuTuc","/motcua/motcuanhangom/index/idhoso/<?php echo $this->id?><?=$this->id_yeucau>0?"/id_yeucau/".$this->id_yeucau:""?>",1);
+	<?php
+		}
+		else
+		if($this->type_id>0)
+		{
+	?>
+		loadDivFromUrl("DivThuTuc","/motcua/motcuanhangom/index/idloai/<?php echo $this->type_id ?>",1);
+	<?php
+		}
+	?>
+
+
+	function SaveButtonClick()
+	{
+		var err = true;
+		//err = err & validateInput("req",document.frmAddMotCua.ID_STN,"<?php echo "Bạn phải chọn một sổ tiếp nhận"; ?>");
+		err = err & validateInput("email",document.frmAddMotCua.EMAIL,"Địa chỉ email không hợp lệ");
+        err = err & validateInput("greaterthan=0",document.frmAddMotCua.phuong,"Phải chọn xã/phường");
+
+        if(document.frmAddMotCua.ID_STN.value == 0){
+			err = err & false;
+			var ospan = document.getElementById('ERRID_STN') ;
+			ospan.innerHTML = "Bạn phải chọn một sổ tiếp nhận";
+		}
+		err = err & validateInput("req",document.frmAddMotCua.TRICHYEU,"<?php echo ERR11001001 ?>");
+        err = err & err==true?validateInput("maxlen=500",document.frmAddMotCua.TRICHYEU,"<?php echo ERR11001002 ?>"):false;
+        if( err && document.frmAddMotCua.ID_LOAIHOSO.value==0)
+		{
+			document.getElementById("ERRID_LOAIHOSO").innerHTML="<?php echo ERR11001001 ?>";
+			err = err & false;
+		}
+		else
+		{
+			document.getElementById("ERRID_LOAIHOSO").innerHTML="";
+
+		}
+
+        err = err & validateInput("req",document.frmAddMotCua.TENTOCHUCCANHAN,"<?php echo ERR11001001 ?>");
+        err = err & validateInput("req",document.frmAddMotCua.DIACHI,"<?php echo ERR11001001 ?>");
+        <?php
+			if(count($arr_custom_fields) > 0){
+
+			foreach ($arr_custom_fields as $cus){
+				if($cus["IS_REQUIRED"] == 1){
+
+		?>
+			err = err & validateInput("req",document.frmAddMotCua.<?=$cus["NAME_COLUMN"]?>,"<?="Bạn phải nhập ". $cus["NAME_DISPLAY"] ?>");
+		<?php
+				}
+			switch($cus["TYPE"]){
+			case "DATE" : ?>
+				err = err & validateInput("date",document.frmAddMotCua.<?=$cus["NAME_COLUMN"]?>,"Ngày tháng sai định dạng");
+			<?php break; ?>
+			<?php case "DATE" : ?>
+			err = err & validateInput("date",document.frmAddMotCua.<?=$cus["NAME_COLUMN"]?>,"Ngày tháng sai định dạng");
+			<?php break; ?>
+			<?php case "INTEGER" : ?>
+			err = err & validateInput("numeric",document.frmAddMotCua.<?=$cus["NAME_COLUMN"]?>,"Ngày tháng sai định dạng");
+			<?php break; ?>
+			<?php case "DOUBLE" : ?>
+			err = err & validateInput("decimal",document.frmAddMotCua.<?=$cus["NAME_COLUMN"]?>,"Ngày tháng sai định dạng");
+			<?php break; ?>
+		<?php }
+			}
+		}?>
+
+		if(document.frmAddMotCua.NHAN_NGAY.value!="")
+		{
+       		err = err & validateInput("req",document.frmAddMotCua.NHAN_NGAY,"<?php echo ERR11001001 ?>");
+
+		}
+        if(err==true)
+        {
+            if(document.frmAddMotCua.id.value>0){
+		        document.getElementById("LEPHI_hidden").value=document.getElementById("id_LEPHI").value;
+				document.frmAddMotCua.submit();
+            }else{
+            	if(document.frmAddMotCua.wf_nextuser.value>0)
+	        	{
+		        	document.getElementById("LEPHI_hidden").value=document.getElementById("id_LEPHI").value;
+					document.frmAddMotCua.submit();
+	        	}
+	        	else
+	        	{
+	        		document.getElementById("system_error").innerHTML="Không có dòng luân chuyển cho loại hồ sơ hiện tại. Xin vui lòng liên hệ quản trị website";
+	        	}
+            }
+        }
+
+	}
+	function BackButtonClick()
+	{
+		<?php if($this->id_yeucau){?>
+		document.frmAddMotCua.action = "/hscv/hscv/listbosung";
+		document.frmAddMotCua.submit();
+		<?php }else { ?>
+		document.frmAddMotCua.action = "/hscv/hscv/list";
+		document.frmAddMotCua.submit();
+		<?php } ?>
+	}
+	function loadLePhi()
+	{
+		/*<?php
+		if(null!=$this->dataLoai)
+		{
+			foreach ($this->dataLoai as $row )
+			{
+
+		?>
+			if(document.getElementById("id_ID_LOAIHOSO").value=="<?php echo $row->ID_LOAIHOSO?>")
+			{
+				document.getElementById("id_LEPHI").value="<?php echo $row->LEPHI ?>";
+			}
+		<?php
+			}
+		}
+		?>*/
+
+	}
+	function UpdateTrichYeu()
+	{
+		<?php if($this->BUILDNAME==""){?>
+		var tentochuccanhan="cho "+document.frmAddMotCua.TENTOCHUCCANHAN.value;
+		<?php }else{
+			$s="''";
+			$arr = explode("+",$this->BUILDNAME);
+			foreach($arr as $bitem){
+				if(substr($bitem,0,1)=="$"){
+					$s .= "+(document.frmAddMotCua.".substr($bitem,1)."!=null?document.frmAddMotCua.".substr($bitem,1).".value:'')";
+				}else{
+					$s .= "+'".$bitem."'";
+				}
+			}
+			echo "var tentochuccanhan=".$s;
+		}
+		?>
+		//tencongtrinh=document.frmAddMotCua.TENCONGTRINH.value;
+		document.frmAddMotCua.TRICHYEU.value=document.frmAddMotCua.tenloai.value+" "+tentochuccanhan;
+	}
+	document.location.href = "#atitle";
+    function PressCtrlS(){
+    	SaveButtonClick();
+    }
+    var retvalue;
+    function ChangeDate(){
+         //alert(document.frmAddMotCua.NHAN_NGAY.value);
+         getvalue("auth","user","adddate","date="+document.frmAddMotCua.NHAN_NGAY.value+"&value="+(parseInt(document.frmAddMotCua.HANXULY.value,10)));
+
+    }
+    function ChangeHan(){
+       //alert(parseInt(document.frmAddMotCua.HANXULY.value,10)+1);
+       getvalue("auth","user","adddate","all=1&date="+document.frmAddMotCua.NHAN_NGAY.value+"&value="+(parseInt(document.frmAddMotCua.HANXULY.value,10)));
+
+    }
+    function UpdateRet(){
+		if((document.frmAddMotCua.idlhs.value==95 || document.frmAddMotCua.idlhs.value==108 || document.frmAddMotCua.idlhs.value==136)&& (document.frmAddMotCua.HANXULY.value==0)){document.frmAddMotCua.NHANLAI_NGAY.value=document.frmAddMotCua.NHAN_NGAY.value}else{
+         document.frmAddMotCua.NHANLAI_NGAY.value = retvalue;}
+    }
+
+	var old_stn = "<?=$this->id_stn?>";
+	function getSoHS(id_stn){
+
+		if( old_stn != id_stn){
+			var url = "/motcua/motcua/getsohoso?id_stn="+id_stn;
+			var type_request = "GET";
+			sendRequestToServer(url,type_request,get_soden,checkFail);
+		}else{
+			get_soden("<?=$this->so?>");
+		}
+
+	}
+	function get_soden(msg){
+
+		document.frmAddMotCua.SO.value = msg;
+		var fade = function (node) {
+	        var level = 1;
+	        var step = function (  ) {
+	            var hex = level.toString(16);
+	            node.style.backgroundColor = '#FFFF' + hex + hex;
+	            if (level < 15) {
+	                level += 1;
+	                setTimeout(step, 100);
+	            }
+	        };
+	        setTimeout(step, 100);
+	    };
+	    fade(document.frmAddMotCua.SO);
+	    //oimgsoden = document.getElementById("id_img_den");
+	    //oimgsoden.style.display = "none";
+	}
+	function checkFail(msg){
+		alert(msg);
+	}
+  <?php if($this->delay >0){?>
+    ChangeHan();
+  <?php }?>
+</script>
+<?php if(count($arr_stn) <= 1 ){ ?>
+<script>getSoHS(document.frmAddMotCua.ID_STN.value); </script>
+<?php } ?>
+<?php if($stnmoi != null) {?>
+<script>document.frmAddMotCua.ID_STN.value="<?=$stnmoi?>";
+	getSoHS(document.frmAddMotCua.ID_STN.value); </script>
+	<?php }?>

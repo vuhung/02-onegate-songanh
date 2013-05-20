@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+td{
+	border-color: black;
+}
+th{
+	border-color: black;
+}
+</style>
+
+</head>
+<body style="background-color:transparent">
+<table  width=100% >
+<tr >
+  <td align=center ><b><?= mb_strtoupper($this->config->sys_info->unit,"utf-8") ?></b></td>
+
+  <td align=center><b>CỘNG HÒA XÃ HỘI CHỦ
+  NGHĨA VIỆT NAM</b></td>
+ </tr>
+ <tr >
+  <td align=center ><b><?=mb_strtoupper($this->config->sys_info->company,"utf-8") ?></b></td>
+  <td align=center ><b>Ðộc lập - Tự do - Hạnh phúc</b></td>
+ </tr>
+ <tr >
+
+ 
+  <td ></td>
+  <td align=right><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></td>
+ </tr> 
+</table>
+
+<p align=center><b>THỐNG KÊ HỒ SƠ LƯU TRỮ</b></p>
+<p align=center><?php echo $this->thu;?> </p>
+
+<table border="1" style="border: 1px solid black; border-collapse: collapse;" width=100%>
+	
+	<thead>
+		<tr>
+			<th align=center>Loại hồ sơ</th>
+			<th align=center>Tổng số hồ sơ lưu trữ</th>
+			<th align=center>Số hồ sơ còn lại trong kho</th>
+			<th align=center>Số hồ sơ cho mượn</th>			
+		</tr>
+	</thead>
+
+	<tbody>
+     <?php
+			global $db;
+			if($this->id_lhs==0){
+				$r = $db->query("SELECT * FROM qllt_loaihoso");
+				$row = $r->fetchAll();
+				}else{
+				$r = $db->query("SELECT * FROM qllt_loaihoso where ID_LOAIHOSO=$this->id_lhs");
+				$row = $r->fetchAll();
+				//var_dump($row);
+				}
+			foreach($row as $lhs){
+			?>
+    <tr>
+			<td nowrap  width="40%">
+			<?=$lhs['TENLOAI']?>
+			</td>
+			<td nowrap  width="20%">	
+					
+			 <?php			      
+				echo  baocaoluutruhosoreportModel::counttkehslt($this->fromdate,$this->todate,$this->id_pb,$lhs['ID_LOAIHOSO']);				
+			 ?>			 
+			
+			</td>			 
+			<td nowrap width="20%">	
+			
+			 <?php
+				echo baocaoluutruhosoreportModel::counttkehsltconlai($this->fromdate,$this->todate,$this->id_pb,$lhs['ID_LOAIHOSO']);			
+			 ?>
+		
+			</td>			 
+			<td nowrap width="20%">
+			
+			<?php
+				echo baocaoluutruhosoreportModel::counttkehsltchomuon($this->fromdate,$this->todate,$this->id_pb,$lhs['ID_LOAIHOSO']);			
+			 ?>
+			
+			</td>
+			<?php }?>
+		</tr>
+	</tbody>
+</table>
+</body>
+<script>print();</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,66 @@
+<form name=frm method=post >
+<table class=adminlist>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th>Tên danh mục</th>
+			<th>Tên bảng</th>
+			<th>Trường dữ liệu</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php $stt = 1; foreach($this->data as $it){?>
+		<tr>
+			<td><?=$stt?></td>
+			<td><input type=checkbox name=DEL[] value='<?=$it['ID_DANHMUC'] ?>'></td>
+			<td><a href="/dvc/danhmuc/input/id/<?=$it["ID_DANHMUC"]?>" ><?=$it["NAME"]?></a></td>
+			<td><?=$it["TABLENAME"]?></td>
+			<td><?=$it["FIELDLIST"]?></td>
+			<td><a href="#" onclick="onDongbo('<?=$it['CODE']?>')" > Đồng bộ dữ liệu</a>(Lần cập nhật gần nhất <?=date(" H:i:s  d/m/Y",strtotime($it["LAST_SYS"]))?>)</td>
+		</tr>
+		<?php $stt++;}?>
+	</tbody>
+</table>
+</form>
+<script>
+function AddNewButtonClick(){
+	window.location = "/dvc/danhmuc/input";
+}
+
+function DeleteButtonClick(){
+	document.frm.action = "/dvc/danhmuc/delete";
+	document.frm.submit();
+}
+
+function onDongbo(code){
+	var submitAjax = new AjaxEngine(); 
+	var oXmlHttp = submitAjax.createXMLHttp();
+	oXmlHttp.open("post", "/dvc/danhmuc/synchronous/code/"+encodeURIComponent(code) , true); 
+	oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	oXmlHttp.onreadystatechange = function () { 
+				if (oXmlHttp.readyState == 4) { 
+				
+				if (oXmlHttp.status == 200) { 
+			
+				if(oXmlHttp.responseText ==1){
+					
+					alert('Dữ liệu đồng bộ thành công');
+					window.location.reload();
+				}	
+				else{
+					if(oXmlHttp.responseText == 0)
+						alert('Có sự cố xảy ra khi truyền dữ liệu lên adapter');
+					if(oXmlHttp.responseText == -1)
+						alert('Mã số dịch vụ không đúng');
+				}
+				
+            } else { 
+                //as_checkdata_all = 1;
+            } 
+        } 
+       }; 
+   	   oXmlHttp.send(null);		   
+}
+</script>

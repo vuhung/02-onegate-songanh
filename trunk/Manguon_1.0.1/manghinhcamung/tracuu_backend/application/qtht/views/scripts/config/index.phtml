@@ -1,0 +1,643 @@
+<script type="text/javascript" src="/js/Ajax/AjaxEngine.js"></script>
+<script type="text/javascript" src="/js/Ajax/testconfigmailAjax.js"></script>
+<form name=frm action="/qtht/config/save" method="post">
+<fieldset>
+	<legend>Thông số hệ thống</legend>
+	<table class=admintable>
+			<tr>
+				<td class=key>Tên hệ thống:</td>
+				<td><input size=50 type=text name='sysinfo_name' value="<?php echo $this->data->sys_info->name_system ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Phiên bản:</td>
+				<td><input size=50 type=text name='sysinfo_version' value="<?php echo $this->data->sys_info->version ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Thành phố/Tỉnh:</td>
+				<td><input size=50 type=text name='sysinfo_city' value="<?php echo $this->data->sys_info->city ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Tên cơ quan:</td>
+				<td><input size=50 type=text name='sysinfo_company' value="<?php echo $this->data->sys_info->company ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Địa chỉ:</td>
+				<td><input size=50 type=text name='sysinfo_address' value="<?php echo $this->data->sys_info->address ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Số điện thoại:</td>
+				<td><input size=50 type=text name='sysinfo_phone' value="<?php echo $this->data->sys_info->phone ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Fax:</td>
+				<td><input size=50 type=text name='sysinfo_fax' value="<?php echo $this->data->sys_info->fax ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Đơn vị trực thuộc (Viết tắt):</td>
+				<td><input size=50 type=text name='sysinfo_unit' value="<?php echo $this->data->sys_info->unit ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Ký hiệu tiếp nhận:</td>
+				<td><input size=50 type=text name='sysinfo_kyhieutiepnhan' value="<?php echo $this->data->sys_info->kyhieutiepnhan ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Văn thư nhập bút phê:</td>
+				<td>
+				<input type=radio name=hscv_vtbp value=1 <?=($this->data->hscv->vtbp==1?"checked":"")?>> có 
+				<input type=radio name=hscv_vtbp value=0 <?=($this->data->hscv->vtbp==0?"checked":"")?>> không 
+				</td>
+			</tr>
+			<tr>
+				<td class=key>Cho phép nhập lịch dự kiến:</td>
+				<td>
+				<input type=radio name=lct_dukien value=1 <?=($this->data->lct->dukien==1?"checked":"")?>> có 
+				<input type=radio name=lct_dukien value=0 <?=($this->data->lct->dukien==0?"checked":"")?>> không 
+				</td>
+			</tr>
+	</table>
+</fieldset>
+<fieldset>
+	<legend>Thông số hệ thống</legend>
+	<fieldset>
+		<legend>Thông số Database</legend>
+		<table class=admintable>
+			<tr>
+				<td class=key>Địa chỉ IP:</td>
+				<td><input size=50 type=text name='db_host' value="<?php echo $this->data->db->params->host ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Tên đăng nhập:</td>
+				<td><input size=50 type=text name='db_username' value="<?php echo $this->data->db->params->username ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Mật khẩu:</td>
+				<td><input size=50 type=text name='db_password' value="<?php echo $this->data->db->params->password ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Tên database:</td>
+				<td><input size=50 type=text name='db_dbname' value="<?php echo $this->data->db->params->dbname ?>"></td>
+			</tr>
+			<tr>
+				<td class=key>Thư mục chứa dữ liệu:</td>
+				<td><input size=50 type=text name='db_dbdatastorage' value="<?php echo $this->data->db->params->dbdatastorage ?>">
+				<span>(Để Backup )</span>
+				</td>
+			</tr>
+		</table>
+		<input type='button' value='Kiểm tra kết nối' onclick="checkDatabase();">
+		<img id="image_load" src="/images/loading.gif" style="display:none;">
+		<span id='re_cdb'></span>
+	</fieldset>
+	<!--
+	<fieldset>
+		<legend>Thông số CGI</legend>
+		<table class=admintable>
+		<tr>
+				<td class=key>Hệ điều hành:</td>
+				<td><input size=50 type=text name='cgi_os' value="<?php echo $this->data->cgi->os?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Tập tin thực thi CGI đọc file word:</td>
+				<td><input size=50 type=text name='cgi_parse_word_exe_win' value="<?php echo $this->data->cgi->parse_word_exe_win?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Thư mục CGI đọc file word:</td>
+				<td><input size=50 type=text name='cgi_parse_word_mapping_win' value="<?php echo $this->data->cgi->parse_word_mapping_win?>"></td>
+		</tr>
+		</table>
+	</fieldset>
+	-->
+	<!--
+	<fieldset>
+		<legend>Thông số khác</legend>
+		<table class=admintable>
+		<tr>
+				<td class=key>Tên layout:</td>	
+				<td><input size=50 type=text name='appearance_layout' value="<?php echo $this->data->appearance->layout ?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Thư mục layout:</td>	
+				<td><input size=50 type=text name='appearance_layoutPath' value="<?php echo $this->data->appearance->layoutPath ?>"></td>
+		</tr>
+		</table>
+	</fieldset>
+	-->
+</fieldset>
+
+<fieldset>
+	<legend>Thông số mail client</legend>
+	
+	<table class=admintable>
+		<tr>
+				<td class=key>Server nhận mail:</td>
+				<td><input type=text name='default_outgoing_server'  value="<?=$this->config_mail->mail->default->outgoing_server?>"></td>	
+		</tr>
+		<tr>
+				<td class=key>Server gửi mail:</td>
+				<td><input type=text name='default_incoming_server'  value="<?=$this->config_mail->mail->default->incoming_server?>"></td>	
+		</tr>
+
+		
+		<tr>
+				<td class=key>Quota:</td>
+				<td><input type=text name='QUOTA_MAXSIZE'  value="<?=$this->config_mail->mail->quota->maxsize?>"></td>	
+		</tr>
+		<tr>
+				<td class=key>Quota:</td>
+				<td><input type=text name='QUOTA_MAXSIZE'  value="<?=$this->config_mail->mail->quota->maxsize?>"></td>	
+		</tr>
+		
+	</table>
+	
+</fieldset>
+<fieldset>
+		<legend>Thông số Ldap</legend>
+		<table class=admintable>
+		<tr>
+				<td class=key>Máy chủ Ldap server:</td>
+				<td><input size=50 type=text name='ldap_os' value="<?php echo $this->data_ldap->ldap->host ?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Port:</td>
+				<td><input size=50 type=text name='ldap_port' value="<?php echo $this->data_ldap->ldap->port ?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Tên đăng nhập:</td>
+				<td><input size=50 type=text name='ldap_username' value="<?php echo str_replace(".","=",$this->data_ldap->ldap->username)?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Mật khẩu:</td>
+				<td><input size=50 type="password" name='ldap_pass' value="<?php echo $this->data_ldap->ldap->password ?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Kết nối với ldap:</td>
+				<td>
+				   <input type=radio name=kn_ldap value=1 <?=($this->data_ldap->ldap->enable==1?"checked":"")?>> có 
+				   <input type=radio name=kn_ldap value=0 <?=($this->data_ldap->ldap->enable==0?"checked":"")?>> không 
+				</td>
+		</tr>
+		<tr>
+				<td class=key>Quy định username:</td>
+				<td>
+				   <input type=radio name=ldap_user_qd value=1 <?=($this->data_ldap->ldap->user_qd==1?"checked":"")?>> cn 
+				   <input type=radio name=ldap_user_qd value=0 <?=($this->data_ldap->ldap->user_qd==0?"checked":"")?>> uid 
+				</td>
+		</tr>
+		</table>
+		
+		<input type='button' value='Kiểm tra kết nối' onclick="checkDatabase_ldap();">
+		<span id='ldap'></span>
+</fieldset>
+
+
+<fieldset>
+	<legend>Thông số File đính kèm</legend>
+	
+	<table class=admintable>
+		<tr>
+				<td class=key>File Server:</td>
+				<td>Đang sử dụng Web server</td>	
+		</tr>
+		<tr>
+				<td class=key>Kích thước tố đa tập tin tải lên:</td>
+				<td><input size=50 type=text name='file_maxsize' value="<?php echo $this->data->file->maxsize ?>"></td>	
+		</tr>
+		<tr>
+				<td class=key>Thư mục lưu trữ file:</td>	
+				<td><input size=50 type=text name='file_root_dir' value="<?php echo $this->data->file->root_dir ?>"></td>
+		</tr>
+		<tr>
+				<td class=key>Thư mục lưu trữ tạm (temp path):</td>	
+				<td><input size=50 type=text name='file_temp_path' value="<?php echo $this->data->file->temp_path ?>"></td>
+		</tr>
+		
+	</table>
+	
+</fieldset>
+<fieldset>
+	<legend>Thông số Phân trang</legend>
+	<table class=admintable>
+	<tr>
+				<td class=key>Số trang hiện thị mặc định:</td>	
+				<td><input size=50 type=text name='limit' value="<?php echo $this->data->limit ?>"></td>
+		</tr>
+	</table>
+</fieldset>
+
+
+
+<fieldset>
+	<legend>Cấu hình mail nhận và gửi văn bản</legend>
+	
+<div class="clr"></div>
+
+<div>
+<label><b>Địa chỉ email</b></label>
+<input type="text" value="<?=$this->email_account->_email_addr?>" name="EMAIL_ADDR">
+</div>
+
+<div class="clr"></div>
+
+<div>
+<label><b>Tài khoản</b></label>
+<input type="text" value="<?=$this->email_account->_username?>" name="USERNAME">
+</div>
+
+<div class="clr"></div>
+<div>
+<label><b>Mật khẩu:</b></label>
+<input type="password" value="<?=$this->email_account->_password?>" name="PASSWORD">
+</div>
+
+
+<div class="clr"></div>
+<div style="float:left">
+			<label><b>Server nhận mail </b></label>
+			<input type="text" value="<?=$this->email_account->_incoming_hostname?>" name="INCOMING_HOSTNAME">
+</div>
+
+<table >
+	<tr>
+		
+		<td nowrap>
+			
+			<label><b>Giao thức </b></label>
+			<select  name="INCOMING_PROTOCOL">
+			<option <?php if($this->email_account->_incoming_protocol == "POP3")
+			echo "selected";
+			?> value="POP3"><b>POP3</b></option>
+			<!--
+			<option  <?php if($this->email_account->_incoming_protocol == "IMAP")
+			echo "selected"; ?> value="IMAP">IMAP</option>
+			-->
+			</select>
+			
+		</td>
+		<td nowrap>
+			
+			<label><b>Port </b></label>
+			<input type="text" size='5' name="INCOMING_PORT" value="<?=$this->email_account->_incoming_port?>">
+			
+		</td>
+		<td nowrap>
+			
+			<label>Có sử dụng SSL</label>
+			<select name="SSL_IN">
+				<option value=0>Không sử dụng</option>
+				<option value=1>Sử dụng SSL</option>
+				<option value=2>Sử dụng TLS</option>
+			</select>
+			<script>document.frm.SSL_IN.value=<?=$this->email_account->_ssl_in?></script>
+			
+			
+		</td>
+	</tr>
+</table>
+
+<div style="float:left">
+			<label><b>Server gửi mail </b></label>
+			<input type="text" value="<?=$this->email_account->_outgoing_hostname?>" name="OUTGOING_HOSTNAME">
+</div>
+<table>	
+	<tr>
+		<td>
+			<label><b>Giao thức </b></label>
+			<select  name="OUTGOING_PROTOCOL">
+			<option value="SMTP">SMTP</option>
+			</select>
+		</td>
+		<td>
+			<label><b>Port </b></label>
+			<input type="text"  size='5' name="OUTGOING_PORT" value="<?=$this->email_account->_outgoing_port?>">
+		</td>
+		<td>
+			<label>Có sử dụng SSL </label>
+			<select name="SSL_OUT" >
+				<option value=0>Không sử dụng</option>
+				<option value=1>Sử dụng SSL</option>
+				<option value=2>Sử dụng TLS</option>
+			</select>
+			<script>document.frm.SSL_OUT.value=<?=$this->email_account->_ssl_out?></script>
+			
+		</td>	
+	</tr>
+
+</table>
+
+
+
+
+
+<div class="clr"></div>
+
+
+
+
+<input type="hidden" name="ACTIVE" value="1"?>
+<input type="hidden" name="ID_EAC" value="<?=$this->id_eac?>"?>
+
+
+<div class="clr"></div>
+<div>
+<input type="button" value="Kiểm tra kết nối" name="test_mail"
+onclick="testButtonClick();"
+>
+</div>
+<div class="clr"></div>
+
+<div id='test_result' style="display:none">
+
+
+<div id="check_3">
+<img id ='check_3_pro' src='/images/loading.gif' width='16' height='16' border='0'></img>
+<label id='check_3_lbl_dis'>Đăng nhập vào server nhận mail</label>
+<img id='check_3_suc' src='/images/header/icon-48-checkin.png' width='16' height='16' border='0' style='display:none'></img>
+<img id='check_3_err' src='/images/icon_del.jpg' width='16' height='16' border='0' style='display:none'></img>
+</div>
+<div class="clr"></div>
+<div id="check_4">
+<img id ='check_4_pro' src='/images/loading.gif' width='16' height='16' border='0'></img>
+<label id='check_4_lbl_dis'>Gửi mail thử</label>
+<img id='check_4_suc' src='/images/header/icon-48-checkin.png' width='16' height='16' border='0' style='display:none'></img>
+<img id='check_4_err' src='/images/icon_del.jpg' width='16' height='16' border='0' style='display:none'></img>
+</div>
+
+</div>
+</fieldset>
+<fieldset>
+	<legend>Thông số Hiển thị danh sách hồ sơ công việc</legend>
+<table class=adminlist>
+<tbody>
+<?php 
+//tach chuoi
+$hscv_1 = $this->data->HSCV_1;
+$arr_1 = explode(',',$hscv_1);
+?>
+<tr>
+	<td>Xử lý văn bản đến</td>
+	<td>
+	<input type='checkbox' value=1 name=HSCV_1_0 <? if($arr_1[0]==1) echo "checked" ?>> Chi tiết
+	<input type='checkbox' value=1 name=HSCV_1_1 <? if($arr_1[1]==1) echo "checked" ?>> Bút phê
+	<input type='checkbox' value=1 name=HSCV_1_2 <? if($arr_1[2]==1) echo "checked" ?>> Phối hợp
+	<input type='checkbox' value=1 name=HSCV_1_3 <? if($arr_1[3]==1) echo "checked" ?>> File đính kèm
+	<input type='checkbox' value=1 name=HSCV_1_4 <? if($arr_1[4]==1) echo "checked" ?>> Dự thảo
+	<input type='checkbox' value=1 name=HSCV_1_5 <? if($arr_1[5]==1) echo "checked" ?>> Luân chuyển
+	<input type='checkbox' value=1 name=HSCV_1_6 <? if($arr_1[6]==1) echo "checked" ?>> Bổ sung
+	<input type='checkbox' value=1 name=HSCV_1_7 <? if($arr_1[7]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_1_8 <? if($arr_1[8]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_1_9 <? if($arr_1[9]==1) echo "checked" ?>> Không biết 
+	</td>
+<tr>
+<?php 
+//tach chuoi
+$hscv_2 = $this->data->HSCV_2;
+$arr_2 = explode(',',$hscv_2);
+?>
+<tr>
+	<td>Soạn thảo văn bản</td>
+	<td>
+	<input type='checkbox' value=1 name=HSCV_2_0 <? if($arr_2[0]==1) echo "checked" ?>> Chi tiết
+	<input type='checkbox' value=1 name=HSCV_2_1 <? if($arr_2[1]==1) echo "checked" ?>> Bút phê
+	<input type='checkbox' value=1 name=HSCV_2_2 <? if($arr_2[2]==1) echo "checked" ?>> Phối hợp
+	<input type='checkbox' value=1 name=HSCV_2_3 <? if($arr_2[3]==1) echo "checked" ?>> File đính kèm
+	<input type='checkbox' value=1 name=HSCV_2_4 <? if($arr_2[4]==1) echo "checked" ?>> Dự thảo
+	<input type='checkbox' value=1 name=HSCV_2_5 <? if($arr_2[5]==1) echo "checked" ?>> Luân chuyển
+	<input type='checkbox' value=1 name=HSCV_2_6 <? if($arr_2[6]==1) echo "checked" ?>> Bổ sung
+	<input type='checkbox' value=1 name=HSCV_2_7 <? if($arr_2[7]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_2_8 <? if($arr_2[8]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_2_9 <? if($arr_2[9]==1) echo "checked" ?>> Không biết 
+	</td>
+<tr>
+<?php 
+//tach chuoi
+$hscv_3 = $this->data->HSCV_3;
+$arr_3 = explode(',',$hscv_3);
+?>
+<tr>
+	<td>Hồ sơ một cửa</td>
+	<td>
+	<input type='checkbox' value=1 name=HSCV_3_0 <? if($arr_3[0]==1) echo "checked" ?>> Chi tiết
+	<input type='checkbox' value=1 name=HSCV_3_1 <? if($arr_3[1]==1) echo "checked" ?>> Bút phê
+	<input type='checkbox' value=1 name=HSCV_3_2 <? if($arr_3[2]==1) echo "checked" ?>> Phối hợp
+	<input type='checkbox' value=1 name=HSCV_3_3 <? if($arr_3[3]==1) echo "checked" ?>> File đính kèm
+	<input type='checkbox' value=1 name=HSCV_3_4 <? if($arr_3[4]==1) echo "checked" ?>> Dự thảo
+	<input type='checkbox' value=1 name=HSCV_3_5 <? if($arr_3[5]==1) echo "checked" ?>> Luân chuyển
+	<input type='checkbox' value=1 name=HSCV_3_6 <? if($arr_3[6]==1) echo "checked" ?>> Bổ sung
+	<input type='checkbox' value=1 name=HSCV_3_7 <? if($arr_3[7]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_3_8 <? if($arr_3[8]==1) echo "checked" ?>> Không biết
+	<input type='checkbox' value=1 name=HSCV_3_9 <? if($arr_3[9]==1) echo "checked" ?>> Không biết 
+	</td>
+<tr>
+</tbody>
+</table>
+</fieldset>
+<fieldset>
+	<legend>Lịch làm việc của cơ quan</legend>
+	<iframe style="overflow-x:visible;" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no name="frmbussday" id="frmbussday" src="/qtht/config/viewbussdate"> </iframe>	
+</fieldset>
+
+
+
+
+</form>
+
+
+
+<script type="text/javascript">
+<!--
+
+//-->
+
+
+
+function checkFormData(){
+	
+}
+
+function SaveButtonClick(){
+	//window.showModalDialog( '/DialogTemplate/QueryDialog.html',document);
+	var img = document.getElementById('image_load');
+		var re_dis = document.getElementById('re_cdb');
+    	img.style.display = '';
+    	re_dis.innerHTML ='';
+    	var submitAjax = new AjaxEngine(); 
+		var oXmlHttp = submitAjax.createXMLHttp();
+		oXmlHttp.open("post", "/qtht/config/checkdatabase" , true); 
+		oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+		var post = submitAjax.getDataFromFrm(document.frm);
+		oXmlHttp.onreadystatechange = function () { 
+		if (oXmlHttp.readyState == 4) { 
+			
+			if (oXmlHttp.status == 200) { 
+				//alert(oXmlHttp.responseText);
+				if(oXmlHttp.responseText == 1){
+					re_dis.innerHTML = "<font color='blue'><b>Kết nối cơ sở dữ liệu thành công</b></font>";
+					document.frm.submit();
+					
+				}else{
+					re_dis.innerHTML = "<font color='red'><b>Không thể kết nối cơ sở dữ liệu</b></font>";
+				}
+					
+	        } else { 
+            
+        	} 
+        	
+        	
+    	} 
+    	img.style.display = "none";
+   }; 
+   oXmlHttp.send(post);
+	
+}
+function BackButtonClick(){
+	
+	window.location = '/default/index';
+	
+}
+
+function checkDatabase(){
+	//Luu van ban di bang ajax
+    	
+    	var img = document.getElementById('image_load');
+		var re_dis = document.getElementById('re_cdb');
+    	img.style.display = '';
+    	re_dis.innerHTML ='';
+    	var submitAjax = new AjaxEngine(); 
+		var oXmlHttp = submitAjax.createXMLHttp();
+		oXmlHttp.open("post", "/qtht/config/checkdatabase" , true); 
+		oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+		var post = submitAjax.getDataFromFrm(document.frm);
+		oXmlHttp.onreadystatechange = function () { 
+		if (oXmlHttp.readyState == 4) { 
+			
+			if (oXmlHttp.status == 200) { 
+				//alert(oXmlHttp.responseText);
+				if(oXmlHttp.responseText == 1){
+					re_dis.innerHTML = "<font color='blue'><b>Kết nối cơ sở dữ liệu thành công</b></font>";
+					
+				}else{
+					re_dis.innerHTML = "<font color='red'><b>Không thể kết nối cơ sở dữ liệu</b></font>";
+				}
+					
+	        } else { 
+            
+        	} 
+        	
+        	
+    	} 
+    	img.style.display = "none";
+   }; 
+   oXmlHttp.send(post);
+}
+ function checkDatabase_ldap(){
+	//Luu van ban di bang ajax
+    	
+    	
+		var re_dis = document.getElementById('ldap');
+    	
+    	re_dis.innerHTML ='';
+    	var submitAjax = new AjaxEngine(); 
+		var oXmlHttp = submitAjax.createXMLHttp();
+		oXmlHttp.open("post", "/qtht/config/checkdatabaseldap" , true); 
+		oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+		var post = submitAjax.getDataFromFrm(document.frm);
+		oXmlHttp.onreadystatechange = function () { 
+		if (oXmlHttp.readyState == 4) { 
+			
+			if (oXmlHttp.status == 200) { 
+				//alert(oXmlHttp.responseText);
+				if(oXmlHttp.responseText == 1){
+					re_dis.innerHTML = "<font color='blue'><b>Kết nối server ldap thành công</b></font>";
+					
+				}else{
+					re_dis.innerHTML = "<font color='red'><b>Không thể kết nối server ldap</b></font>";
+				}
+					
+	        } else { 
+            
+        	} 
+        	
+        	
+    	} 
+    	img.style.display = "none";
+   }; 
+   oXmlHttp.send(post);
+}
+
+/**
+* Gui van ban qua email
+*/
+function saveButtonClick(){
+	document.frm.submit();
+}
+
+
+
+function testButtonClick(){
+	
+	var odiv_re = document.getElementById('test_result');
+	odiv_re.style.display ="";
+	var values = new Array();
+	for(i = 2 ; i<4 ;i++ ){
+		switch(i){
+			case 0:
+			values[i] = document.frm.INCOMING_HOSTNAME.value;
+			break;
+			case 1:
+			values[i] = document.frm.OUTGOING_HOSTNAME.value;
+			break;
+			case 2:
+			values[i] = 0;
+			break;
+			case 3:
+			values[i] = 0;
+			break;
+			break;
+			default:
+			break;
+		}
+		
+	}
+	var url = "/mailclient/emailengine/testconnect";
+	//document.frm.action="/mailclient/emailengine/testconnect";
+	//document.frm.submit();
+	var ajobj= new testconfigmailAjax ();
+	for(i = 3 ; i<=4 ;i++ )
+	{
+		initDisplayState(i);
+		var frmobject = document.frm;
+		if(i==1 || i==2)
+			frmobject = null;
+		ajobj.getResultFromserver(frmobject,i,url,values[i-1]);
+	}
+	
+	
+}
+
+function initDisplayState(test_id){
+	var img_su = document.getElementById("check_"+test_id+"_suc");
+	var img_fa = document.getElementById("check_"+test_id+"_err");
+	var check_pro = document.getElementById("check_"+test_id+"_pro");
+	var check_1_lbl_dis = document.getElementById("check_"+test_id+"_lbl_dis");
+	img_fa.style.display = "none";
+	
+	img_su.style.display = "none";
+	check_1_lbl_dis.style.color = "black";
+	check_pro.style.display = "";
+}
+
+function SSL_INselect(){
+	
+	
+}
+
+function SSL_OUTselect(){
+	
+}
+
+/**
+* Ket thuc gui van ban qua mail
+*/
+
+
+</script>

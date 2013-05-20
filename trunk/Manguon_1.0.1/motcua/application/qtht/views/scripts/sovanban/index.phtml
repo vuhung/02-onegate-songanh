@@ -1,0 +1,82 @@
+<div>
+<label><b>Văn bản đến</b></label>
+<form name="vbden_updatecolfrm" action="/qtht/sovanban/updatecolname?type=1" method="POST">
+<table class=adminlist>
+<thead>
+	
+	<tr>
+		<th nowrap>#</th>
+		<th nowrap></th>
+		<th width=100% >Mô tả</th>
+		
+	</tr>
+</thead>
+<tbody>
+	<?php 
+	$stt =  1;
+	foreach ($this->dataVBden as $row){
+	?>
+	<tr>
+		<td><?php echo $stt?> </td>
+		<td><input type=radio name=choice_attr value='<?php echo $row["ID_CONFIG_SOVANBAN"] ?>' 
+		<?php if($row["IS_SELECTED"] == 1) echo "checked";?>
+		> </td>
+		<td><?php echo $row["DESCRIPTION"]?> </td>
+		
+		
+	</tr>
+	<?php $stt ++ ;}?>
+</tbody>
+</table>
+</form>
+</div>
+
+<div>
+<label><b>Văn bản đi</b></label>
+<form name="vbdi_updatecolfrm" action="/qtht/sovanban/updatecolname?type=2" method="POST">
+<table class=adminlist>
+<thead>
+	
+	
+	<tr>
+		<th nowrap>#</th>
+		<th nowrap></th>
+		<th width=100% >Mô tả</th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+	<?php 
+	$stt =  1;
+	foreach ($this->dataVBdi as $row){
+	?>
+	<tr>
+		<td><?php echo $stt?> </td>
+		<td><input type=radio name=choice_attr value='<?php echo $row["ID_CONFIG_SOVANBAN"] ?>' 
+		<?php if($row["IS_SELECTED"] == 1) echo "checked";?>
+		> </td>
+		<td><?php echo $row["DESCRIPTION"]?> </td>
+		
+		
+	</tr>
+	<?php $stt ++ ;}?>
+</tbody>
+</table>
+
+</form>
+</div>
+
+
+<script>
+function luuButtonClick(){
+	//window.location = "/qtht/sovanban/input";
+	document.vbdi_updatecolfrm.submit();
+	document.vbden_updatecolfrm.submit();
+	return false;
+}
+
+function trangchuButtonClick(){
+	window.location = "/";
+}
+</script>

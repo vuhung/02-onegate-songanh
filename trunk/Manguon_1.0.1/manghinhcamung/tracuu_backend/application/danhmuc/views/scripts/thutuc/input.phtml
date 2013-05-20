@@ -1,0 +1,49 @@
+<?php require_once 'Common/FileDinhKem.php';
+
+?>
+<script type="text/javascript" src="/js/Ajax/AjaxEngine.js"></script>
+<form name="frm" action="/danhmuc/thutuc/save" method="POST">
+<div>
+<label><b>Tên thủ tục</b></label>
+<textarea rows="2" cols="80" name=TEN><?=$this->data["TEN"]?></textarea>
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Thuộc loại hồ sơ</b></label>
+<select name="ID_LOAIHOSO">
+	<?=loaihosoModel::toCombo($this->data["ID_LOAIHOSO"]);?>
+</select>
+
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Được sử dụng</b></label>
+<input type=checkbox name="ACTIVE" value=1  <?=$this->data["ACTIVE"]==1?"checked":""?> >
+</div>
+
+<div class="clr"></div>
+
+
+<div class="clr"></div>
+<input type="hidden" name="ID_THUTUC" value="<?=$this->data["ID_THUTUC"]?>" >
+<input type="hidden" name="ID_LOAIHOSO_OLD" value="<?=$this->data["ID_LOAIHOSO"]?>" >
+<iframe style="overflow-x:visible" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no name="resourceid" id="resourceid" src="" width="100%"> 
+</iframe>
+
+</form>
+
+<script>
+//document.getElementById('resourceid').src = "/danhmuc/resource/input";
+
+
+function SaveButtonClick(){
+	document.frm.submit();
+	//window.frames["resourceid"].save();
+}
+
+function BackButtonClick(){
+	window.location= "/danhmuc/thutuc/index";
+}
+
+
+</script>

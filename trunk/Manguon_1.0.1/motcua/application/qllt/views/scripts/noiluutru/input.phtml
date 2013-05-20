@@ -1,0 +1,202 @@
+
+
+<?php
+echo "<script language=\"javascript\">";
+echo ' var idtst = "'.$this->data['ID_THUMUCCHA'].'";';
+echo "</script>";
+$ArrLoai = array(0=>'',1=>'Kho',2=>'Kệ',3=>'Tầng',4=>'Ngăn',5=>'Hộp');
+?>
+<script>
+function showHide(id) {
+
+	document.getElementById(id).style.display = 'block';
+
+}
+function Hide(id) {
+
+	document.getElementById(id).style.display = 'none';
+
+}
+</script>
+<form action="/qllt/noiluutru/save" name="frmEditFolder"  method="post">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="center"><span class="box_erro_area"></span></div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTenthumuc">Nơi lưu trữ<font color="red">*</font></label>
+		
+    	<span class="box_erro_area">
+        <input type="text" name="tenthumuc" id="id_ttm" value="<?php echo $this->data['TENTHUMUC']; ?>" size="35"></input>	
+        </span>
+		<span class="box_erro_area" id="ERRtenthumuc"></span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Nơi chứa<font color="red">*</font></label>
+		
+    	<span class="box_erro_area">
+        <input type="text" id="id_tmc" readonly="true" name="thumuccha_name" size="35" value="<?php echo $ArrLoai[$this->data['LOAITHUMUCCHA']].' '.$this->data['TENTHUMUCCHA']; ?>" Onclick="showHide('treeview')"></input>
+        
+		<input type=hidden name=idthumuccha value="<?=$this->data[ID_THUMUCCHA] ?>">
+		</span>
+		<span class="box_erro_area" id="ERRthumuccha_name"></span>
+		<div class="clr"></div>  
+		<div id="treeview" style="display: none;margin-left:3.7cm;border: 1px solid #CCCCCC;width:400px;height:200px;overflow-y:scroll;overflow-x:scroll">
+
+		<!-- Hiển thị Cây thư mục-->
+		<ul class=treeview id=treemenu2>
+			<li id="1~Sở GTVT" class=submenu>
+				<a href="#" id="1~Sở GTVT" onclick="setValue(this.id);Hide('treeview')"><?=$this->systemName?></a>
+	
+					
+						<?php 
+							$html = "";
+							$action = "setValue(this.id);Hide('treeview')";
+							echo qllt_noiluutruModel::GetTree_noiluutru(1,"treemenu2",$html,$this->id_noiluutru,$action);
+						?>
+					
+			</li>
+		</ul>
+		<script type="text/javascript" src="/js/simpletreemenu.js">
+		</script>
+
+		<script type="text/javascript" language="javascript">
+		function setValue(name)
+		{
+			var classField = document.getElementById("id_tmc");			
+			str = name.split("~");			
+			classField.value = str['1'];
+			document.frmEditFolder.idthumuccha.value = str[0];	
+			
+		}
+
+		</script>
+
+		<link rel="stylesheet" type="text/css" href="/styles/simpletree.css" />
+		<script type="text/javascript">
+
+		ddtreemenu.createTree("treemenu2", true, 5)
+		ddtreemenu.flatten('treemenu2', 'expand');
+
+		</script>
+		<!-- Hết cây thư mục -->
+		<br/></div>
+	</div>
+	<div class="clr"></div>  
+	<div class="clr"></div>
+	<div class="clr"></div>
+	<div class="required">
+		<label for="ACTIVE" id="lblTextIput">Loại <font color="red">*</font> </label>
+		<select name="loai">
+			<option id="option1" value="1">Kho</option>
+			<option id="option2" value="2">-- Kệ</option>
+			<option id="option3" value="3">---- Tầng</option>
+			<option id="option4" value="4">------ Ngăn</option>
+			<option id="option5" value="5">---------- Hộp</option>
+
+							
+		</select>
+		<script>
+			<?php 				
+				echo 'var maloai="option'.$this->data['LOAI'].'";';				
+			?>
+			if(maloai != "option")
+			{
+				document.getElementById(maloai).selected = true;
+			}
+		</script>
+		<script>
+			function setCombobox(loai)
+			{
+				if(loai != "")
+				{
+					loaji = parseInt(loai) + 1;
+					maloai = "option"+loaji;
+					document.getElementById(maloai).selected = true;
+				}
+			}
+		</script>
+		<span class="box_erro_area" id="ERRloai"></span>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label for="ID_U_DAIDIEN" id="lblTextIput">Ghi chú</label>
+		<textarea style="width:80%" cols="80" rows="3" name="ghichu" value="$this->data['GHICHU']"><?=$this->data['GHICHU']?></textarea>
+	</div>
+
+	<div class="clr"></div>	
+	<div class="clr"></div><br/>
+	<div class="optional">
+		<label for="ACTIVE" id="lblTextIput">Kích hoạt</label>
+		
+        <span class="box_erro_area">
+        <input type="checkbox" Onclick="Clickchexbox();"  <?php if($this->data['ACTIVE'] == "1") echo "checked"; ?>  value="<?=$this->data['ACTIVE'] ?>" id="ACTIVE" name="active">	
+        </span>
+	</div>
+	<input type=hidden name="id" value='<?=$this->id ?>'>
+</fieldset>
+</form>
+
+<script>
+	
+	function checkFormData(){
+	var str = "Bạn phải nhập tên thư mục";
+	var strerr = validateInput("required",document.frmEditFolder.tenthumuc,str);
+	if(!strerr){
+		document.frmEditFolder.tenthumuc.focus();
+		return false;
+	}
+	var str = "Bạn phải chọn một thư mục cha";
+	var strerr = validateInput("required",document.frmEditFolder.thumuccha_name,str);
+	if(!strerr){
+		document.frmEditFolder.thumuccha_name.focus();
+		return false;
+	}
+	var str = "Bạn phải chọn một loại thư mục";
+	var strerr = validateInput("required",document.frmEditFolder.loai,str);
+	if(!strerr){
+		document.frmEditFolder.loai.focus();
+		return false;
+	}
+  
+	return true;
+	}
+
+	function Clickchexbox()
+	{
+		var isset = "No";
+		var ckvalue = document.getElementById("ACTIVE");
+		if(ckvalue.value == 0)
+		{
+			ckvalue.value = 1;
+			isset = "Yes";			
+		}
+		if(ckvalue.value == 1)
+		{
+			if(isset == "No")
+			{
+			ckvalue.value = 0;
+			}
+		}		
+	}
+	
+	function SaveButtonClick()
+	{		
+		if(checkFormData())
+		{
+			document.frmEditFolder.submit();
+		}
+		else
+		{
+			document.frmEditFolder.tenthumuc.focus();
+		}
+	}
+	function BackButtonClick()
+	{
+		document.frmEditFolder.action = "/qllt/noiluutru/";
+		document.frmEditFolder.submit();
+	}
+</script>

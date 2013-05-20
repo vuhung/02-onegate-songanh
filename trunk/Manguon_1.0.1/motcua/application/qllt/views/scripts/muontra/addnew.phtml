@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/calendar.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<form name="frm" method=post action="/qllt/muontra/save/execute/insert">
+<table class=admintable width=100% >
+	<tr>
+		<td colspan="2">
+			<span style="margin-left:7px">
+				<b>Ngày mượn <font color="red">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></b><?=QLVBDHCommon::calendarFull($this->fromdate,"ngaymuon","ngaymuon") ?>				
+			</span>
+			<span class="box_erro_area" id="ERRngaymuon"></span>
+			<script>
+				document.frm.ngaymuon.value = '<?php echo date("j/n/Y") ?>';				
+			</script>	
+			<input type=hidden id=time name=time value="">			
+			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span style="margin-left:7px">
+				<b>Số ngày cho mượn </b>
+				<input type="text" id="adddate" name="addndate" value="" onkeypress='return isNumberKeyNoPoint(event)' onchange="addDays(ngaymuon.value,this.value)" maxlength="3" size="10"/>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span style="margin-left:7px">
+				<b>Ngày phải trả  <font color="red">*</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b><?=QLVBDHCommon::calendarFullWithNoEvent($this->fromdate,"ngayphaitra","ngayphaitra") ?>
+			</span>
+			<span class="box_erro_area" id="ERRngayphaitra"></span>
+			<script>
+				document.frm.ngayphaitra.value = '<?php echo date("j/n/Y") ?>';
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<span style="margin-left:7px">
+				<br/><b>Chọn người mượn </b><font color="red">*</font>
+			<?php echo QLVBDHCommon::writeSelectDepartmentUserWithSelAndAction('DEP_NGUOIGUI','NGUOIGUI',105,1,"")?>
+			</span>
+			
+			</td>
+	</tr>
+	<tr>
+		<td valign="top" nowrap="nowrap">
+			
+			<input type="button" value="Cho mượn" onclick="Insertvalue(NGUOIGUI.value);ValidateForm();" />
+		</td>		
+	</tr>
+
+</table>
+<br/><br/><br/><br/><br/><br/><br/><br/>
+<input type=hidden name=id value="<?=$this->id?>">
+<input type=hidden name=year value="<?=$this->year?>">
+<input type=hidden name=idnguoimuon value="">
+<input type=hidden name=idhoso value="<?=$this->id_hoso?>">
+</form>
+<p id=lasttext></p>
+
+</body>
+</html>
+<script>
+	var arr_user = new Array();
+	var arr1 = new Array();
+	var arr_user_temp = new Array();	
+
+	function addDays(t1,t2){  
+		if(t2==""){document.frm.ngayphaitra.value=t1;	return;}    
+		var valid = (t2.match(/^\d+$/));	
+
+       if(t1 != "" && t2 != "" && valid)
+	   {
+	   
+			var A=t1.split('/');
+			var N= parseInt(t2)*86400000;
+			A[1]-=1;
+			var D=new Date(A[2],(A[1]),A[0]).getTime();
+			D=new Date((D+N));
+		   var str= D.getDate()+'/'+(D.getMonth()+1)+'/'+D.getFullYear();
+		   
+		   document.frm.ngayphaitra.value = str;
+		   
+	   }
+   }
+
+	function daysInMonth(iMonth, iYear)
+	{
+	return 32 - new Date(iYear, iMonth, 32).getDate();
+	}
+
+	function isNumberKeyNoPoint(evt)
+	{
+	   var charCode = (evt.which) ? evt.which : event.keyCode;
+	   //if(charCode==46)return true;
+	   if (charCode > 31 && (charCode < 48 || charCode > 57))
+		  return false;
+
+	   return true;
+	}
+
+	function SaveButtonClick(){
+		var err = true;
+		if(err==true){
+			document.frm.submit();
+		}
+	}
+	function Insertvalue(value){	
+		document.frm.idnguoimuon.value = value;		
+	}
+
+	function InsertIntoArr(value){	
+		document.frm.idnguoimuon.value = value;
+	}
+
+	function formfocus() {
+      document.getElementById('adddate').focus();
+	}
+   window.onload = formfocus;
+
+
+	function resize(){
+		var iframeElement = parent.document.getElementById('<?=$this->IdFrame ?>');
+		iframeElement.style.height = "" + document.getElementById("lasttext").offsetTop + "px";
+		iframeElement.width = "100%";
+	}
+	resize();
+
+
+/**
+ * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
+ */
+// Declaring valid date character, minimum year and maximum year
+var dtCh= "/";
+var minYear=1850;
+var maxYear=2200;
+
+function isInteger(s){
+	var i;
+    for (i = 0; i < s.length; i++){   
+        // Check that current character is number.
+        var c = s.charAt(i);
+        if (((c < "0") || (c > "9"))) return false;
+    }
+    // All characters are numbers.
+    return true;
+}
+
+function stripCharsInBag(s, bag){
+	var i;
+    var returnString = "";
+    // Search through string's characters one by one.
+    // If character is not in bag, append to returnString.
+    for (i = 0; i < s.length; i++){   
+        var c = s.charAt(i);
+        if (bag.indexOf(c) == -1) returnString += c;
+    }
+    return returnString;
+}
+
+function daysInFebruary (year){
+	// February has 29 days in any year evenly divisible by four,
+    // EXCEPT for centurial years which are not also divisible by 400.
+    return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
+function DaysArray(n) {
+	for (var i = 1; i <= n; i++) {
+		this[i] = 31
+		if (i==4 || i==6 || i==9 || i==11) {this[i] = 30}
+		if (i==2) {this[i] = 29}
+   } 
+   return this
+}
+
+function checkDate(){
+
+	var ngaytra_thucte = "<?=$this->ngaytra_thucte ?>";
+
+	var strerr1 = validateInput("required",document.frm.ngaymuon,"Nhập ngày mượn");
+	strerr1 = strerr1==true?validateInput("date",document.frm.ngaymuon,"Bạn phải nhập đúng định dạng ngày mượn, ví dụ : 20/10/2010"):strerr1;
+	strerr1 = validateInput("required",document.frm.ngayphaitra,"Nhập ngày phải trả");	
+	strerr1 = strerr1==true?validateInput("date",document.frm.ngayphaitra,"Bạn phải nhập đúng định dạng ngày phải trả, ví dụ : 08/03/2010 "):strerr1;
+	strerr1 = strerr1==true?CompareDateBAOTQ(ngaytra_thucte,document.frm.ngaymuon.value,"ERRngaymuon","Ngày mượn phải lớn hơn hoặc bằng ngày hồ sơ được trả trước đó (<a href='#' title='click vào đây' onclick='insertMissDate();'>"+ngaytra_thucte+"</a>)"):strerr1;	
+	strerr1 = strerr1==true?CompareDateBAOTQ(document.frm.ngaymuon.value,document.frm.ngayphaitra.value,"ERRngayphaitra","Ngày trả phải lớn hơn hoặc bằng ngày mượn"):strerr1;
+	if(strerr1!=true){
+		return false;
+	}	
+
+return true
+}
+
+function insertMissDate()
+{
+	var ngaytrathucte = "<?=$this->ngaytra_thucte ?>";
+	document.frm.ngaymuon.value = ngaytrathucte;
+	document.getElementById('ERRngaymuon').innerHTML = "";
+	document.frm.adddate.focus();
+	if(document.frm.addndate.value != "")
+	{
+		ChangeDate();
+		
+	}
+
+}
+
+function CompareDateBAOTQ(dt1,dt2,onelement,displayErr)
+{	
+	str1		= dt1.split("/");			
+	var year1	= str1['2'];
+	var month1	= str1['1'] -1;
+	var day1	= str1['0'];
+
+	str2		= dt2.split("/");			
+	var year2	= str2['2'];
+	var month2	= str2['1'] -1;
+	var day2	= str2['0'];
+
+	var Date1	=new Date();
+	Date1.setFullYear(year1,month1,day1);
+		
+	var Date2	=new Date();
+	Date2.setFullYear(year2,month2,day2);
+
+	if(Date1 > Date2)
+	{
+		document.getElementById(onelement).innerHTML = displayErr;
+		return false;
+	}
+	else
+	{
+		document.getElementById(onelement).innerHTML = "";
+		return true;
+	}
+	return true;
+}
+
+function ValidateForm(){
+	var isvalid = 1
+	if (checkDate()==false){		
+		isvalid = 0;
+		document.frm.ngaymuon.focus();
+	}
+	if(isvalid == 1)
+	{
+    SaveButtonClick();
+	}
+ }
+function ChangeDate(){
+	//alert(document.frm.ngaymuon.value);
+	addDays(document.frm.ngaymuon.value,document.frm.addndate.value);
+}
+</script>

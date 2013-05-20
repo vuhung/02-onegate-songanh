@@ -1,0 +1,760 @@
+<script type="text/javascript" src="/js/Ajax/AjaxEngine.js"></script>
+<script type="text/javascript" src="/js/chat.js"></script>
+<table class="adminform">
+	<tr>
+		<td width="50%" valign="top">
+			<div id="cpanel">
+<?php
+	$createarr = WFEngine::GetCreateProcessButtonFromLoaiCV(1,$this->user->ID_U);
+	if(count($createarr)>0){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="<?=$createarr["LINK"]."/type/1/wf_id_t/".$createarr["ID_T"]."/year/".$this->year?>">
+							<img src="/images/header/icon-48-article-add.png" />
+							<span><b><?=$createarr["NAME"]?></span>
+						</a>
+					</div>
+				</div>
+<?php
+	}
+?>
+<?php
+	$createarr = WFEngine::GetCreateProcessButtonFromLoaiCV(2,$this->user->ID_U);
+	if(count($createarr)>0){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="<?=$createarr["LINK"]."/type/2/wf_id_t/".$createarr["ID_T"]."/year/".$this->year?>">
+							<img src="/images/header/soanthaovb.png" alt="" />
+							<span><b><?=$createarr["NAME"]?></span>
+						</a>
+					</div>
+				</div>
+<?php
+	}
+?>
+<?php
+	$actid = ResourceUserModel::getActionByUrl("motcua","motcua","input");
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/motcua/motcua/input">
+							<img src="/images/header/taomotcua.png" alt="" />
+							<span><b>Tiếp nhận HSMC</span>
+						</a>
+					</div>
+				</div>
+<?php
+	}
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/lichcttext/index/index">
+							<img src="/images/header/calendar1.png" />
+							<span><b>Lịch cá nhân</span>
+						</a>
+					</div>
+				</div>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/lichcttext/index/indexd">
+							<img src="/images/header/calendar2.png" />
+							<span><b>Lịch phòng</span>
+						</a>
+					</div>
+				</div>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/lichcttext/index/indexc">
+							<img src="/images/header/calendar3.png" />
+							<span><b>Lịch cơ quan</span>
+						</a>
+					</div>
+				</div>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','tiepnhanhosomotcua','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/tiepnhanhosomotcua/index">
+							<img src="/images/header/tiepnhan.png" alt="" />
+							<span>Báo cáo tiếp nhận hồ sơ</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('hscv','hscv','listsearchall');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/hscv/hscv/listsearchall">
+							<img src="/images/header/timkiemhs.png" alt="" />
+							<span>Tìm kiếm hồ sơ</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','tiepnhanhosomotcua','reporthoso');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/tiepnhanhosomotcua/reporthoso">
+							<img src="/images/header/thongkehs.png" alt="" />
+							<span>Thống kê số lượng hồ sơ</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','dientichdat','thongke');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/dientichdat/thongke">
+							<img src="/images/header/thongkedientich.png" alt="" />
+							<span>Thống kê diện đất xây dựng</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','baocaolanhdao','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/baocaolanhdao/index">
+							<img src="/images/header/baocaolanhdao.png" alt="" />
+							<span>Báo cáo lãnh đạo</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','baocaolanhdao','indextke');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/baocaolanhdao/indextke">
+							<img src="/images/header/thongketheolinhvuc.png" alt="" />
+							<span>Thống kê theo lĩnh vực</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','VanBanDi','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/VanBanDi/index">
+							<img src="/images/header/baocaovbdi.png" alt="" />
+							<span>Báo cáo văn bản đi</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','tamnghivanghihan','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/tamnghivanghihan/index">
+							<img src="/images/header/xuly.png" alt="" />
+							<span>Báo cáo tạm nghĩ và nghĩ hẵn đăng ký kinh doanh</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','xulycongviec','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/xulycongviec/index">
+							<img src="/images/header/baocaoxulyhs.png" alt="" />
+							<span>Báo cáo xử lý hồ sơ</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+<?php
+$actid = ResourceUserModel::getActionByUrl('report','baocaolanhdao','index');
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/report/baocaolanhdao/index/isphong/1">
+							<img src="/images/header/lanhdao.png" alt="" />
+							<span>Báo cáo theo phòng ban</span>
+						</a>
+					</div>
+				</div>
+<?php } ?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/traodoi/traodoi/index">
+							<img src="/images/header/forum.gif"  />
+							<span><b>Trao đổi nội bộ</span>
+						</a>
+					</div>
+				</div>
+<?php
+	$actid = ResourceUserModel::getActionByUrl("auth","log","index");
+	if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/auth/log">
+							<img src="/images/header/icon-48-user.png"  />
+							<span><b>Theo dõi hệ thống</span>
+						</a>
+					</div>
+				</div>
+<?php
+	}
+?>
+				<div style="float: left;">
+					<div class="icon">
+						<a href="/auth/user/help">
+							<img src="/images/header/icon-help.png" />
+							<span><b>Trợ giúp</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</td>
+		<td width="50%" valign="top">
+			<div id="content-pane" class="pane-sliders">
+
+					<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Thống kê trạng thái</span>
+					</h3>
+					<div class="jpane-slider content">
+					<table class="adminlist">
+
+							<tbody>
+								<?php
+
+								$arr_tktths = $this->arr_tktths;
+$arr_trangthais = $this->arr_trangthais;
+foreach($arr_trangthais as $trangthai){
+?>
+<tr>
+
+<td><a  href="/motcua/motcua/index/id_tths/<?=$trangthai["ID_TTHS"]?>/"><?=$trangthai["TEN"]?> (<?=(int)$arr_tktths[$trangthai["ID_TTHS"]]?>) </a></td>
+
+</tr>
+<?php }?>
+							</tbody>
+					</table>
+					</div>
+					</div>
+				
+					<div id="content-pane" class="pane-sliders">
+					<!-- hscv -->
+					<?php
+						$hscv = new hosocongviecModel();
+						$parameter = array(
+							"ID_THUMUC"=>1,
+							"ID_LOAIHSCV"=>"",
+							"NGAY_BD"=>"",
+							"NGAY_KT"=>"",
+							"TRANGTHAI"=>"",
+							"ID_U"=>$this->user->ID_U,
+							"ID_G"=>$this->user->ID_G,
+							"ID_DEP"=>$this->user->ID_DEP,
+							"NAME"=>"",
+							"SCOPE"=>array(),
+							"CODE"=>""
+						);
+
+						$hscvcount = $hscv->countHSMC($parameter,0,0,"");
+						$hscv = $hscv->SelectAll($parameter,0,5,"");
+						
+					?>
+					<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Hồ sơ một cửa<?php echo $hscvcount>0?" (<font color=red>".$hscvcount."</font>)":" (0)"; ?></span>
+					</h3>
+					<div class="jpane-slider content">
+					<table class="adminlist">
+							<thead>
+								<tr>
+									<td class="title"><strong>#</strong></td>
+									<td class="title"><strong>Nội dung</strong></td>
+									<td class="title"><strong>Người gửi</strong></td>
+									<td class="title"><strong>Ngày gửi</strong></td>
+									<td class="title" ><strong>Số đến</strong></td>
+									<td class="title" ><strong>Số ngày còn lại</strong></td>
+								</tr>
+							</thead>
+							<tbody>
+						<?php
+						if($hscvcount>0){
+							$stt = 1;
+							foreach($hscv as $row){
+								$info = WFEngine::GetCurrentTransitionInfoByIdHscv($row['ID_HSCV']);
+								//var_dump($info);exit;
+						?>
+								<tr>
+									<td width="5%"><?=$stt?></td>
+									<td><a href="/hscv/hscv/list/idhscv/<?=$row['ID_HSCV']?>#hscv<?=$row['ID_HSCV']?>"><?=$row['NAME']?> (<font color=red><i><?=$info['AC_NAME']?></i></font>)</a></td>
+									<td><?=$info['EMPNCNAME']?></td>
+									<td><?=QLVBDHCommon::MysqlDateToVnDate($info['DATESEND'])?></td>
+									<td ><?=$row['SO']?> </td>
+									<td ><?php
+									$ngay_ketthuc=strtotime($row["NHANLAI_NGAY"]);
+									$delay = QLVBDHCommon::countdatesongayconlai($ngay_ketthuc,null);
+									if($delay>0){
+										if($delay<2){
+											echo  "<font color=blue>còn ".floor($delay/8)." ngày"." ".floor($delay%8)." giờ"."</font>";
+										}else{
+											echo  "còn ".floor($delay/8)." ngày"." ".floor($delay%8)." giờ"."";
+										}
+									}else{
+										echo  "<font color=red>trễ ".floor(-$delay/8)." ngày"." ".floor(-$delay%8)." giờ"."</font>";
+									}
+
+									?> </td>
+								</tr>
+								
+						<?php
+								$stt++;
+							}
+							?>
+							<tr>
+								<td width="100%" colspan="6"><a href="/hscv/hscv/list">Xem tất cả</a></td>
+							</tr>
+							<?php
+						}else{
+						?>
+						<tr><td colspan="6">Chưa có hồ sơ nào</td></tr>
+						<?php
+						}
+						?>
+						</tbody>
+					</table>
+					</div>
+					</div>
+                    <!-- trao doi noi bo-->
+					<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Trao đổi nội bộ<?php echo $this->unread>0?" (<font color=red>".$this->unread."</font>)":""; ?></span>
+					</h3>
+					<div class="jpane-slider content">
+						<table class="adminlist">
+							<thead>
+								<tr>
+									<td class="title"><strong>#</strong></td>
+									<td class="title"><strong>Tiêu đề</strong></td>
+									<td class="title"><strong>Người gửi</strong></td>
+									<td class="title"><strong>Ngày gửi</strong></td>
+								</tr>
+							</thead>
+							<tbody>
+				<?php
+					if($this->unread>0)
+					{
+				?>
+							<?php
+								$max=count($this->dataTraoDoi);
+								if($max>0)
+								{
+									for($j=0;$j<$max;$j++)
+									{
+
+							?>
+										<tr>
+										<td><?php echo $j+1; ?></td>
+										<td><a href="/traodoi/traodoi/viewinbox/id/<?php echo $this->dataTraoDoi[$j]["id_thongtin"]; ?>"><?php echo $this->dataTraoDoi[$j]["tieude"]; ?></a></td>
+										<td><?php echo $this->dataTraoDoi[$j]["nguoitao"]; ?></td>
+										<td><?php echo $this->dataTraoDoi[$j]["ngaytao"]; ?></td>
+										</tr>
+							<?php
+
+									}
+								}
+							?>
+							<?php }else{
+?>
+								<tr>
+									<td width="100%" colspan="4">Chưa có trao đổi nào.</td>
+								</tr>
+<?php
+	}
+?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- Phoi hop xu ly-->
+				<div class="panel">
+				<h3 class="jpane-toggler title">
+					<span>Phối hợp xử lý<?php echo count($this->phoihop_data)>0?"(<font color=red>".count($this->phoihop_data)."</font>)":" (0)"; ?></span>
+				</h3>
+				<div class="jpane-slider content">
+				<table class="adminlist">
+						<thead>
+							<tr>
+								<td class="title"><strong>#</strong></td>
+								<td class="title"><strong>Hồ sơ</strong></td>
+
+							</tr>
+						</thead>
+						<tbody>
+					<?php
+					if(count($this->phoihop_data)>0){
+						$stt = 1;
+					foreach ($this->phoihop_data as $phoihop_item){?>
+					<tr>
+						<td nowrap="nowrap"><?=$stt?></td>
+						<td width="100%">
+						<a href=
+						"/hscv/hscv/list/code/phoihop/idhscv/<?=$phoihop_item["ID_HSCV"]?>#hscv<?=$phoihop_item["ID_HSCV"]?>">
+						<?=$phoihop_item["TEN_HS"]?>
+						</a>
+						</td>
+
+					</tr>
+					<?php $stt++;}}else{
+					?><tr><td colspan="2">Chưa có chuyển phối hợp nào</td></tr>
+					<?php
+					} ?>
+					</tbody>
+				</table>
+				</div>
+				</div>
+
+<?php
+
+$actid = ResourceUserModel::getActionByUrl('hscv','hscv','listbosung');
+if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+$hscv = $this->bosung->SelectAll(0,0,0,"");
+
+?>
+				<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Chờ bổ sung hồ sơ(<?=count($hscv)>0?"<font color=red>".count($hscv)."</font>":count($hscv)?>)</span>
+					</h3>
+					<div class="jpane-slider content">
+						<table class="adminlist">
+							<thead>
+								<tr>
+									<td class="title"><strong>#</strong></td>
+									<td class="title"><strong>Nội dung</strong></td>
+									<td class="title"><strong>Người gửi</strong></td>
+									<td class="title"><strong>Ngày gửi</strong></td>
+								</tr>
+							</thead>
+							<tbody>
+<?php
+	if(count($hscv)>0){
+		$stt=0;
+		foreach($hscv as $row){
+			$stt++;
+			$info =WFEngine::GetCurrentTransitionInfoByIdHscv($row['ID_HSCV']);
+?>
+								<tr>
+									<td width="5%"><?=$stt?></td>
+									<td><a href="/hscv/hscv/listbosung/idhscv/<?=$row['ID_HSCV']?>#hscv<?=$row['ID_HSCV']?>"><?=$row['NAME']?></a></td>
+									<td><?=$info['EMPNKNAME']?></td>
+									<td><?=QLVBDHCommon::MysqlDateToVnDate($info['DATESEND'])?></td>
+								</tr>
+<?php
+		}
+	}else{
+?>
+								<tr>
+									<td width="100%" colspan="4">Chưa có công việc nào.</td>
+								</tr>
+<?php
+	}
+?>
+</tbody>
+						</table>
+					</div>
+				</div >
+<?php
+	}
+?>
+         <!-- da bo sung -->
+<?php
+$actid = ResourceUserModel::getActionByUrl("motcua","motcua","inputbosung");
+if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+$hscv = $this->bosung->getHscvVuaBS();
+?>
+				<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Đã bổ sung(<?=count($hscv)>0?"<font color=red>".count($hscv)."</font>":count($hscv)?>)</span>
+					</h3>
+					<div class="jpane-slider content">
+						<table class="adminlist">
+							<thead>
+								<tr>
+									<td class="title"><strong>#</strong></td>
+									<td class="title"><strong>Nội dung</strong></td>
+									<td class="title"><strong>Người bổ sung</strong></td>
+									<td class="title"><strong>Ngày gửi</strong></td>
+								</tr>
+							</thead>
+							<tbody>
+<?php
+	if(count($hscv)>0){
+		$stt=0;
+		foreach($hscv as $row){
+			$stt++;
+
+?>
+								<tr>
+									<td width="5%"><?=$stt?></td>
+									<td>
+									<?php $id_tths = WFEngine::getTrangthaihosoByIdhsv($row['ID_HSCV']); ?>
+									<a href="/motcua/motcua/index/id_tths/<?=$id_tths?>/idhscv/<?=$row['ID_HSCV']?>#hscv<?=$row['ID_HSCV']?>"><?=$row['NAME']?></a></td>
+									<td><?=$row['NAME_NGUOIBOSUNG']?></td>
+									<td><?=QLVBDHCommon::MysqlDateToVnDate($row['NGAY_BOSUNG'])?></td>
+								</tr>
+<?php
+		}
+	}else{
+?>
+								<tr>
+									<td width="100%" colspan="4">Chưa có công việc nào.</td>
+								</tr>
+<?php
+	}
+?>
+
+</tbody>
+						</table>
+					</div>
+				</div >
+
+<?php }?>
+<!-- hồ sơ thông tin trễ-->
+   <?php
+						$hscv = new hosocongviecModel();
+						$quyenthongbaotre = $hscv->quyenthongbaotre();
+						$hscvcount = $hscv->CountMonitordefault();
+						$hscv = $hscv->SelectAllMonitordefault();
+						if($quyenthongbaotre==1){
+					?>
+					<div class="panel">
+					<h3 class="jpane-toggler title">
+						<span>Hồ sơ thông báo trễ<?php echo $hscvcount>0?" (<font color=red>".$hscvcount."</font>)":" (0)"; ?></span>
+					</h3>
+					<div class="jpane-slider content">
+					<table class="adminlist">
+							<thead>
+								<tr>
+									<td class="title"><strong>#</strong></td>
+									<td class="title"><strong>Nội dung</strong></td>
+									<td class="title"><strong>Người gửi</strong></td>
+									<td class="title"><strong>Ngày gửi</strong></td>
+									<td class="title" ><strong>Số đến</strong></td>
+									<td class="title" ><strong>Số ngày còn lại</strong></td>
+								</tr>
+							</thead>
+							<tbody>
+						<?php
+						if($hscvcount>0){
+							$stt = 1;
+							foreach($hscv as $row){
+								$info = WFEngine::GetCurrentTransitionInfoByIdHscv($row['ID_HSCV']);
+								//var_dump($info);exit;
+						?>
+								<tr>
+									<td width="5%"><?=$stt?></td>
+									<td><a href="/hscv/hscv/listmonitor/idhscv/<?=$row['ID_HSCV']?>#hscv<?=$row['ID_HSCV']?>"><?=$row['NAME']?> (<font color=red><i><?=$info['AC_NAME']?></i></font>)</a></td>
+									<td><?=$info['EMPNCNAME']?></td>
+									<td><?=QLVBDHCommon::MysqlDateToVnDate($info['DATESEND'])?></td>
+									<td ><?=$row['SO']?> </td>
+									<td ><?php
+									$ngay_ketthuc=strtotime($row["NHANLAI_NGAY"]);
+									$delay = QLVBDHCommon::countdatesongayconlai($ngay_ketthuc,null);
+									if($delay>0){
+										if($delay<2){
+											echo  "<font color=blue>còn ".floor($delay/8)." ngày"." ".floor($delay%8)." giờ"."</font>";
+										}else{
+											echo  "còn ".floor($delay/8)." ngày"." ".floor($delay%8)." giờ"."";
+										}
+									}else{
+										echo  "<font color=red>trễ ".floor(-$delay/8)." ngày"." ".floor(-$delay%8)." giờ"."</font>";
+									}
+
+									?> </td>
+								</tr>
+						<?php
+								$stt++;
+							}
+						}else{
+						?>
+						<tr><td colspan="6">Chưa có hồ sơ nào</td></tr>
+						<?php
+						}
+						?>
+						</tbody>
+					</table>
+					</div>
+					</div>
+					<?php } ?>
+					
+					<!-- Tiếp nhận hồ sơ qua mạng-->					
+					<?php	
+					$actid = ResourceUserModel::getActionByUrl('motcua','dongbohsmc','index');
+                    if(ResourceUserModel::isAcionAlowed($this->user->USERNAME,$actid[0])){
+						global $db;
+						$r = $db->query("SELECT count(*) as CNT FROM dvc_motcua_hoso_web where (IS_TIEPNHAN is null or IS_TIEPNHAN = 0 )");
+						$cnt = $r->fetch();
+					?>
+                   <div class="panel" onclick="stopBlinkTitle();unCheckHoSo()">
+                     <h3 class="jpane-toggler title">
+						<span id="headSoLuongHoSo">Tiếp nhận hồ sơ qua mạng  (<image src='/images/loading.gif'> </image>)</span>                        
+					</h3>
+				    <div class="jpane-slider content">
+                        <table class="adminlist">
+                            <tbody>
+                                <tr>
+                                <td onclick><a onclick="checkCountHoSo()" style="color:#0B55C4;cursor:pointer">Có <span id="spanSoLuongHoSo">0</span> hồ sơ cần đồng bộ.</a></td>
+                                </tr>
+                            <tr>
+                                <td>
+                                    <a href="/motcua/dongbohsmc/index">Có <?=$cnt["CNT"]?> hồ sơ chờ tiếp nhận.</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>	
+				    </div>
+              </div>
+              <script>                
+                 // Nó dài là vì để nó "thông minh hơn"
+                 var timeDefault = 1800000; 	// Thoi gian check mac dinh
+                 var timeDefaultError = 60000;  // Thoi gian check khi gap loi
+                 var countDelayError = 5;		// So lan check khi gap loi
+                 var limitToUncheck = 500; 		// Gioi han canh bao so luong ho so qua lon
+				 
+                 var isCheckFirst = 1;
+                 var delayCheckHoSo = 500;
+                 var retryCheckHoSo = 0;
+                 var checkCount = 0;
+                 var lastResultCheck = 0;
+                 var isUncheck = 0;
+                 var isLow = 0;
+                 startCheckHoSo();
+                function startCheckHoSo()
+                {
+                    if(retryCheckHoSo > 0 && checkCount < countDelayError){
+                    delayCheckHoSo = retryCheckHoSo;
+                    }
+                    else{
+                        if(isCheckFirst === 0){
+                            delayCheckHoSo = timeDefault;        
+                        }else{
+                            isCheckFirst = 0;
+                        }
+                    }
+                    var t=setTimeout("checkhoso()",delayCheckHoSo);
+                }
+                function checkhoso()
+                {
+					jx.setParameter("ischeck",1);
+					jx.success('getResultCheck');
+					jx.request('/dvc/services/getinfofromadapter','POST');
+					jx.error('errorAjax');
+					document.getElementById('headSoLuongHoSo').innerHTML = 'Tiếp nhận hồ sơ qua mạng (<font color="red"><image src="/images/loading.gif"></font>)';
+                }
+                function getResultCheck(){
+                    delayCheckHoSo = timeDefault;
+                    retryCheckHoSo = 0;
+                    checkCount = 0;
+                    
+                    document.getElementById('spanSoLuongHoSo').innerHTML = soluonghoso;
+                    document.getElementById('headSoLuongHoSo').innerHTML = 'Tiếp nhận hồ sơ qua mạng (<font color="red">'+soluonghoso+'</font> hồ sơ chờ đồng bộ)';
+                    stopBlinkTitle();
+                    if(soluonghoso < limitToUncheck){
+                        startCheckHoSo();
+                        if(soluonghoso > 0){
+                            if(soluonghoso < lastResultCheck){
+                                if(isLow === 0){
+                                    isLow = 1;
+                                    lastResultCheck = soluonghoso;
+                                }                                
+                            }
+                            //alert(soluonghoso +' | '+ lastResultCheck + '| ' +isUncheck);
+                            if(soluonghoso > lastResultCheck || isUncheck === 0){
+                            //alert('Dô');
+                                blinkTitle("Dịch vụ công trực tuyến",soluonghoso+" hồ sơ");
+                                if(soluonghoso > lastResultCheck ){
+                                    isUncheck = 0;                               
+                                    lastResultCheck = soluonghoso;
+                                }
+                            }
+                        }
+                    }else{
+                        alert("Số lượng hồ sơ dịch vụ công trực tuyến tăng bất thường \nHệ thống ngừng kết nối với website để đảm bảo an toàn");
+                    }
+                }
+                function errorAjax(){
+                document.getElementById('spanSoLuongHoSo').innerHTML = 0;
+                document.getElementById('headSoLuongHoSo').innerHTML = 'Tiếp nhận hồ sơ qua mạng (<font color="red">0</font> hồ sơ chờ đồng bộ)';
+                retryCheckHoSo = timeDefaultError;
+                checkCount ++;
+                startCheckHoSo();
+                }
+
+                function checkCountHoSo(){
+                var slhs = document.getElementById('spanSoLuongHoSo').innerHTML;
+                    if(slhs > limitToUncheck){
+                        var rs = confirm('Số lượng hồ sơ dịch vụ công trực tuyến tăng bất thường, quá trình đồng bộ hồ sơ có thể bị gián đoạn \n Đề nghị liên hệ với bộ phận quản trị để phòng ngừa rủi ro cho hệ thống');
+                        if(rs === true){
+                            window.location.href="/motcua/dongbohsmc/index";
+                        }
+                    }else{
+						window.location.href="/motcua/dongbohsmc/index";
+					}
+                }                
+                var notificationTimer = null;
+                 
+                function blinkTitle(m1,m2) {
+                document.title=m1;
+                
+                notificationTimer = setTimeout("blinkTitle(' "+m2+" ',' "+m1+" ')",1000);
+                }
+                
+                function stopBlinkTitle() {
+                   clearTimeout(notificationTimer);
+                   document.title = "Điều hành và quản lý văn bản";
+                }
+                function unCheckHoSo(){
+                    isUncheck = 1;
+                }
+                </script>
+					<?php
+					}
+					?>
+					<!-- Kết thúc Tiếp nhận hồ sơ qua mạng-->	
+<script><?=$script?></script>
+</td>
+</tr></table>

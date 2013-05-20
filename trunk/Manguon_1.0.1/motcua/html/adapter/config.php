@@ -1,0 +1,20 @@
+<?php
+date_default_timezone_set('Asia/Jakarta');
+define('MADONVI',"020");
+define('MAHETHONG',"1");
+define('DB_HOST','localhost');
+define('DB_USERNAME','motcua');
+define('DB_PASSWORD','Unitech@1');
+define('DB_DATABASE','motcua');
+define('PATH_FILE_UPLOAD','D:\\PMNM_Motcua\\Source Code\\01_Development\\adapter\\upload');
+define('DVC_USERNAME','motcua');
+define('DVC_PASSWORD','123456');
+define('MAIL_HOST','mail.unitech.vn');
+define('MAIL_PORT',587);
+define('MAIL_PROTOCOL','tls');
+define('MAIL_USERNAME','motcua-stttt');
+define('MAIL_PASSWORD',123456);
+define('MAIL_ADDRESS','nguyennd@unitech.vn');
+define('WEBSITE','tttt.danang.gov.vn');
+define('MAIL_SUBJECT','SỞ THÔNG TIN VÀ TRUYỀN THÔNG THÀNH PHỐ ĐÀ NẴNG');
+define('LOG_FILE','D:\\PMNM_Motcua\\Source Code\\01_Development\\adapter\\log\\DVCLog.txt');

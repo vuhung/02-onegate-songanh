@@ -1,0 +1,325 @@
+<?php
+	require_once 'Common/FileDinhKem.php';
+	require_once('auth/models/ResourceUserModel.php');
+	$disable="/isreadonly/1";
+?>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse_state.js"?>></script>
+<script type="text/javascript" src="/js/autocomplete.js"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<?php
+echo "<script language=\"javascript\">";
+echo ' var idtst = "'.$this->idthumucchadachon.'";';
+echo "</script>";
+?>
+<script>
+function showHide(id) {
+
+	document.getElementById(id).style.display = 'block';
+
+}
+function Hide(id) {
+
+	document.getElementById(id).style.display = 'none';
+
+}
+</script>
+<form name=frmListhslt method="post" action="/qllt/hslt">
+	<table>
+		<tr>
+			<td>Tên hồ sơ</td>
+			<td>
+				<input type=text size=50 name=TENHOSO value="<?=$this->parameter["TENHOSO"]?>">
+			</td>
+		</tr>
+		<tr>
+			<td>Năm lưu trữ</td>
+			<td>
+				<input type=text size=4 name=SAVEYEAR onkeypress="return isNumberKeyNoPoint(event)" value="<?=$this->parameter["SAVEYEAR"]?>">
+			</td>
+		</tr>
+		<tr>
+			<td>Nơi lưu trữ</td>
+			<td>
+			<input type="text" id="id_tmc" readonly="true" name="thumuccha_name" size="35" value="<?=$this->parameter["thumuccha_name"]?>" Onclick="showHide('treeview')"></input>
+        
+		<input type=hidden name=idthumuccha value="<?=$this->parameter["idthumuccha"]?>">
+				</div>  
+		<div id="treeview" style="display: none;border: 1px solid #CCCCCC;width:400px;height:200px;overflow-y:scroll;overflow-x:scroll">
+
+		<!-- Hiển thị Cây thư mục-->
+		<ul class=treeview id=treemenu2>
+			<li id="1~Sở GTVT" class=submenu>
+				<a href="#" id="1~Sở GTVT" onclick="setValue(this.id);Hide('treeview')"><?=$this->systemName?></a>
+	
+					
+						<?php 
+							$html = "";
+							$action = "setValue(this.id);Hide('treeview')";
+							echo qllt_noiluutruModel::GetTree_noiluutru_nohop(1,"treemenu2",$html,$this->id_noiluutru,$action);
+						?>
+					
+			</li>
+		</ul>
+		<script type="text/javascript" src="/js/simpletreemenu.js">
+		</script>
+
+		<script type="text/javascript" language="javascript">
+		function setValue(name)
+		{
+			var classField = document.getElementById("id_tmc");			
+			str = name.split("~");			
+			classField.value = str['1'];
+			document.frmListhslt.idthumuccha.value = str[0];	
+			
+		}
+		</script>
+
+		<link rel="stylesheet" type="text/css" href="/styles/simpletree.css" />
+		<script type="text/javascript">
+
+		ddtreemenu.createTree("treemenu2", true, 5)
+		ddtreemenu.flatten('treemenu2', 'expand');
+
+		</script>
+		<!-- Hết cây thư mục -->
+		<br/></div>
+			</td>
+		</tr>
+		<tr>
+			<td>Loại hồ sơ</td>
+			<td>
+				<select name=LOAIHOSO>
+					<option value="0">--Chọn loại hồ sơ--</option>
+					<?php
+						foreach($this->lhslt as $item){
+							echo "<option value=".$item['ID_LOAIHOSO'].">".$item['TENLOAI']."</option>";
+						}
+					?>
+				</select>
+				<script>
+					document.frmListhslt.LOAIHOSO.value="<?=$this->parameter["LOAIHOSO"]?>";
+				</script>
+			</td>
+		</tr>
+		<tr>
+			<td>Mã số hồ sơ</td>
+			<td>
+				<input type=text size=10 name=MASO value="<?=$this->parameter["MASO"]?>">
+			</td>
+		</tr>
+		</tr>
+		<tr>
+			<td><input type=submit value="Tìm kiếm"></td>
+		</tr>
+	</table>
+	<table class="adminlist">
+	<thead>
+		<tr>
+			<th nowrap>#</th>
+			<th><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th width="100%">
+				Nội dung
+			</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan="3">
+					<div class="pagination">
+						<div class="limit">Hiển thị #
+							<select name="limit" id="limit" class="inputbox" size="1" onchange="document.frmListhslt.submit();" style="width:60px;">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="15">15</option>
+								<option value="20">20</option>
+								<option value="25">25</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<script>
+									document.frmListhslt.limit.value='<?php echo $this->limit; ?>';
+								</script>
+							</select>
+						</div>
+						<div style="float:right;"><?php echo $this->showPage; ?></div>
+					</div>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+if(count($this->data)>0){
+$stt=0;
+$i=0;
+foreach ($this->data as $row )
+	{
+	$stt++;
+?>
+		<tr class="row<?=$i?>">
+			<td nowrap align="right"><?php echo $stt ?></td>
+			<td nowrap><input type=checkbox name=DEL[] value="<?php echo $row['ID_HOSO'] ?>"></td>
+			<td><?php
+					echo "<b>".$row['MASO']." - </b>";
+					echo "<b>".$row['TENLOAIHOSO']." </b><br/>";
+					//echo "<b>".$row['NAMLUUTRU']."</b><br/>";					
+					//echo $row['TENHOSO'];
+				?>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_HOSO'] ?>);">
+					<?=QLVBDHCommon::highlightWords($row['TENHOSO'],$this->parameter["TENHOSO"]);?>
+				</a>
+				<div>
+					<ul class="chitiethscv">					
+						<li id=groupicon1_<?=$row["ID_HOSO"]?>>
+							<img src="/images/icon_chitiet.jpg" border="0" hspace="5" >
+							<a href='javascript:SwapDiv(<?=$row["ID_HOSO"]?>,"/qllt/hslt/detail/id/<?=$row["ID_HOSO"]?>",1);'>Chi tiết</a>
+						</li>						
+					
+					<li id=groupicon6_<?=$row["ID_HOSO"]?>>
+						<img src="/images/icon_luanchuyen.jpg" border="0" hspace="5" >
+						<a href='javascript:SwapDiv(<?=$row["ID_HOSO"]?>,"/qllt/muontra/index/id_hoso/<?=$row["ID_HOSO"]?>",1);'>Mượn trả</a>
+					</li>
+					
+					<li id=groupicon7_<?=$row["ID_HOSO"]?>>
+						<img src="/images/icon_files.jpg" border="0" hspace="5" >
+						<a href='javascript:SwapDiv(<?=$row["ID_HOSO"]?>,"/qllt/vanban/list/idhoso/<?=$row["ID_HOSO"]?>",6);'>Giấy tờ kèm theo</a>
+					</li>
+			
+					</ul>
+					
+					<div class="clr"></div>
+					<div class="groupcontent" id="groupcontent<?=$row["ID_HOSO"]?>" style="display:none"></div>
+				</div>
+				
+			</td>			
+		</tr>
+<?php
+	$i = (-1+$i)*-1;
+}
+}else{
+?>
+	<tr><td colspan=3>Không tìm thấy hồ sơ</td></tr>
+<?php
+}
+?>
+	</tbody>
+</table>
+<input type="hidden" name="page" value="<?php echo $this->page; ?>">
+<input type="hidden" name="comeFrom" value="listForm">
+</form>
+<script>
+
+function confirmDelete(idhoso,idmuontra)
+	{
+		var answer = confirm("Bạn có chắc chắc muốn xóa không?");
+		if (answer)
+		{		
+			execfunction('qllt','muontra','delete','execute/delete/idhoso/'+idhoso+'/idmt/'+idmuontra);
+		}
+		else
+		{
+			
+		}
+
+	}
+
+function DeleteButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DEL[]","Chọn ít nhất một mục để xoá.");
+	if(mess){
+		if(confirm("<?php echo 'Bạn muốn xóa mục này!'; ?>")){
+			document.frmListhslt.action = "/qllt/hslt/delete";
+			document.frmListhslt.submit();
+		}
+	}else{
+		alert("Chọn ít nhất một mục để xoá.");
+	}
+}
+		 
+function AddNewButtonClick()
+{   
+	window.location = "/qllt/hslt/input";
+	//document.frmListhslt.submit();
+}
+
+function ItemClick(id)
+{
+	document.frmListhslt.action = "/qllt/hslt/input/id_hslt/"+id;
+	document.frmListhslt.submit();
+}
+
+function SwapDiv(id,url,tab){
+		for(var i=1;i<11;i++){
+			if(document.getElementById("groupicon"+i+"_"+id)){
+				if(tab!=i){
+					if(document.getElementById("groupicon"+i+"_"+id).className=="groupiconopen"){
+						document.getElementById("groupcontent"+id).style.display="none";
+						document.getElementById("groupicon"+i+"_"+id).className = "groupicon";
+						break;
+					}
+				}
+			}
+		}
+		if(document.getElementById("groupcontent"+id).style.display==""){
+			document.getElementById("groupcontent"+id).style.display="none";
+			document.getElementById("groupicon"+tab+"_"+id).className = "groupicon";
+		}else{
+			document.getElementById("groupcontent"+id).style.display="";
+			document.getElementById("groupicon"+tab+"_"+id).className = "groupiconopen";
+			document.getElementById("groupcontent"+id).innerHTML="<img src='/images/loading.gif' width='16' height='16' border='0'></img<img src='/images/loading.gif' width='16' height='16' border='0'></img><img src='/images/loading.gif' width='16' height='16' border='0'></img><img src='/images/loading.gif' width='16' height='16' border='0'></img>";
+			loadDivFromUrl("groupcontent"+id,url,1);
+
+		}
+	}
+
+	function updateImageNew(iddiv,id){
+    	var oimg = document.getElementById(iddiv);
+    	if(oimg != null){
+    		if(oimg.style.display != 'none'){
+	    	oimg.style.display = 'none';
+	    	
+	    	var AE = new AjaxEngine();
+			var oXmlHttp = AE.createXMLHttp(); 	
+		    <?php 
+		    $authen = Zend_Registry::get('auth');
+		    $user = $authen->getIdentity();
+		    ?>
+			var url = '/vbden/vbden/updatedadoc?year=<?=QLVBDHCommon::getYear()?>&id_vbd='+id+'&id_u=<?=$user->ID_U?>';
+			oXmlHttp.open('post', url , true);
+		    oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		    oXmlHttp.onreadystatechange = function () { 
+		        if (oXmlHttp.readyState == 4) { 
+		        	if (oXmlHttp.status == 200) {             	
+		            	//alert(oXmlHttp.responseText);
+		        	} else { 
+		            	
+		            }            
+		        } 
+		    };  
+		    oXmlHttp.send(null);   
+    		}
+    	}
+	    
+    }
+
+	function SwapIframe(id,url){
+		for(var i=1;i<11;i++){
+			if(document.getElementById("groupicon"+i+"_"+id)){
+				if(document.getElementById("groupicon"+i+"_"+id).className=="groupiconopen"){
+					document.getElementById("groupcontent"+id).style.display="none";
+					document.getElementById("groupicon"+i+"_"+id).className = "groupicon";
+					break;
+				}
+			}
+		}
+		if(document.getElementById('groupcontent'+id).style.display == ''){
+			document.getElementById('groupcontent'+id).style.display = 'none';
+		}else{
+			document.getElementById('groupcontent'+id).innerHTML = '<iframe style="overflow-x:visible" height=0 id=iframebutphe'+id+' allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no src="'+url+'"></iframe>';
+			document.getElementById('groupcontent'+id).style.display = '';
+		}
+	}
+</script>

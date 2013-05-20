@@ -1,0 +1,79 @@
+<form name="frm" action="/danhmuc/loaihoso/save" method="POST" enctype="multipart/form-data" >
+<div>
+<label><b>Tên Loại hồ sơ</b></label>
+<textarea rows="2" cols="80" name=TEN><?=$this->data["TEN"]?></textarea>
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Thuộc Lĩnh vực</b></label>
+<select name="ID_LINHVUC">
+	<?=linhvucModel::toCombo($this->data["ID_LINHVUC"]);?>
+</select>
+
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Lệ phí</b></label>
+<input type="text" name="LEPHI" value="<?=$this->data["LEPHI"]?>">
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Số ngày xử lý</b></label>
+<input type="text" name="SONGAYXULY" value="<?=$this->data["SONGAYXULY"]?>" >
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Được sử dụng</b></label>
+<input type=checkbox name="ACTIVE" value=1  <?=$this->data["ACTIVE"]==1?"checked":""?> >
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Ghi chú</b></label>
+<textarea rows="2" cols="80" name="GHICHU" ><?=$this->data["GHICHU"]?></textarea>
+</div>
+
+<div class="clr"></div>
+<div>
+<label><b>Hình qui trình:</b></label>
+<input name="uploadedfile" type="file" />
+</div>
+<div class="clr"></div>
+<div id=idNhaplieu>
+<?php
+
+									$sBasePath = $this->dirFCK .'/fckeditor/';
+									$oFCKeditor = new FCKeditor('CHITIET_HOSO') ;
+									$oFCKeditor->BasePath = $sBasePath;
+									$oFCKeditor->Config['SkinPath'] = $sBasePath . 'editor/skins/' . htmlspecialchars('office2003') . '/' ;
+									$oFCKeditor->Value = base64_decode($this->data["CHITIET_HOSO"]);
+									$oFCKeditor->Width = "100%";
+									$oFCKeditor->Height = 400;
+									$oFCKeditor->ToolbarSet = 'Default';
+									$oFCKeditor->Create();
+									
+
+																?>				
+</div>							
+<div class="clr"></div>
+
+
+
+<input type="hidden" name="ID_LOAIHOSO" value="<?=$this->data["ID_LOAIHOSO"]?>" >
+<input type="hidden" name="id_lv_old" value="<?=$this->id_lv_old?>" >
+
+</form>
+
+<script>
+
+function SaveButtonClick(){
+	//alert(document.frm.CHITIET_HOSO.value);
+	//document.frm.action ="";
+	document.frm.submit();
+}
+
+function BackButtonClick(){
+	window.location= "/danhmuc/loaihoso/index?ID_LINHVUC=<?=$this->id_lv_old?>";
+}
+
+
+</script>

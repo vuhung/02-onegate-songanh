@@ -1,0 +1,61 @@
+<form name=frm method="post" action="/wf/trangthaihoso/Save" enctype="multipart/form-data" >
+<fieldset>
+	<div class="required clearfix">
+		<label>Tên trạng thái hồ sơ(*)</label>
+		<input type=text class=inputbox name=NAME value="<?=htmlspecialchars($this->data["TEN"])?>" class="inputText" size="50" maxlength="100">
+    	<span class="box_erro_area" id="ERRNAME"></span>
+	</div>
+	<div class="required clearfix">
+		<label>Nhóm(*)</label>
+		
+		<?php
+			if($i<count($this->group)){
+				foreach($this->group as $gr_it){
+		?>
+				<input type=checkbox name=ID_G[] <?=$gr_it["IS_ON"]?"checked":""?> value=<?=$gr_it["ID_G"]?> > 
+				<?php if($gr_it["IS_ON"]) {?>
+			<input type=hidden value="<?=$gr_it["ID_G"]?>" name="IS_ON[]" >
+				<?php }?>
+				<?=$gr_it["NAME"]?> 
+		<?php
+			}}
+		?>
+		
+	</div>
+    
+	<div class="required clearfix">
+		<label>Hồ sơ chuyển đến</label>
+		<input type=checkbox name="LATRANGTHAINHAN" value=1 <?=$this->data["LATRANGTHAINHAN"]||(!$this->id)?"checked":""?> >
+	</div>
+
+	<div class="required clearfix">
+		<label>Trạng thái chờ bổ sung</label>
+		<input type=checkbox name="LA_CHOBOSUNG" value=1 <?=$this->data["LA_CHOBOSUNG"]?"checked":""?> >
+	</div>
+
+	<div class="required clearfix">
+		<label>Là trạng thái riêng của tổ một cửa</label>
+		<input type=checkbox name="THUOCTOMOTCUA" value=1 <?=$this->data["THUOCTOMOTCUA"]?"checked":""?> >
+	</div>
+	
+	<div class="optional clearfix">
+		<label>(*) Bắt buộc nhập liệu.</label>
+	</div>
+</fieldset>
+<input type=hidden name="id" value="<?=$this->id?>">
+</form>
+<script>
+	function SaveButtonClick(){
+		var err = true;
+		err = err & validateInput("req",document.frm.NAME,"Tên trạng thái không được rỗng.");
+		//err = err & err==true?validateInput("maxlen=50",document.frm.NAME,"<?=ERR11006004?>"):false;
+		//err = err & validateInput("req",document.frm.ID_AP,"<?=ERR11006008?>");
+		if(err==true){
+			document.frm.submit();
+		}
+	}
+	function BackButtonClick(){
+		document.frm.action = "/wf/trangthaihoso/index";
+		document.frm.submit();
+	}
+</script>

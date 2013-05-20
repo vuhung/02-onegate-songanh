@@ -1,0 +1,188 @@
+<form name=frmListVanBans method="post" action="/vbpq/vanban">
+	<table>		
+		<tr>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table width="100%" cellspacing="0" cellpadding="2" border="0" align="center">   
+	            <tbody>	
+	            <tr>
+	                <td>
+	                   <table>
+	                         <tbody>
+	                         <tr >
+	                           <td align="right">
+	                             Ngày ban hành
+	                           </td>
+	                           <td align="left" valign="top">
+	                           		<table>
+	                           			<tr>
+	                           				<td>Từ ngày</td>
+	                           				<td><?=QLVBDHCommon::calendarFull($this->tungay,"tungay","tungay") ?></td>
+										</tr>
+										<tr>
+	                           				<td>Đến ngày</td>
+	                           				<td><?=QLVBDHCommon::calendarFull($this->denngay,"denngay","denngay") ?></td>
+										</tr>
+									</table>	                             
+	                           </td>
+	                         </tr>
+							 <tr>
+	                           <td align="right">
+	                             Số hiệu văn bản
+	                           </td>
+	                           <td align="left">
+	                             <input type="text" style="width: 180px;" value="<?php echo $this->sohieuvanban?>" name="p_sohieuvanban">
+	                           </td>
+	                         </tr>
+	
+	                         <tr>
+	                           <td align="right">
+	                             Trích yếu
+	                           </td>
+	                           <td align="left">
+	                             <input type="text" style="width: 395px;" value="<?php echo $this->trichyeu?>" name="p_trichyeu">
+	                           </td>
+	                         </tr>
+	
+	                         
+	
+	                         <tr>
+	                           <td align="right">
+	                             Cấp văn bản
+	                           </td>
+	                           <td align="left">
+	                             	<select style="width: 280px;" name="p_cap" onChange="document.frmListVanBans.submit();">
+	                             		<option value="0">-- Tất cả --</option>
+										<?php
+	                            	 		$datacap=$this->datacap;
+	                            	 		if(count($datacap)>0)
+	                            	 		{
+	                            	 			foreach($datacap as $row)
+	                            	 			{													
+										?>
+										<option <?php echo $this->cap==$row["ID_CAP"]?"selected":""?> value="<?php echo $row["ID_CAP"]?>"><?php echo htmlspecialchars($row["TEN_CAP"])?></option>
+										<?php
+												}
+											}
+	                            	 	?>		
+									</select>
+	                            </td>
+	                          </tr>	
+	                         
+	                         <tr>
+	                           <td align="right">
+	                             Nội dung văn bản
+	                           </td>
+	                           <td align="left">
+	                             <input type="text" style="width: 395px;" maxlength="512" value="<?php echo $this->noidung?>" name="p_noidung">
+	                           </td>
+	                         </tr>
+	                         <tr>
+	                         	<td>				
+								</td>
+								<td align="left">
+									<button onclick="document.frmListVanBans.submit();">Tìm</button>
+									<button onclick="document.getElementById('search').value='';document.frmListVanBans.submit();">Làm lại</button>
+								</td>								
+							</tr>	                         
+	            			</tbody>
+						</table>
+	            	</td>
+	            </tr>
+	            </tbody></table>
+			</td>
+		</tr>
+	</table>
+	<table class="adminlist">
+	<thead>
+		<tr>
+			<th nowrap>#</th>
+			<th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th nowrap width="30%">Tên văn bản</th>
+			<th nowrap width="20%">Số ký hiệu</th>
+			<th nowrap width="20%">Ngày ban hành</th>
+			<th nowrap width="10%">Cấp</th>
+			<th nowrap width="20%">Cơ quan ban hành</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan="7">
+					<div class="pagination">
+						<div class="limit">Hiển thị #
+							<select name="limit" id="limit" class="inputbox" size="1" onchange="document.frmListVanBans.submit();" style="width:60px;">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="15">15</option>
+								<option value="20">20</option>
+								<option value="25">25</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<script>
+									document.frmListVanBans.limit.value='<?php echo $this->limit ?>';
+								</script>
+							</select>
+						</div>
+						<div style="float:right;"><?php echo $this->showPage; ?></div>
+					</div>
+			</td>
+		</tr>
+	</tfoot>
+
+	<tbody>
+<?php
+$stt=0;
+$i=0;
+if(count($this->data)>0)
+{
+foreach ($this->data as $row )
+	{
+	$stt++;
+?>
+		<tr class="row">
+			<td nowrap align="right"><?php echo $stt ?></td>			
+			<td nowrap align="center">
+				<input type=checkbox name=DEL[] value='<?php echo $row['ID_VBPQ'] ?>'>
+			</td>		
+			<td><a href="#" onClick="ItemClick(<?php echo $row['ID_VBPQ'] ?>);return false;"><?php echo $row['TRICHYEU'];?></a></td>			
+			<td><?php echo $row['SOKYHIEU'];?></td>
+			<td><?php echo $row['NGAYBANHANH'];?></td>
+			<td><?php echo $row['TEN_CAP'];?></td>
+			<td><?php echo $row['COQUANBANHANH_TEXT'];?></td>
+		</tr>
+<?php
+	$i = (-1+$i)*-1;
+}
+}
+?>
+	</tbody>
+</table>
+<input type="hidden" name="page" value="<?php echo $this->page; ?>">
+<input type="hidden" name="comeFrom" value="listForm">
+</form>
+<script>
+function DeleteButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DEL[]","Chọn ít nhất một mục để xoá.");
+	if(mess){
+		if(confirm("<?php echo 'Bạn muốn xóa mục này!'; ?>")){
+			document.frmListVanBans.action = "/vbpq/vanban/delete";
+			document.frmListVanBans.submit();
+		}
+	}else{
+		alert("Chọn ít nhất một mục để xoá.");
+	}
+}
+function AddNewButtonClick()
+{
+	document.frmListVanBans.action = "/vbpq/vanban/input";
+	document.frmListVanBans.submit();
+}
+function ItemClick(id)
+{
+	document.frmListVanBans.action = "/vbpq/vanban/input/id/"+id;
+	document.frmListVanBans.submit();
+}
+</script>

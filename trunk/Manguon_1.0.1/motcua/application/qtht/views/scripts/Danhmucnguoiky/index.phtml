@@ -1,0 +1,50 @@
+<form name="frm">
+<table class="adminlist">
+<thead>
+	<th nowrap>#</th>
+	<th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+	<th width="100%">Tên nhân viên</th>
+	<th nowrap>Phòng</th>
+</thead>
+<tbody>
+	<?php $stt = 1 ;foreach ($this->data as $item){?>
+	<tr>
+	<td nowrap><?=$stt?></td>
+	<td nowrap align="center">
+			<input type=checkbox name=DEL[] value='<?php echo $item["ID_VB_NK"] ?>'>
+	</td>
+	<td width="100%"><b><?=$item["NAME"]?></b></td>
+	<td nowrap><?=$item["DEP_NAME"]?></td>
+	</tr>
+	<?php $stt++;}?>
+</tbody>
+</table>
+</form>
+<script>
+function DeleteButtonClick(){
+	var ln = 0;
+	var arr = document.getElementsByName('DEL[]');
+	for(var i = 0 ; i < arr.length ;i++ ){
+		if(arr[i].checked == true){
+			ln = 1;
+		}
+	}
+	if(ln == 1){
+		if(confirm("<?php echo "Bạn có muốn xóa không"; ?>")){
+			//document.URL=
+			document.frm.action="/qtht/Danhmucnguoiky/delete";
+			document.frm.method="post";
+			document.frm.submit();
+		}
+	}else{
+		alert("Bạn phải một dòng chọn để xóa");
+	}
+}
+function AddNewButtonClick(){
+	//document.URL = "/qtht/DanhMucCoQuan/input";
+	document.frm.action="/qtht/Danhmucnguoiky/input";
+	document.frm.method="post";
+	document.frm.submit();
+	
+}
+</script>

@@ -1,0 +1,35 @@
+<form name=frm method=post>
+<table class=adminlist >
+	<thead>
+		<tr>
+			<th nowrap>#</th>
+			<th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th nowrap>Tên dịch vụ</th>
+			<th nowrap>Loại hồ sơ</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php $stt = 1; foreach($this->data as $it) {?>	
+		<tr>
+			<td><?=$stt?></td>
+			<td nowrap align="center">
+				<input type=checkbox name=DEL[] value='<?=$it['ID_SERVICE'] ?>'>
+			</td>
+			<td width=80% ><a href="/dvc/services/input/id/<?=$it["ID_SERVICE"]?>" ><?=$it["TENDICHVU"]?> (Mã số:<?=$it["CODE"]?>)</a> </td>	
+			<td width=30%><?=$it["TENLOAI"]?></td>
+		</tr>
+	<?php $stt++; } ?>
+	</tbody>
+
+</table>
+
+<script>
+function AddNewButtonClick(){
+	window.location = "/dvc/services/input";
+}
+
+function DeleteButtonClick(){
+	document.frm.action = "/dvc/services/delete";
+	document.frm.submit();
+}
+</script>

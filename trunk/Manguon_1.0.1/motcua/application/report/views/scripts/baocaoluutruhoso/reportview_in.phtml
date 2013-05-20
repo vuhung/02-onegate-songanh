@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+td{
+	border-color: black;
+}
+th{
+	border-color: black;
+}
+</style>
+
+</head>
+<body style="background-color:transparent">
+<table  width=100% >
+<tr >
+  <td align=center ><b><?= mb_strtoupper($this->config->sys_info->unit,"utf-8") ?></b></td>
+
+  <td align=center><b>CỘNG HÒA XÃ HỘI CHỦ
+  NGHĨA VIỆT NAM</b></td>
+ </tr>
+ <tr >
+  <td align=center ><b><?=mb_strtoupper($this->config->sys_info->company,"utf-8") ?></b></td>
+  <td align=center ><b>Ðộc lập - Tự do - Hạnh phúc</b></td>
+ </tr>
+ <tr >
+
+ 
+  <td ></td>
+  <td align=right><?=$this->config->sys_info->city?>, ngày <?=date("d")?> tháng <?=date("m")?> năm <?=date("Y")?></td>
+ </tr>
+
+ 
+</table>
+<p align=center><b>BÁO CÁO HỒ SƠ LƯU TRỮ </b></p>
+<p align=center><?php echo $this->thu;?> </p>
+
+<table border="1" style="border: 1px solid black; border-collapse: collapse;" width=100%>
+ <thead>
+ 	<tr>
+	    <th nowrap >Stt</th>
+		<th >Hộp số</th>
+		<th nowrap>Mã số</th>
+ 		<th nowrap>Tên hồ sơ</th>	 		
+ 		<th nowrap>Ngày BĐ và KT</th>
+ 		<th >Thời hạn lưu trữ</th>
+		<th nowrap>Ghi chú</th>		
+ 	</tr> 
+ </thead>
+ <tbody>
+<?php require_once 'qtht/models/LoaiVanBanModel.php';
+require_once 'qtht/models/CoquanModel.php'; 
+require_once 'qtht/models/DepartmentsModel.php';
+require_once 'qtht/models/UsersModel.php';
+?>
+<?php $stt=1; 
+$num = count($this->data);
+foreach($this->data as $row){ 
+ 
+ ?>
+	
+	<tr>
+    <td nowrap valign=top ><?=$stt?></td>
+	<td valign=top ><?=$row["TENTHUMUC"]?></td>
+	<td nowrap valign=top ><?=$row["MASO"]?></td>
+ 	<td nowrap valign=top ><?=$row["TENHOSO"]?></td>	
+ 	<td nowrap  valign=top ><?php echo $row['NGAYBATDAU']."</br>".$row['NGAYKETTHUC']; ?></td>
+ 	<td nowrap valign=top ><? if($row["THOIHANLUUTRU"]==1)  echo "Vĩnh viễn";
+						if($row["THOIHANLUUTRU"]==2) echo "Lâu dài";
+						if($row["THOIHANLUUTRU"]==3) echo "Tạm thời";
+	 ?></td>
+	<td  valign=top width=30% ></td>
+	</tr> 
+
+<?php  
+  $stt++ ; } ?>
+ </tbody>
+
+</table>
+</body>
+<script>print();</script>
+</html>

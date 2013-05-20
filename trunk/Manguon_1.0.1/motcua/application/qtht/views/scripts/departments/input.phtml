@@ -1,0 +1,168 @@
+<form action="" name="frmEditDepartment"  method="<?php echo $this->form->getAttrib('method');?>">
+<fieldset>
+	<div style="text-align:right;width:100%">
+		Trường có dấu <font color="red">*</font> là bắt buộc nhập
+	</div>
+	<div align="center"><span class="box_erro_area"><?php echo $this->error; ?></span></div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Mã phòng ban<font color="red">*</font></label>
+		<?php echo $this->form->getElement('CODE_DEP');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('CODE_DEP'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+		<label id="lblTextIput">Tên phòng ban<font color="red">*</font></label>
+		<?php echo $this->form->getElement('NAME');?>
+    	<span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('NAME'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="required">
+	    <label id="lblTextkh">Ký hiệu<font color="red">*</font></label>
+	    <?php echo $this->form->getElement('KYHIEU_PB');?>
+	    <span class="box_erro_area" id="ERRKIHIEU_PB">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('KYHIEU_PB'));			
+            ?>
+        </span>
+	 </div>   
+	<div class="clr"></div>
+	<div class="optional">
+		<label for="ID_DEP_PARENT" id="lblTextIput">Phòng cấp trên</label>
+		<?php echo $this->form->getElement('ID_DEP_PARENT');?>
+        <span class="box_erro_area">
+        	<?php 
+                echo QLVBDHCommon::getTopErrorMessage($this->form->getElement('ID_DEP_PARENT'));			
+            ?>
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label for="ID_U_DAIDIEN" id="lblTextIput">Người đại diện</label>
+		<select name=ID_U_DAIDIEN>
+			<option value=0>--Chọn người đại diện--</option>
+<?php
+	foreach($this->user as $useritem){
+?>			<option value=<?=$useritem['ID_U']?>><?=$useritem['NAME']?></option>
+<?php
+	}
+?>
+		</select>
+		<script>
+			document.frmEditDepartment.ID_U_DAIDIEN.value='<?=$this->ID_U_DAIDIEN?>';
+		</script>
+        <span class="box_erro_area">
+        </span>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label for="ACTIVE" id="lblTextIput">Kích hoạt</label>
+		<?php echo $this->form->getElement('ACTIVE');?>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label for="ISLEADER" id="lblTextIput">Là phòng lãnh đạo</label>
+		<?php echo $this->form->getElement('ISLEADER');?>
+	</div>
+	<div class="clr"></div>
+	<div class="optional">
+		<label id="lblTextIput">Là quy trình UBND </label>
+		<input type=checkbox name=ISUBND value=1 <?php echo ($this->dep==1?"checked":"") ;?>>
+	</div>
+	<div class="clr"></div>
+	<fieldset>
+		<legend>Chức năng</legend>
+		<table class=adminlist>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Tên Module</th>
+					<th><input type=checkbox name=DELACT onclick="SelectAllByTitle(this,'GMODNAME')">Tên Chức năng</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th colspan="3">
+					</th>
+				</tr>
+			</tfoot>
+			<tbody>
+<?php
+	$i=0;
+	$out = false;
+	$stt=1;
+	while(!$out){
+?>
+			<tr>
+				<td><?=$stt?></td>
+				<td nowrap><input type=checkbox title="GMODNAME" onclick="SelectAllByTitle(this,'MODNAME<?=$this->action[$i]['ID_GMOD']?>')"><?=$this->action[$i]['GMODNAME']?></td>
+				<td>
+					<table>
+<?php
+		while(!$out){
+?>
+						<tr>
+							<td class=key><input type=checkbox title="MODNAME<?=$this->action[$i]['ID_GMOD']?>" onclick="SelectAllByTitle(this,'ACTNAME<?=$this->action[$i]['ID_MOD']?>')"><?=$this->action[$i]['MODNAME']?></td>
+							<td>
+<?php
+			while(!$out){
+?>
+								<span><input type=checkbox name=ID_ACT[] title="ACTNAME<?=$this->action[$i]['ID_MOD']?>" value=<?=$this->action[$i]['ID_ACT']?> <?=$this->action[$i]['SEL']==1?"checked":""?>><?=$this->action[$i]['NAME']?></span>
+<?php
+				if($this->action[$i]['ID_MOD']!=$this->action[$i+1]['ID_MOD']){
+					$out=true;
+				}else{
+					$i++;
+				}
+			}
+			$out = false;
+?>
+							</td>
+						</tr>
+<?php
+			if($this->action[$i]['ID_GMOD']!=$this->action[$i+1]['ID_GMOD']){
+				$out=true;
+			}else{
+				$i++;
+			}
+		}
+		$out = false;
+?>
+					</table>
+				</td>
+			</tr>
+<?php
+		if($i>=count($this->action)-1){
+			$out=true;
+		}else{
+			$i++;
+			$stt++;
+		}
+	}
+?>
+			</tbody>
+	</table>
+	</fieldset>
+	<input type=hidden name="id" value=<?php echo $this->id?> >
+</fieldset>
+</form>
+
+<script>
+	function SaveButtonClick()
+	{
+		document.frmEditDepartment.submit();
+	}
+	function BackButtonClick()
+	{
+		document.frmEditDepartment.action = "/qtht/departments/";
+		document.frmEditDepartment.submit();
+	}
+</script>

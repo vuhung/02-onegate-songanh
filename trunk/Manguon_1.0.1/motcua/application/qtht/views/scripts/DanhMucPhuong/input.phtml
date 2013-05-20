@@ -1,0 +1,45 @@
+<form name="frm"  action="/qtht/DanhMucPhuong/save" method="post">
+<div class="required clearfix">
+	<label id="lblTextIput">Tên Phường/Xã</label>
+	<input type="text" name="tenphuong" size=50 maxlength="128" value="<?php echo htmlspecialchars($this->tenphuong);?>">
+	<span class="box_erro_area" id="ERRtenphuong">		
+	</span>
+</div>
+<div class="required clearfix">
+	<label id="lblTextIput">Mã Số</label>
+	<input type="text" name="maso" size=50 maxlength="128" value="<?php echo htmlspecialchars($this->maso);?>">
+	<span class="box_erro_area" id="ERRmaso">		
+	</span>
+</div>
+
+<div class="required clearfix">
+	<label id="lblTextIput">Được sử dụng</label>
+	<?php
+		if($this->activeselect == 1){
+			echo '<input type="checkbox" value=1 name="active" checked=checked>';
+		}
+		else {
+			echo '<input type="checkbox" value=1 name="active">';
+		}
+	?>
+</div>
+<input type=hidden name="id_phuong" value=<?php echo $this->id?> >
+
+</form>
+
+
+<script>
+function SaveButtonClick(){
+	var err = true;
+	err = err & validateInput("req",document.frm.tenphuong,"Nhập phường");
+	
+	err = err & validateInput("req",document.frm.maso,"Nhập mã số");
+	if(err==true){
+		document.frm.submit();
+	}
+}
+function BackButtonClick(){
+	document.frm.action = '/qtht/DanhMucPhuong/index';
+	document.frm.submit();
+}
+</script>

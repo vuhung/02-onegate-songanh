@@ -1,0 +1,43 @@
+<?php
+$array = array();
+QLVBDHCommon::getAllNoiLuuTruChildPath(&$array,$this->id_noiluutru);
+?>
+<table width="100%" class=adminlist1>
+	<tr class=row1>		
+		<td nowrap="nowrap" style="color:blue">Năm lưu trữ :</td>
+		<td nowrap="nowrap"><?php if((int)$this->namluutru == 0) echo "Không có"; else echo $this->namluutru; ?></td>
+		<td width="20" nowrap="nowrap"></td>
+		<td nowrap="nowrap" style="color:blue">Mã số :</td>
+		<td nowrap="nowrap"><?php if(count($this->maso) == 0) echo "Không có"; else echo $this->maso; ?></td>
+		<td width="100%"></td>
+	</tr>
+	<tr class=row1>
+		<td nowrap="nowrap" style="color:blue">Nơi lưu trữ :</td>
+		<td nowrap="nowrap"><?php if($this->noiluutru == "") echo "Không có"; else echo implode(", ",array_reverse($array)); ?></td>
+		<td width="20" nowrap="nowrap"></td>
+		<td nowrap="nowrap" style="color:blue">Loại hồ sơ :</td>
+		<td nowrap="nowrap"><?php if(count($this->loaihoso) == 0) echo "Không có"; else echo $this->loaihoso; ?></td>
+		<td width="100%"></td>
+	</tr>
+	<tr class=row1>
+		<td nowrap="nowrap" style="color:blue">Ngày bắt đầu :</td>
+		<td nowrap="nowrap"><?php if($this->ngaybatdau == "") echo "Không có"; else echo $this->ngaybatdau; ?></td>
+		<td width="20" nowrap="nowrap"></td>
+		<td nowrap="nowrap" style="color:blue">Ngày kết thúc :</td>
+		<td nowrap="nowrap"><?php if($this->ngayketthuc == "") echo "Không có"; else echo $this->ngayketthuc; ?></td>
+		<td width="100%"></td>
+	</tr>
+	<tr class=row1>	
+		<td nowrap="nowrap" style="color:blue">Thời hạn lưu trữ :</td>
+		<td nowrap="nowrap">
+			<?php 
+				if ($this->thoihanluutru == 1) echo "Vĩnh viễn";
+				if ($this->thoihanluutru == 2) echo "Lâu dài";
+				if ($this->thoihanluutru == 3) echo "Tạm thời";
+			?>
+		</td>		
+		<td width="20" nowrap="nowrap"></td>
+		<td colspan=2></td>
+		<td width="100%"></td>
+	</tr>
+</table>

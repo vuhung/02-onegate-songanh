@@ -1,0 +1,17 @@
+
+<?php 
+$url = "";
+$is_new = 0;
+$type = $this->type;
+if((int)$this->idObject==0){
+	$is_new = 1;
+}else{
+	$is_new = 0;
+}
+$url ="'/hscv/file?iddiv=idFileDinhKem&idObject=".$this->idObject."&is_new=".$is_new."&year=" . $this->year . "&type=".$type."'" ;
+?>
+<div id="idFileDinhKem" colspan="3"></div>
+
+<script>
+	loadDivFromUrl('idFileDinhKem',<?echo $url ?>,0);
+</script> 

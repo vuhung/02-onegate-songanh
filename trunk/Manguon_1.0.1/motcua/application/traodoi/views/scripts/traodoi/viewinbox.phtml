@@ -1,0 +1,250 @@
+<form name="frmTraodoi" action="/traodoi/traodoi/" method="POST">
+<table cellpadding="0" cellspacing="0" class="adminlist" style="margin-top:5px" >
+	<tr>
+		<td width="15%" valign="top">			
+			<div class="urbangreymenu">
+				<div class="headerbar">Thư mục tin</div>
+					<ul>
+						<li><a href="#" onclick="viewInbox(); return false;"><span <?php echo ("inbox"==$this->class?"style='border-bottom-width:1px; font-weight: bold; text-decoration: underline;'":"") ?>>Tin đến</span><font color="#0B55C4">(<?php echo $this->unread ?>)</font></a></li>
+						<li><a href="#"  onclick="viewSentItems(); return false;"><span <?php echo ("sentitems"==$this->class?"style='border-bottom-width:1px; font-weight: bold; text-decoration: underline;'":"") ?>>Tin đã gửi</span></a></li>
+						<li><a href="#"  onclick="viewDraft(); return false;"><span <?php echo ("draft"==$this->class?"style='border-bottom-width:1px; font-weight: bold; text-decoration: underline;'":"") ?>>Tin nháp</span><font color="#0B55C4">(<?php echo $this->drafts ?>)</font></a></li>
+					</ul>
+			</div>
+		</td>
+		<td width="85%">
+				
+				<div class="traodoi_search_tb">				
+					<div style="float:left;margin-left:10px;margin-bottom:10px;">
+						<input  accesskey="9" type="button" name="send" value="Phản hồi" title="Phản hồi" onclick="Reply('<?php echo $this->id ?>')">
+						<input  type="button" name="forward" value="Chuyển tiếp" onclick="Forward('<?php echo $this->id ?>')">
+						<input type="button" accesskey="0" name="cancel" value="Xóa" title="Xóa" onclick="Delete('<?php echo $this->id ?>')">
+					</div>
+				</div>					   
+		 		<table width="100%" cellpadding="0" cellspacing="0" border="0">	
+		 				<tr>
+							<td colspan="2" style="background: #f0f0f0;">
+							<a href="#" onclick="Toggle('thongtinchitiet')"><b>Tin nhận</b></a>							    																	
+							</td>
+						</tr>					
+						<tr id='thongtinchitiet' >
+							<td colspan="2">
+								<table cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+											<td colspan="2" style="background: #F6F6F6; border-color:#CCCCCC; border-width:1px; border-style:dashed">
+											<div class="required">
+												<label>Gửi từ :</label>	
+												<div style="float:left;margin-top:3px;margin-left:5px"><a href="#"><?php echo $this->form->getElement('nguoinhan')->getValue();?><i>(<?php echo $this->tennguoigui ?>)</i></a></div>						
+												<input type="hidden" name="nguoinhan" value="<?php echo $this->form->getElement('nguoinhan')->getValue();?>">
+											</div>	
+											<div class="clr"></div>
+											<div class="required">
+												<label>Gửi đến :</label>
+												<div style="float:left;margin-top:3px;margin-left:5px">
+												<?php
+														foreach($this->nguoinhans as $row)
+														{
+															if($row['danhan']==1){
+												?>
+															<font color=red><?php echo $row['USERNAME'] ?> <?php echo "(".$row['TENNGUOI'].")" ?>;</font>
+												<?php
+															}else{
+												?>
+															<?php echo $row['USERNAME'] ?> <?php echo "(".$row['TENNGUOI'].")" ?>;
+												<?								
+															}				
+														}
+												?>		
+												</div>									
+											</div>		
+											<div class="clr"></div>
+											<div class="required">
+												<label id="lblTextIput">Tiêu đề :</label>	
+												<div style="float:left;margin-top:3px;margin-left:5px"><?php echo $this->form->getElement('tieude')->getValue();?></div>
+												<input type="hidden" name="tieude" value="<?php echo $this->form->getElement('tieude')->getValue();?>">
+											</div>
+											<div class="clr"></div>								
+											<div class="required">
+												<label id="lblTextIput">Tệp đính kèm</label>
+												<div id="idFileDinhKem" style="margin-top:3px"></div>
+												<span class="box_erro_area">
+										        </span>
+											</div>	
+											<div class="clr"></div>		
+											<script type="text/javascript">
+												divFileDinhKemId='idFileDinhKem';
+												url='/hscv/file/attachment?iddiv=idFileDinhKem&idObject=<?php echo ($this->idTemp >0?$this->idTemp:0) ?>&is_new=<?php echo ($this->idTemp > 0?0:1)?>&isreadonly=<?php echo $this->isreadonly; ?>&from=inbox&year=<?php echo $this->year ?>&type=<?php echo ($this->idTemp > 0?6:-1) ?>';
+												loadDivFromUrl(divFileDinhKemId,url,0);
+											</script>												
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">								
+											<div style="margin-left:10px;">
+											<?php echo $this->noidung; ?>
+										</td>
+									</tr>	
+								</table>
+							</td>
+						
+						</tr>	
+									
+				</table>
+				<?php
+					if(count($this->lienquan)>0)
+					{
+						$rows=$this->lienquan;
+							
+						for($i=0;$i<count($rows); $i++)
+						{
+													
+				?>
+				<table width="100%" cellpadding="0" cellspacing="0" border="0">						
+						<tr>
+							<td colspan="2" style="background: #f0f0f0;" colspan="2">
+							<a href="#" onclick="Toggle('thongtinlienquan<?php echo $i; ?>');return false;"><b>Tin liên quan : </b><?php echo $rows[$i]['tieude'];?></a>							    																	
+							</td>
+						</tr>					
+						<tr style="display:none" id="thongtinlienquan<?php echo $i; ?>">
+							<td>
+							<table  cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td  style="background: #F6F6F6; border-color:#CCCCCC; border-width:1px; border-style:dashed">
+								
+										<div class="required">
+											<label id="lblTextIput">Tiêu đề :</label>	
+											<div style="float:left;margin-top:3px;margin-left:5px"><?php echo $rows[$i]['tieude'];?></div>
+										</div>
+										<div class="clr"></div>	
+										<div class="required">
+											<label id="lblTextIput">Người gửi :</label>	
+											<div style="float:left;margin-top:3px;margin-left:5px"><?php echo $rows[$i]['tennguoigui'];?></div>
+										</div>
+										<div class="clr"></div>	
+										<div class="required">
+											<label id="lblTextIput">Ngày tạo :</label>	
+											<div style="float:left;margin-top:3px;margin-left:5px"><?php echo $rows[$i]['ngaytao'];?></div>
+										</div>
+										<div class="clr"></div>	
+										<div class="required">
+											<label id="lblTextIput">Tệp đính kèm</label>
+											<div id="idFileDinhKem<?php echo $i; ?>" style="margin-top:3px"></div>
+											<span class="box_erro_area">
+									        </span>
+										</div>	
+										<?php 
+											$idTemp=$rows[$i]['id_thongtin'];
+										 ?>
+										<script type="text/javascript">
+											divFileDinhKemId='idFileDinhKem<?php echo $i; ?>';
+											url='/hscv/file/attachment?iddiv=idFileDinhKem<?php echo $i; ?>&idObject=<?php echo ($idTemp>0?$idTemp:0) ?>&is_new=<?php echo ($idTemp > 0?0:1)?>&isreadonly=<?php echo $this->isreadonly; ?>&from=inbox&year=<?php echo $this->year ?>&type=<?php echo ($idTemp> 0?6:-1) ?>';
+											loadDivFromUrl(divFileDinhKemId,url,0);
+										</script>	
+										<div class="clr"></div>						
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div id="scroll_box" style="margin-left:10px;">
+											  <?php echo $rows[$i]['noidung']; ?>
+									    </div>	
+									    
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+				</table>
+				<?php
+						}
+					}
+				?>
+				<table width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr height="50">
+							<td style="background: #f0f0f0;" colspan="2">
+								<div style="float:left;margin-left:10px;">
+									<input  accesskey="9" type="button" name="send" value="Phản hồi" title="Phản hồi" onclick="Reply('<?php echo $this->id ?>')">
+									<input  type="button" name="forward" value="Chuyển tiếp" onclick="Forward('<?php echo $this->id ?>')">
+						            <input type="button" accesskey="0" name="cancel" value="Xóa" title="Xóa" onclick="Delete('<?php echo $this->id ?>')">
+						     	</div>								
+							</td>
+						</tr>							
+				</table>
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="act" id="id_act" value="">
+<input type="hidden" name="view" value="">
+<input type="hidden" name="comeFrom" value="listForm">
+<input type="hidden" name="DEL[]" id="DEL">
+<input type="hidden" name="page" value="<?=$this->page?>">
+</form>
+<script>
+function Reply(id)
+{
+	document.frmTraodoi.action = "/traodoi/traodoi/input/idreply/"+id;
+	document.frmTraodoi.submit();
+}
+function Forward(id)
+{
+	document.frmTraodoi.action = "/traodoi/traodoi/input/idforward/"+id;
+	document.frmTraodoi.submit();	
+}
+function Delete(id)
+{
+	if(confirm("Bạn muốn xóa tin này"))
+	{
+		document.getElementById("DEL").value=id;
+		document.frmTraodoi.action = "/traodoi/traodoi/delete";		
+		document.frmTraodoi.submit();	
+	}
+}
+
+function CreateNewMessage()
+{
+	document.location.href = "/traodoi/traodoi/input";
+	
+}
+function BackButtonClick()
+{
+	document.frmTraodoi.action = "/traodoi/traodoi/";
+	document.frmTraodoi.submit();
+}
+function SaveButtonClick(){
+	
+	var err = true;
+	err = err & validateInput("req",document.frmTraodoi.ten_chude,"Trường này phải nhập liệu");
+    err = err & err==true?validateInput("maxlen=50",document.frmTraodoi.ten_chude,"Dữ liệu quá dài"):false;                   
+    if(err==true)
+    {
+        document.frmTraodoi.submit();
+    }	
+}
+function viewDraft()
+{
+	document.frmTraodoi.view.value="draft";
+	document.frmTraodoi.submit();	
+}
+function viewInbox()
+{
+	document.frmTraodoi.view.value="inbox";
+	document.frmTraodoi.submit();	
+}
+function viewSentItems()
+{
+	document.frmTraodoi.view.value="sentitems";
+	document.frmTraodoi.submit();	
+}
+function Toggle(item) 
+{
+   	obj=document.getElementById(item);
+   	visible=(obj.style.display!="none")
+  	if (visible) 
+  	{
+  		obj.style.display="none";   
+	} 
+  	else 
+  	{
+  		obj.style.display="block";
+	}
+}
+</script>

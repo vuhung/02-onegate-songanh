@@ -1,0 +1,88 @@
+  
+  <form name=frm >
+  <table>
+        <tr>
+            <td align="left" width="100%">
+                Lọc:
+                <input type="text" name="search" id="search" value="<?php echo $this->search ?>" class="text_area" onchange="document.frm.submit();" />
+                <button onclick="document.frm.submit();">Tìm</button>
+                <button onclick="document.getElementById('search').value='';document.frm.submit();">Làm lại</button>
+            </td>
+            <td nowrap="nowrap">
+                <select name="ID_LOAIHOSO" id="filter_object" class="inputbox" size="1" onchange="document.frm.submit();">
+                    <?php 
+                        echo loaihosoModel::toCombo($this->ID_LOAIHOSO); 
+                    ?>
+                </select>
+            </td>
+        </tr>
+    </table>
+  <table class="adminlist">
+    <thead>
+        <tr>
+            <th nowrap>#</th>
+            <th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+            <th width=50%>Tên</th>
+			<th width=50%>Loại hồ sơ</th>
+            <th nowrap>Được sử dụng</th>
+        </tr>
+    </thead>
+	
+	<tbody>
+		<?php $stt=1; 
+			foreach($this->data as $item){
+			
+		?>
+			<tr>
+				<td><?=$stt?></td>
+				<td nowrap align="center">
+                <input type=checkbox name=DEL[] value='<?php echo $item['ID_QUITRINH'] ?>'>
+				</td>
+				<td> <a href="#" onclick = "ItemClick(<?php echo $item['ID_QUITRINH'] ?>);"><?=$item["TEN"]?></a></td>
+				<td><?=$item['TENLOAIHOSO']?></td>
+				<td><?=$item["ACTIVE"]==1?"Có":"Không" ?></td>
+			</tr>
+		<?php 
+		$stt++;	
+		}
+		?>
+	</tbody>
+</table>
+</form>
+<script>
+
+	function DeleteButtonClick(){
+		var ln = 0;
+		var arr = document.getElementsByName('DEL[]');
+		for(var i = 0 ; i < arr.length ;i++ )
+		{
+			
+			if(arr[i].checked == true)
+			{
+				ln = 1;
+			}
+		}
+		if(ln == 1)
+		{
+			if(confirm("<?php echo "Bạn có muốn xóa không"; ?>")){
+				document.frm.action="/danhmuc/quitrinh/delete";
+				document.frm.method="post";
+				document.frm.submit();
+			}
+		}
+		else
+		{
+			alert("Bạn phải một dòng chọn để xóa");
+		}
+	}
+
+	function AddNewButtonClick(){
+		document.frm.action = "/danhmuc/quitrinh/input";
+		document.frm.submit();
+	}
+	
+	function ItemClick(id){
+		document.frm.action = "/danhmuc/quitrinh/input/id/"+id;
+		document.frm.submit();
+	}
+</script>

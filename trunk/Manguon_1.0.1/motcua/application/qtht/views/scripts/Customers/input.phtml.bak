@@ -1,0 +1,34 @@
+<form name="frm" method="post" action="/qtht/customers">
+	<table>
+		<tr>
+			<td><label for="txtName"><b>Tên:</b></label></td>
+			<td><input type="text" name="txtName" id="txtName" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['NAME'];}?>" /></td>
+		</tr>
+		<tr>
+			<td><label for="txtAddress"><b>Địa chỉ:</b></label></td>
+			<td><input type="text" name="txtAddress" id="txtAddress" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['ADDRESS'];}?>" /></td>
+		</tr>
+		<tr>
+			<td><label for="txtEmail"><b>Email:</b></label></td>
+			<td><input type="text" name="txtEmail" id="txtEmail" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['EMAIL'];}?>" /></td>
+		</tr>
+		<tr>
+			<td><label for="txtPhone"><b>Số điện thoại:</b></label></td>
+			<td><input type="textbox" name="txtPhone" id="txtPhone" value="<?php if($this->data[0]['NAME'] != ''){ echo $this->data[0]['PHONE'];}?>" /></td>
+		</tr>
+	</table>
+	<input type="hidden" name="id" value="<?=$this->id;?>" />
+</form>
+<script>
+	function SaveButtonClick()
+	{
+		
+		document.frm.action = "/qtht/customers/save";
+		document.frm.submit();
+	}
+	function BackButtonClick()
+	{
+		document.frm.action = "/qtht/customers/";
+		document.frm.submit();
+	}
+</script>

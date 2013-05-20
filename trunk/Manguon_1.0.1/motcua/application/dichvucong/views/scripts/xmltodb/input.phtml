@@ -1,0 +1,213 @@
+<script>
+//getColumn();
+
+var arr_colist = new Array();
+var arr_namelist = new Array();
+var arr_colid = new Array();
+<?php 
+
+if(count($this->datachild)){ 
+	foreach($this->datachild as $col){
+
+	?>
+		arr_colist[arr_colist.length] = "<?=$col["COLUMNNAME"]?>";
+		arr_namelist[arr_namelist.length] = "<?=$col["NAME"]?>";
+<?php 
+		if((int)$col["IS_IDENTITY"] ==1){ ?>
+			
+			arr_colid[arr_colid.length] = "<?=$col["COLUMNNAME"]?>";
+			
+		<?php
+		}
+} }?>
+
+
+function getColumn(tblname){
+	var submitAjax = new AjaxEngine(); 
+	var oXmlHttp = submitAjax.createXMLHttp();
+	oXmlHttp.open("post", "/dvc/danhmuc/onshowcol/tblname/"+encodeURIComponent(tblname) , true); 
+	oXmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	oXmlHttp.onreadystatechange = function () { 
+				if (oXmlHttp.readyState == 4) { 
+				
+				if (oXmlHttp.status == 200) { 
+			
+				if(oXmlHttp.responseText){
+					
+					//alert(oXmlHttp.responseText);
+					var data_js = JSON.parse(oXmlHttp.responseText);
+					//var myjsObject = JSON.parse(oXmlHttp.responseText);
+					//alert(oXmlHttp.responseText);
+					createTblColumns(data_js);
+			
+				}	
+				else{
+					
+				}
+				
+            } else { 
+                //as_checkdata_all = 1;
+            } 
+        } 
+       }; 
+   	   oXmlHttp.send(null);		   
+}
+
+function createTblColumns(data_js){
+		 var odivtk = document.getElementById('listcolsdiv');
+		 if(data_js.length == 0){
+			odivtk.innerHTML = 'Không tìm thấy dự án nào';
+		 }else{
+			 var oTable = document.createElement("TABLE");
+			 oTable.innerText = "";
+			 oTable.setAttribute("className","adminlist"); //ie only
+			 oTable.setAttribute("class","adminlist");
+			 oTable.setAttribute("id","listcols");
+			 var oTRH = oTable.insertRow(-1);
+			 var oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'STT';
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Tên cột';
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Kiểu dữ liệu';
+			 
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Tên (XML)';
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Chọn';
+			 
+			 oTDH = oTRH.insertCell(-1);
+			 oTDH.innerHTML = 'Trường xác định';
+
+			 var stt = 1;
+			 
+			 var is_old = 0;
+			 if(document.frm.TABLENAME.value == "<?=$this->data["TABLENAME"]?>") 
+				 is_old = 1;
+			 
+			 for(var i = 0 ; i < data_js.length ; i++){
+				
+				oTRH = oTable.insertRow(-1);
+				oTRH.setAttribute("id","tr"+data_js[i].Field);
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = stt;
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = data_js[i].Field;
+				oTDH = oTRH.insertCell(-1);
+				oTDH.innerHTML = data_js[i].Type;
+				oTDH = oTRH.insertCell(-1);
+				var otext = document.createElement('input');
+				otext.name = "NAME__"+data_js[i].Field;
+				otext.value = data_js[i].Field;
+				oTDH.appendChild(otext);
+				oTDH = oTRH.insertCell(-1);
+				var oCheck = document.createElement('input');
+				oCheck.setAttribute('type','checkbox');
+				oCheck.setAttribute('name','colslist[]');
+				oCheck.value = data_js[i].Field;
+				
+				
+				for(var j=0; j < arr_colist.length ; j++){
+					if(arr_colist[j] == data_js[i].Field ){
+						oCheck.checked = "checked";
+						otext.value = arr_namelist[j];
+						break;
+					}
+				}
+				
+				oTDH.appendChild(oCheck);
+				oTDH = oTRH.insertCell(-1);
+				var oRadio = document.createElement('input');
+				oRadio.setAttribute('type','radio');
+				oRadio.setAttribute('name','identity');
+				//oCheck.value = data_js[i].Field;
+				oRadio.value = data_js[i].Field;
+				for(var j=0; j < arr_colid.length ; j++){
+					if(arr_colid[j] == data_js[i].Field ){
+						oRadio.checked = true;
+						//alert(arr_colist[j]);
+						break;
+					}
+					//alert(arr_colist[0]);
+				}
+
+				
+
+				oTDH.appendChild(oRadio);
+				stt++;
+
+			 }
+			
+			 odivtk.innerHTML = "";
+			 odivtk.appendChild(oTable);
+		}
+		
+	}
+
+	function SaveButtonClick(){
+		//document.frm.action="/dvc/services/save";
+		document.frm.submit();
+	}
+	
+	function BackButtonClick(){
+		window.location = "/dvc/services/index";
+	}
+
+	
+
+
+</script>
+<form name=frm method="post" action="/dvc/xmltodb/save"  >
+	<div>
+	<label>Tên </label>
+	<input type=text name="NAME" value="<?=$this->data["NAME"]?>" >
+	</div>
+	<div class=clr></div>
+	<div>
+	<label>Cột thuộc về:</label>
+	<select name=PARENT >
+		<option value=0> Là node gốc </option>
+		<?php foreach($this->parentinfo as $pri){
+		?>
+		<option value="<?=$pri["ID_DBDVCI"]?>" ><?=$pri["NAME"]?></option>
+		<?php
+		}	
+		?>
+	</select>
+	<script>
+		document.frm.PARENT.value = "<?=(int)$this->data['PARENT']?>";
+	</script>
+	</div>
+	
+	<div class=clr></div>
+	
+	
+	<div name="forvalue" id="forvalue" >
+		<div>
+		<label>Tên bảng dữ liệu tương ứng </label>
+		<select name="TABLENAME" onchange="getColumn(this.value)"  >
+			<?php foreach( $this->tbllist as $tbl){  ?>
+			<option > 
+				<?=$tbl["Tables_in_".$this->dbName]?>
+			</option>
+			<?php }?>
+		</select>
+		<script>
+			<?php if($this->id){?>
+				document.frm.TABLENAME.value = "<?=$this->data["TABLENAME"]?>";
+				getColumn(document.frm.TABLENAME.value);
+			<?php } ?>
+		</script>
+		</div>
+		<div class=clr></div>
+	
+	
+	</div>
+	<div id="listcolsdiv" >
+		
+
+	</div>
+	<input type=hidden name="id" value="<?=$this->id?>" >
+	<input type=hidden name=SERVICECODE value="<?=$this->servicecode?>" >
+
+</form>

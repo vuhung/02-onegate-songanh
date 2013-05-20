@@ -1,0 +1,60 @@
+<table class=adminlist>
+	<thead>
+		<tr>
+			<th nowrap>STT</th>
+			<th nowrap>Người yêu cầu</th>
+			<th nowrap>Số phiếu</th>
+			<th width="100%">Nội dung cần bổ sung</th>
+			<th nowrap>Ngày yêu cầu</th>
+			<th nowrap>Ngày bổ sung</th>
+			<?php if(hosocongviecModel::isAlowPrintBosung()){
+				  if(($this->bs)==1) {?>
+			<th nowrap>In phiếu</th>
+			<?php }else {
+			?>
+			<?php }}else{}?>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th colspan="7">
+			</th>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+	$i=0;
+	$stt=1;
+	if(count($this->data)>0){
+		foreach($this->data as $row){
+?>
+		<tr class="row<?=$i?>">
+			<td nowrap><?=$stt?></td>
+			<td nowrap><?=$row['UYCNAME']?></td>
+			<td nowrap><?=$row['SOPHIEU']?></td>
+			<td width="100%"><?=nl2br($row['CACGHICHU'])?><br>
+
+			</td>
+			<td nowrap><?=QLVBDHCommon::MysqlDateToVnDate($row['NGAY_YEUCAU'])?></td>
+			<td nowrap><?=$row['NGAY_BOSUNG']==""?"Chưa bổ sung":QLVBDHCommon::MysqlDateToVnDate($row['NGAY_BOSUNG'])." <i>(".$row['UBSNAME'].")</i>"?></td>
+			<?php if(hosocongviecModel::isAlowPrintBosung()){
+				  if(($this->bs)==1 && !$row['NGAY_BOSUNG'] ) {?>
+			<td nowrap><a href="/hscv/hscv/inphieubosunghoso/id/<?=$this->idhscv?>" target="_blank" ><img src='/images/print_icn.gif' alt="In ra web" title="In ra web"></img></a>  <a href="/hscv/hscv/inphieubosunghosoword/id/<?=$this->idhscv?>" target="_blank" ><img src='/images/WordIcon.png' alt="In ra word" title="In ra word"></img></a></td>
+			<?php }else {
+			?>
+			<?php }}else{}?>
+		</tr>
+<?php
+			$stt++;
+			$i = (-1+$i)*-1;
+		}
+	}else{
+?>
+		<tr>
+			<td colspan="7">Chưa có bổ sung nào</td>
+		</tr>
+<?php
+	}
+?>
+	</tbody>
+</table>

@@ -1,0 +1,76 @@
+<table class="adminlist" >
+  <thead>
+    <tr><th nowrap colspan=4>
+    <?php if($this->isCapnhat == 1){ ?>
+    <a href="#" onclick="document.getElementById('tftemp<?php echo $this->idObject?>').style.display='';
+    	document.getElementById('tftemp<?php echo $this->idObject?>').src = 
+    	'/hscv/File/input?type=<?php echo $this->type ?>&year=<?php echo $this->year?>&idObject=<?php echo $this->idObject?>&iddiv=<?php echo $this->iddiv ?>&isTemp=<?php echo $this->isTemp?>';
+    	return false;"><img src="/images/icon_add.gif" border="0">Thêm mới</a>
+    
+	<a href="#" 
+    onclick='
+    var ln = 0;
+	var arr = document.getElementsByName("DELidfiledk<?php echo $this->idObject?>[]");
+	for(var i = 0 ; i < arr.length ;i++ ){
+		if(arr[i].checked == true){
+			ln = 1;
+		}
+	}
+	if(ln == 1){
+		if(confirm("<?php echo "Bạn có muốn xóa không"; ?>")){
+			var url="/hscv/File/delete?type=<?php echo $this->type ?>&year=<?php $this->year?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject?>&isTemp=<?php echo $this->isTemp ?>";
+   			sendDataObjectNameToServer("DELidfiledk<?php echo $this->idObject?>[]",url,false,"<?php echo $this->iddiv ?>");
+		}
+	}else{
+		document.getElementById("FDK_ERRNochoiceDelete<?php echo $this->idObject?>").innerHTML = "Bạn phải chọn ít nhất một dòng để xóa";
+	}
+    return false;
+    '
+    ><img src="/images/icon_del.gif" border="0">Xóa</a>  
+    <?php } ?>
+	<span class="box_erro_area" id="FDK_ERRNochoiceDelete<?php echo $this->idObject?>"></span>
+	</th>
+    </tr>
+    <tr>
+    <th nowrap>#</th>
+    <?php if($this->isCapnhat == 1) {?>
+    <th nowrap>
+    	<input type=checkbox name='DELALLidfiledk<?php echo $this->idObject ?>' onclick="SelectAll(this,'DELidfiledk<?php echo $this->idObject ?>')">
+    </th>
+    <?php } ?>
+    <th width="100%">Tên</th>
+    <th nowrap>Ngày tạo</th>
+   
+    </tr>
+  </thead>
+  <tbody>
+<?php 
+$stt = 1;
+foreach ($this->data as $item){
+?>
+	<input type="hidden" name="idFile[]" value=<?php echo $item->MASO ?>>
+	<tr>
+    <td><?php echo $stt ?></td>
+    <?php if($this->isCapnhat == 1){ ?>
+    <td nowrap >
+				<input type=checkbox name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?=$item->MASO?>'>
+	</td>
+	<?php } ?>
+    <td width="100%"><a href="/hscv/File/download?year=<?php $this->year?>&maso=<?php echo $item->MASO ?>"><?php echo $item->FILENAME  ?></a></td>
+    <td nowrap ><?php echo QLVBDHCommon::MysqlDateToVnDate($item->TIME_UPDATE) ?></td>
+   
+
+  </tr>
+<?php $stt++;}?>
+</tbody>
+<tfoot>
+<tr><th colspan=4><iframe style="overflow-x:visible;display:none" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no  class='iframeinputfile' id="tftemp<?php echo $this->idObject?>" 
+name="tftemp<?php echo $this->idObject?>" 
+src="" >
+</iframe></th></tr>
+</tfoot>
+</table>
+
+
+
+

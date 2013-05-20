@@ -1,0 +1,93 @@
+  <form name=frm >
+   <table>
+        <tr>
+            <td align="left" width="100%">
+            
+            </td>
+            <td nowrap="nowrap">
+                <select name="ID_LINHVUC" id="ID_LINHVUC" class="inputbox" size="1" onchange="document.frm.submit();">
+                    <?php 
+                       linhvucModel::toCombo();// echo ModulesModel::ToCombo($this->Modules,$this->filter_object); 
+                    ?>
+                </select>
+				<script>document.frm.ID_LINHVUC.value=<?=$this->ID_LINHVUC?></script>
+            </td>
+        </tr>
+    </table>
+    <table class="adminlist">
+  <table class="adminlist">
+    <thead>
+        <tr>
+            <th nowrap>#</th>
+            <th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+            <th width="100%">Tên</th>
+			<th nowrap>Lệ phí</th>
+			
+			<th nowrap>Số ngày xử lý</th>
+			<th nowrap>Lĩnh vực</th>
+            <th nowrap>Được sử dụng</th>
+			 <th nowrap>Hình qui trình</th>
+        </tr>
+    </thead>
+	
+	<tbody>
+		<?php $stt=1; 
+			foreach($this->data as $item){
+			
+		?>
+			<tr>
+				<td><?=$stt?></td>
+				<td nowrap align="center">
+                <input type=checkbox name=DEL[] value='<?php echo $item['ID_LOAIHOSO'] ?>'>
+				</td>
+				<td> <a href="#" onclick = "ItemClick(<?php echo $item['ID_LOAIHOSO'] ?>);"><?=$item["TEN"]?></a></td>
+				<td><?=$item["LEPHI"]?></td>
+				<td><?=$item["SONGAYXULY"]?></td>
+				<td><?=$item["TEN_LINHVUC"]?></td>
+				<td><?=$item["ACTIVE"]==1?"Có":"Không" ?></td>
+				<td><?=$item["IMAGE_QUITRINH"]!=""?"Có":"Không" ?></td>
+			</tr>
+		<?php 
+		$stt++;	
+		}
+		?>
+	</tbody>
+</table>
+</form>
+<script>
+
+	function DeleteButtonClick(){
+		var ln = 0;
+		var arr = document.getElementsByName('DEL[]');
+		for(var i = 0 ; i < arr.length ;i++ )
+		{
+			
+			if(arr[i].checked == true)
+			{
+				ln = 1;
+			}
+		}
+		if(ln == 1)
+		{
+			if(confirm("<?php echo "Bạn có muốn xóa không"; ?>")){
+				document.frm.action="/danhmuc/loaihoso/delete";
+				document.frm.method="post";
+				document.frm.submit();
+			}
+		}
+		else
+		{
+			alert("Bạn phải một dòng chọn để xóa");
+		}
+	}
+
+	function AddNewButtonClick(){
+		document.frm.action = "/danhmuc/loaihoso/input";
+		document.frm.submit();
+	}
+	
+	function ItemClick(id){
+		document.frm.action = "/danhmuc/loaihoso/input/id/"+id+"/id_lv/"+document.frm.ID_LINHVUC.value;
+		document.frm.submit();
+	}
+</script>

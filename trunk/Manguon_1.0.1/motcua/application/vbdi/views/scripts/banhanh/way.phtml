@@ -1,0 +1,57 @@
+<table class=admintable width="100%">
+	<tbody>
+		<?php
+			if($this->idobject>0){
+		?>
+		<tr>
+			<td class=key nowrap="nowrap">
+				Chuyển để biết
+			</td>
+			<td width="100%">
+				<?php
+					$currentnc = 0;
+					$currentnd = "";
+					foreach($this->way as $way){
+						if($way['NGUOICHUYEN']!=$currentnc || $way['GHICHU']!=$currentnd){
+							if($currentnd!=""){
+								echo "<br><font color=blue style='margin-left:80px;'><b>Ý kiến:</b> ".$currentnd."</font>";
+							}
+							echo $currentnc!=0?"<br>":"";
+							echo "<b>".date("d/m/Y H:i:s",strtotime($way["NGAYCHUYEN"]))."</b>: ";
+							echo $way["EMPNC"];
+							echo " <img src='/images/j_arrow.png'>";
+							$currentnc = $way['NGUOICHUYEN'];
+						}
+						$currentnd = $way['GHICHU'];
+						echo $way['EMPNN'].", ";
+					}
+					if($currentnd!=""){
+						echo "<br><font color=blue style='margin-left:80px;'><b>Ý kiến:</b> ".$currentnd."</font>";
+					}
+				?>
+			</td>
+		</tr>
+		
+			
+		<?php
+			}
+		?>
+		<tr>
+			<td>
+				<a href="javascript:;" onclick="
+					document.getElementById('iframesend<?=$this->idobject?>').style.display='';
+					document.getElementById('iframesend<?=$this->idobject?>').setAttribute('src','/vbdi/banhanh/send/id/<?=$this->idobject?>/type/<?=$this->type?>/year/<?=$this->year?>');
+				">Chuyển tiếp</a>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<th colspan="2">
+				<iframe style="overflow-x:visible;display:none" height=0 id=iframesend<?=$this->idobject?> 
+		allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no src=""></iframe>
+			</th>
+		</tr>
+	</tfoot>
+	
+</table>

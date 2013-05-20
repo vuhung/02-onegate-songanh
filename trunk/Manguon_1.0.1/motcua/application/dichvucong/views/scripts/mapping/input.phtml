@@ -1,0 +1,140 @@
+<form name=frm action="/dvc/mapping/input" method="post" >
+<table width=100%>
+<tr>
+<td>
+	<b>Tập tin xml mẫu từ dịch vụ công</b>
+	<input type="button" class="edit_btn" value="Chỉnh sửa" 
+		onclick="
+		var tr_editsrcxml = document.getElementById('tr_editsrcxml');
+		tr_editsrcxml.style.display = '';
+		";
+	>
+</td>
+<td>
+<b>Tập tin xml mẫu từ hệ thống một cửa </b> 
+</td>
+</tr>
+
+<tr id="tr_editsrcxml" style="display:none;">
+<td  colspan=2>
+<textarea name="xmlsource" style="width:600px;height:300px;"  ><?=htmlspecialchars($this->xmlsource)?></textarea>
+<br>
+<input type=button class="save_btn" value="Lưu chỉnh sửa" onclick="document.frm.submit();" >
+
+</td>
+<td>
+
+</td>
+</tr>
+
+<tr>
+	<td><iframe style="width:100%;height:300px;" id=viewsource src="/dvc/mapping/showxml/type/0/code/<?=$this->id_service?>"> </iframe></td>
+	<td><iframe style="width:100%;height:300px;" id=viewsource src="/dvc/mapping/showxml/type/1/code/<?=$this->id_service?>"> </iframe></td>
+</tr>
+
+<tr>
+	<td>
+		<input type=button  class="xmlanalaysic_btn" value="Phân tích"  onclick="document.frm.submit();">
+	</td>
+	<td>
+	</td>
+
+</tr>
+
+</table>
+	<table class=adminlist  >
+		<tbody>
+		<?php 
+		//foreach($this->arrdata as $data)
+		//var_dump($this->arrdata);
+		$strrow = "";
+		 $strrow = mapping::arrayToRow2($this->arrdes,&$strrow,$this->arrdata);
+		echo $strrow;
+		?>
+		</tbody>
+		
+	</table>
+<table>
+
+
+</table>
+
+<div>
+<b>File chuyển đổi:</b>
+<iframe style="width:100%;height:300px;" id="showxsdlt" name="showxsdlt" src="/dvc/mapping/showxml/type/3/code/<?=$this->id_service?>" > </iframe>
+<script>
+//var showxsdlt = document.getElementById('showxsdlt');
+//window.frames["showxsdlt"].src = "/dvc/mapping/showxml?data="+encodeURIComponent("<?=base64_encode(($this->xsdlt))?>");
+//alert(window.frames["showxsdlt"].src);
+</script>
+<input type=hidden  name="xsdlt" 
+value='<?=htmlspecialchars($this->xsdlt)?>';
+</div>
+
+Thử chuyển đổi dữ liệu
+
+<table width=100%>
+<tr>
+<td>
+<b>Tập tin xml mẫu từ dịch vụ công</b>
+</td>
+<td>
+<b>Tập tin xml mẫu từ hệ thống một cửa</b>
+</td>
+</tr>
+
+<tr>
+<td>
+<textarea name="xmlsourcetest" style="width:400px;height:300px;"  ><?=htmlspecialchars($this->xmlsourcetest)?></textarea>
+</td>
+<td>
+<textarea style="width:400px;height:300px;"  name="xmldestinationtest" ><?=htmlspecialchars($this->xmldestinationtest)?></textarea>
+</td>
+</tr>
+<tr>
+	<td>
+		<input type=button  class="xmlconvert_btn" value="Thử chuyển đổi"  onclick="document.frm.submit();">
+	</td>
+	<td>
+	</td>
+
+</tr>
+
+</table>
+
+<input type=hidden name="id_service" value="<?=$this->id_service?>">
+</form>
+
+<script>
+
+function OnclickDefineXML(){
+window.location = '/dvc/services/input/id/<?=$this->id_service?>';
+}
+
+function	SaveButtonClick(){
+	document.frm.action ="/dvc/mapping/save";
+	document.frm.submit();
+}
+
+
+
+<?php 
+	if(count($this->mappinginfo)){
+		$i == 0;
+		foreach($this->mappinginfo as $it){ 
+			$name_src = 	("sel_".$it["NAMEFIELDDES"].($it["PARRENT_DES"]?"#".$it["PARRENT_DES"]:"")."_".$it["LEVEL_DES"]);
+			$des_value = $it["NAMEFIELDSRC"].($it["PARRENT_SRC"]?"#".$it["PARRENT_SRC"]:"")."_".$it["LEVEL_SRC"];
+		?> 
+		var obcombo<?=$i?> = document.getElementById('<?=$name_src?>');
+		
+		obcombo<?=$i?>.value = '<?=$des_value?>';
+
+		<?php
+		$i++;		
+		}
+	}
+?>
+
+
+</script>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+</head>
+<body style="background-color:transparent">
+<table class=adminlist>
+ <thead>
+ 	<tr>
+	    <th nowrap >Số đi</th>
+ 		<th nowrap >Ngày tháng</th> 		
+		<th nowrap >Số ký hiệu</th>
+ 		<th nowrap >Trích yếu nội dung</th>
+ 		<th nowrap >Số bản</th>
+ 		<th nowrap >Nơi nhận</th>
+		<th>Lưu hồ sơ số(Người ký)</th>
+		<th nowrap >Ghi chú</th>
+ 	</tr>
+ 	
+ </thead>
+ <tbody>
+<?php require_once 'qtht/models/LoaiVanBanModel.php';
+require_once 'qtht/models/CoquanModel.php'; 
+require_once 'qtht/models/DepartmentsModel.php';
+require_once 'qtht/models/UsersModel.php';
+?>
+<?php  $stt=1; 
+$num = count($this->data);
+
+foreach($this->data as $row){ 
+ ?>
+	<tr>
+	<td nowrap valign=top ><?php echo $row["SODI"]?></td>
+ 	<td nowrap valign=top ><?php echo QLVBDHCommon::MysqlDateToVnDate($row["NGAYBANHANH"]) ?></td>
+	<td nowrap valign=top ><?php echo $row["SOKYHIEU"]?></td>
+ 	<td width="50%"  valign=top ><?php echo $row["TRICHYEU"] ?></td>
+ 	<td nowrap valign=top ><?php echo $row["SOBAN"] ?></td>
+ 	<td valign=top ><?php echo $row["NOINHAN"] ?></td>
+	<td nowrap valign=top ><?php echo UsersModel::getEmloyeeNameByIdUser($row["NGUOIKY"]) ?></td>
+	<td nowrap valign=top ></td>
+	</tr>
+ 
+ 	
+ <?php $stt++ ; } ?>
+ </tbody>
+ <tfoot>
+ </tfoot>
+</table>
+<p id=lasttext></p>
+</body>
+</html>
+<script>
+var iframeElement = window.parent.document.getElementById('reportview');
+iframeElement.style.height = ""+(document.getElementById("lasttext").offsetTop)+"px";
+iframeElement.width = "100%"; 
+</script>

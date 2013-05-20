@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="/js/common.js"></script>
+<script src="/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src="/js/calendar.js"></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/Base64.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json2.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Json/json_parse.js"?>></script>
+<script type="text/javascript" src=<?php echo $this->baseUrl()."/js/Ajax/AjaxEngine.js"?>></script>
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+<link rel="stylesheet" href="/styles/system.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/styles/rounded.css" />
+<link rel="stylesheet" type="text/css" href="/styles/general.css" />
+<link rel="stylesheet" type="text/css" href="/styles/template.css" />
+</head>
+<body style="background-color:transparent">
+<form name=frm action="/hscv/nhantin/save"  method="post" >
+<fieldset>
+<div>
+<label>Số điện thoại</label>
+<input type="text" name=sodt id='sodt' value="<?php echo $this->data["DIENTHOAI"]?>">
+</div>
+</fieldset>
+
+<input type="button" name="SEND" value="Cho nhắn tin" onclick="return Submit();"></input>
+<input type="hidden" name=id value="<?=$this->data["ID_HSCV"]?>">
+<input type="hidden" name=masohoso value="<?=$this->data["MAHOSO"]?>">
+</form>
+<p id=lasttext></p>
+<script >
+var iframeElement = parent.document.getElementById("iframebutphe<?php echo $this->data["ID_HSCV"]?>");
+iframeElement.style.height = ""+ (document.getElementById("lasttext").offsetTop) +"px";
+iframeElement.width = "100%"; 
+</script>
+</body>
+</html>
+<script>
+function Submit(){	
+		document.frm.submit();
+}
+</script>

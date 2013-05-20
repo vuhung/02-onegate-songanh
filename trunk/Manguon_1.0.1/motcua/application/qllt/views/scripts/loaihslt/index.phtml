@@ -1,0 +1,134 @@
+<form name=frmListLoaihslt method="post" action="/qllt/loaihslt">
+	<table>
+		<tr>
+			<td align="left" width="100%">
+				Lọc:
+				<input type="text" name="search" id="search" value="<?php echo $this->search ?>" class="text_area" onchange="document.frmListLoaihslt.submit();" />
+				<button onclick="document.frmListLoaihslt.submit();">Tìm</button>
+				<button onclick="document.getElementById('search').value='';document.frmListLoaihslt.submit();">Làm lại</button>
+			</td>
+			<td nowrap="nowrap">
+				
+			</td>
+		</tr>
+	</table>
+	<table class="adminlist">
+	<thead>
+		<tr>
+			<th nowrap>#</th>
+			<th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+			<th nowrap>Ký hiệu</th>
+			<th width="30%">Tên loại</th>
+			<th nowrap>Thuộc kho</th>
+			<th width="15%">Phòng ban</th>
+			<th nowrap width="30%">Mô tả</th>			
+			<th nowrap>Kích hoạt</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan="11">
+					<div class="pagination">
+						<div class="limit">Hiển thị #
+							<select name="limit" id="limit" class="inputbox" size="1" onchange="document.frmListLoaihslt.submit();" style="width:60px;">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="15">15</option>
+								<option value="20">20</option>
+								<option value="25">25</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<script>
+									document.frmListLoaihslt.limit.value='<?php echo $this->limit; ?>';
+								</script>
+							</select>
+						</div>
+						<div style="float:right;"><?php echo $this->showPage; ?></div>
+					</div>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+<?php
+$stt=0;
+$i=0;
+if(count($this->data) == 0)
+{
+	echo "<tr class=row0><td colspan=8>Không có loại hồ sơ nào.</td></tr>";
+}else{
+foreach ($this->data as $row )
+	{
+	$stt++;
+?>
+		<tr class="row<?=$i?>">
+			<td nowrap align="right"><?php echo $stt ?></td>			
+			<td nowrap align="center">
+				<input type=checkbox name=DEL[] value="<?php echo $row['ID_LOAIHOSO'] ?>">
+			</td>
+			<td nowrap>
+				<a href="#" onclick = "ItemClick( <?php echo $row['ID_LOAIHOSO'] ?>);"><?php echo $row['KYHIEU'] ?>
+				</a>
+				<input type="hidden" name="id" value="<?php echo $row['ID_LOAIHOSO'] ?>" />
+			</td>
+			<td nowrap width=30%>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_LOAIHOSO'] ?>);"><?=$row['TENLOAI'];?></a>
+				<input type="hidden" name="id" value='<?php echo $row['ID_LOAIHOSO'] ?>' />
+			</td>
+			<td nowrap>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_LOAIHOSO'] ?>);">
+				<?php echo $row['TENTHUMUC'];?></a>
+				<input type="hidden" name="id" value='<?php echo $row['ID_LOAIHOSO'] ?>' />
+			</td>
+			<td nowrap>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_LOAIHOSO'] ?>);">
+				<?=$row['TENPHONGBAN'];?></a>
+				<input type="hidden" name="id" value='<?php echo $row['ID_LOAIHOSO'] ?>' />
+			</td>
+			<td nowrap>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_LOAIHOSO'] ?>);">
+				<?php echo $row['MOTA'];?></a>
+				<input type="hidden" name="id" value='<?php echo $row['ID_LOAIHOSO'] ?>' />
+			</td>
+			<td nowrap>
+				<a href="#" onclick = "ItemClick(<?php echo $row['ID_LOAIHOSO'] ?>);">
+				<?php if ($row['ACTIVE'] == '1') echo 'Rồi'; 
+					else echo 'Chưa';?></a>
+				<input type="hidden" name="id" value='<?php echo $row['ID_LOAIHOSO'] ?>' />
+			</td><?php }?>
+		</tr>
+<?php
+	$i = (-1+$i)*-1;
+}
+?>
+	</tbody>
+</table>
+<input type="hidden" name="page" value="<?php echo $this->page; ?>">
+<input type="hidden" name="comeFrom" value="listForm">
+</form>
+<script>
+function DeleteButtonClick(){
+	var mess = true;
+	mess = validateInput("selone_check","DEL[]","Chọn ít nhất một mục để xoá.");
+	if(mess){
+		if(confirm("<?php echo 'Bạn muốn xóa mục này!'; ?>")){
+			document.frmListLoaihslt.action = "/qllt/loaihslt/delete";
+			document.frmListLoaihslt.submit();
+		}
+	}else{
+		alert("Chọn ít nhất một mục để xoá.");
+	}
+}
+		 
+function AddNewButtonClick()
+{
+	window.location = "/qllt/loaihslt/input";
+	//document.frmListLoaihslt.submit();
+}
+
+function ItemClick(id)
+{
+	document.frmListLoaihslt.action = "/qllt/loaihslt/input/id/"+id;
+	document.frmListLoaihslt.submit();
+}
+</script>

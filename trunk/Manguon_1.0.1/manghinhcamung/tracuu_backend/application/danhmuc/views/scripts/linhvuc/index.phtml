@@ -1,0 +1,68 @@
+  <form name=frm >
+  <table class="adminlist">
+    <thead>
+        <tr>
+            <th nowrap>#</th>
+            <th nowrap><input type=checkbox name=DELALL onclick="SelectAll(this,'DEL')"></th>
+            <th width="100%">Tên</th>
+            <th nowrap>Được sử dụng</th>
+        </tr>
+    </thead>
+	
+	<tbody>
+		<?php $stt=1; 
+			foreach($this->data as $item){
+			
+		?>
+			<tr>
+				<td><?=$stt?></td>
+				<td nowrap align="center">
+                <input type=checkbox name=DEL[] value='<?php echo $item['ID_LINHVUC'] ?>'>
+				</td>
+				<td> <a href="#" onclick = "ItemClick(<?php echo $item['ID_LINHVUC'] ?>);"><?=$item["TEN"]?></a></td>
+				<td><?=$item["ACTIVE"]==1?"Có":"Không" ?></td>
+			</tr>
+		<?php 
+		$stt++;	
+		}
+		?>
+	</tbody>
+</table>
+</form>
+<script>
+
+	function DeleteButtonClick(){
+		var ln = 0;
+		var arr = document.getElementsByName('DEL[]');
+		for(var i = 0 ; i < arr.length ;i++ )
+		{
+			
+			if(arr[i].checked == true)
+			{
+				ln = 1;
+			}
+		}
+		if(ln == 1)
+		{
+			if(confirm("<?php echo "Bạn có muốn xóa không"; ?>")){
+				document.frm.action="/danhmuc/linhvuc/delete";
+				document.frm.method="post";
+				document.frm.submit();
+			}
+		}
+		else
+		{
+			alert("Bạn phải một dòng chọn để xóa");
+		}
+	}
+
+	function AddNewButtonClick(){
+		document.frm.action = "/danhmuc/linhvuc/input";
+		document.frm.submit();
+	}
+	
+	function ItemClick(id){
+		document.frm.action = "/danhmuc/linhvuc/input/id/"+id;
+		document.frm.submit();
+	}
+</script>

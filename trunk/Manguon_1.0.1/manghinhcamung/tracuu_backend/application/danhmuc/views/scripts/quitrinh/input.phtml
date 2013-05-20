@@ -1,0 +1,42 @@
+<form name="frm" action="/danhmuc/quitrinh/save" method="POST">
+<div>
+<label><b>Tên qui trình</b></label>
+<textarea rows="2" cols="80" name=TEN><?=$this->data["TEN"]?></textarea>
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Thuộc loại hồ sơ</b></label>
+<select name="ID_LOAIHOSO">
+	<?=loaihosoModel::toCombo($this->data["ID_LOAIHOSO"]);?>
+</select>
+
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Được sử dụng</b></label>
+<input type=checkbox name="ACTIVE" value=1  <?=$this->data["ACTIVE"]==1?"checked":""?> >
+</div>
+<div class="clr"></div>
+<div>
+<label><b>Ghi chú</b></label>
+<textarea rows="2" cols="80" name="GHICHU" ><?=$this->data["GHICHU"]?></textarea>
+</div>
+<div class="clr"></div>
+<div class="clr"></div>
+<input type="hidden" name="ID_QUITRINH" value="<?=$this->data["ID_QUITRINH"]?>" >
+<input type="hidden" name="ID_LOAIHOSO_OLD" value="<?=$this->data["ID_LOAIHOSO"]?>" >
+
+</form>
+
+<script>
+
+function SaveButtonClick(){
+	document.frm.submit();
+}
+
+function BackButtonClick(){
+	window.location= "/danhmuc/quitrinh/index";
+}
+
+
+</script>

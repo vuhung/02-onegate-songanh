@@ -1,0 +1,258 @@
+<form name=frm method="post" action="/qtht/danhmucnguoidung/Save" enctype="multipart/form-data" >
+<fieldset>
+	<div align="center"><span class="box_erro_area"><?php echo $this->error; ?></span></div>
+	<div class="required">
+		<label>Tài khoản(*)</label>
+		<input type=text class=inputbox name=USERNAME value="<?=$this->data['USERNAME']?>" class="inputText" size="50" maxlength="100"  onChange="return checkData(this.value);">
+		<input name="check" type="button" value="Ki&#7875;m tra" onclick="return checkData(document.frm.USERNAME.value);" />	
+    	<span class="box_erro_area" id="ERRUSERNAME"></span>
+	</div>
+	<div class=clr></div>
+    <div class="required">
+		<label>Mật khẩu(*)</label>
+		<input type="password" class=inputbox name=PASSWORD class="inputText" size="50" maxlength="100">
+    	<span class="box_erro_area" id="ERRPASSWORD"></span>
+	</div>
+	<div class=clr></div>
+	<div class="required">
+		<label>Nhập lại mật khẩu(*)</label>
+		<input type="password" class=inputbox name=REPASSWORD class="inputText" size="50" maxlength="100">
+    	<span class="box_erro_area" id="ERRREPASSWORD"></span>
+	</div>
+	<div class=clr></div>
+    <div class="required">
+		<label>Được sử dụng(*)</label>
+		<input type=checkbox class=inputbox name=ACTIVE value="1" <?php echo $this->data['ACTIVE']==1?"checked":"" ?> class="inputText" size="50" maxlength="100">
+		<span class="box_erro_area" id="ERRACTIVE"></span>
+	</div>
+	<div class=clr></div>
+	<div class="required">
+		<label>Là quản lý(*)</label>
+		<input type=checkbox class=inputbox name=ISLEADER value="1" <?php echo $this->data['ISLEADER']==1?"checked":"" ?> class="inputText" size="50" maxlength="100">
+		<span class="box_erro_area" id="ERRISLEADER"></span>
+	</div>
+	<div class=clr></div>
+    <div class="optional">
+		<label>(*) Bắt buộc nhập liệu.</label>
+	</div>
+</fieldset>
+<fieldset>
+	<legend>Nhân viên</legend>
+	<div class="required">
+		<label>Họ(*)</label>
+		<input type=text class=inputbox name=FIRSTNAME value="<?=$this->data['FIRSTNAME']?>" class="inputText" size="50" maxlength="100">
+    	<span class="box_erro_area" id="ERRFIRSTNAME"></span>
+	</div>
+	<div class=clr></div>
+    <div class="required">
+		<label>Tên(*)</label>
+		<input type=text class=inputbox name=LASTNAME value="<?=$this->data['LASTNAME']?>" class="inputText" size="50" maxlength="100">
+    	<span class="box_erro_area" id="ERRLASTNAME"></span>
+	</div>
+	<div class=clr></div>
+	<div class="required">
+		<label>Phòng ban(*)</label>
+		<select name=ID_DEP>
+			<?=nguoidungModel::ToDepCombo($this->dep,$this->data['ID_DEP']) ?>
+		</select>
+    	<span class="box_erro_area" id="ERRLASTNAME"></span>
+	</div>
+	<div class=clr></div>
+</fieldset>
+<fieldset>
+	<legend>Nhóm</legend>
+	<table class=adminlist>
+		<thead>
+			<tr>
+				<th colspan=3><span class="box_erro_area" id="ERRSELGROUP"></span></th>
+			</tr>
+			
+			<tr>
+				<th>#</th>
+				<th><input type=checkbox name=DELALL onclick="SelectAll(this,'SELGROUP')"></th>
+				<th>Tên nhóm</th>
+			</tr>
+		</thead>
+		<tfoot><tr><th colspan="3"></th></tr></tfoot>
+		<tbody>
+
+
+
+<?php
+$i=0;
+$stt=1;
+foreach($this->group as $group){
+?>
+			<tr class="row<?=$i?>">
+				<td nowrap><?=$stt?></td>
+				<td nowrap><input type=checkbox name=SELGROUP[] value=<?=$group['ID_G']?> <?=$group['SEL']==1?"checked":""?>></td>
+				<td width=100%><?=$group['NAME']?></td>
+			</tr>
+<?php
+	$stt++;
+	$i = (-1+$i)*-1;
+}
+?>
+		</tbody>
+	</table>
+	
+</fieldset>
+<fieldset>
+	<legend>Chức năng</legend>
+	<table class=adminlist>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th><input type=checkbox onclick="SelectAllByTitle(this,'GMODNAME')">Tên Module</th>
+				<th>Tên Chức năng</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th colspan="3">
+				</th>
+			</tr>
+		</tfoot>
+		<tbody>
+<?php
+	$i=0;
+	$out = false;
+	$stt=1;
+	while(!$out){
+?>
+			<tr>
+				<td><?=$stt?></td>
+				<td nowrap><input type=checkbox title="GMODNAME" onclick="SelectAllByTitle(this,'MODNAME<?=$this->action[$i]['ID_GMOD']?>')"><?=$this->action[$i]['GMODNAME']?></td>
+				<td>
+					<table>
+<?php
+		while(!$out){
+?>
+						<tr>
+							<td class=key><b><input type=checkbox title="MODNAME<?=$this->action[$i]['ID_GMOD']?>" onclick="SelectAllByTitle(this,'ACTNAME<?=$this->action[$i]['ID_MOD']?>')"><?=$this->action[$i]['MODNAME']?></b></td>
+							<td>
+<?php
+			while(!$out){
+?>
+								<span><input type=checkbox name=ID_ACT[] title="ACTNAME<?=$this->action[$i]['ID_MOD']?>" value=<?=$this->action[$i]['ID_ACT']?> <?=$this->action[$i]['SEL']==1?"checked":""?>><?=$this->action[$i]['NAME']?></span>
+<?php
+				if($this->action[$i]['ID_MOD']!=$this->action[$i+1]['ID_MOD']){
+					$out=true;
+				}else{
+					$i++;
+				}
+			}
+			$out = false;
+?>
+							</td>
+						</tr>
+<?php
+			if($this->action[$i]['ID_GMOD']!=$this->action[$i+1]['ID_GMOD']){
+				$out=true;
+			}else{
+				$i++;
+			}
+		}
+		$out = false;
+?>
+					</table>
+				</td>
+			</tr>
+<?php
+		if($i>=count($this->action)-1){
+			$out=true;
+		}else{
+			$i++;
+			$stt++;
+		}
+	}
+?>
+
+		</tbody>
+</table>
+</fieldset>
+<input type=hidden name=id value="<?php echo $this->id; ?>">
+<input type=hidden name=ID_EMP value="<?php echo $this->data['ID_EMP']; ?>">
+<input type=hidden name=ID_U value="<?php echo $this->data['ID_U']; ?>">
+<input type=hidden name=page value="<?php echo $this->page; ?>">
+<input type=hidden name=limit value="<?php echo $this->limit; ?>">
+<input type=hidden name=search value="<?php echo $this->search; ?>">
+</form>
+<script>
+	var test="2";
+	function SaveButtonClick(){
+		var spERRSELGROUP = document.getElementById("ERRSELGROUP");
+		spERRSELGROUP.innerHTML = "";
+		var err = true;
+		err = err & validateInput("req",document.frm.USERNAME,"Tài khoản không được rỗng.");
+		err = err & validateInput("equ="+document.frm.REPASSWORD.value,document.frm.PASSWORD,"Mật khẩu không hợp lệ.");
+		err = err & validateInput("req",document.frm.FIRSTNAME,"Họ nhân viên không được rỗng.");
+		err = err & validateInput("req",document.frm.LASTNAME,"Tên nhân viên không được rỗng.");
+		if(err == true)
+		err= validateInput("selone_check","SELGROUP[]","Bạn phải chọn ít nhất một nhóm.")
+		if(err == false){
+			spERRSELGROUP.innerHTML = "Bạn phải chọn ít nhất một nhóm.";		
+		}
+
+		
+		
+        if(err==true & test=="2")
+    	{
+	      document.frm.submit();
+    	}
+    	else
+    	{
+    		if(test=='1')
+			{
+				document.getElementById('ERRUSERNAME').innerHTML ="Tên người dùng đã tồn tại";
+			}			
+    	}
+			
+	}
+	function BackButtonClick(){
+		document.frm.action = "/qtht/danhmucnguoidung";
+		document.frm.submit();
+	}
+	function check_sokyhieu(msg)
+	{
+		if(msg=='1')
+		{
+			document.getElementById('ERRUSERNAME').innerHTML ="Tên người dùng đã tồn tại";
+			test='1';
+			return true;
+		}
+		else if(msg=='2')
+		{
+			document.getElementById('ERRUSERNAME').innerHTML ="<font color='blue'>Tên người dùng hợp lệ</font>";
+			test="2";
+			return false;
+		}
+		else 
+		{
+			document.getElementById('ERRUSERNAME').innerHTML ="Vui lòng nhập tên người dùng";
+			test="3";
+			return false;
+		}		
+	}
+	//
+	function checkFail(msg)
+	{
+		alert('Kiểm tra dữ liệu gặp lỗi');
+	}
+	//
+	function checkData(value)
+	{
+		var checkAjax = new AjaxEngine();     	
+		var url="/qtht/danhmucnguoidung/check";	
+			if(document.frm.id.value!="")
+			{
+				url=url+"/id_u/"+document.frm.id.value;		
+			}			
+			url=url+"?username="+value;	
+			var type_request = "GET";
+			if(trim(value)!='')
+			{
+				sendRequestToServer(url,type_request,check_sokyhieu,checkFail);
+			}		
+	}
+</script>
